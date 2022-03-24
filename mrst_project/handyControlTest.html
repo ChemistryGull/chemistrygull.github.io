@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <title></title>
 
     <style media="screen">
@@ -41,12 +43,19 @@
 
     <p>eeehooolo</p>
 
+    <button type="button" name="button" onclick="fullScreen()">FullScreen</button>
+
 
 
     <script type="text/javascript">
       function rangeChange(e) {
         console.log("change");
         console.log(e.value);
+      }
+
+
+      function fullScreen() {
+        document.body.requestFullscreen()
       }
     </script>
   </body>
