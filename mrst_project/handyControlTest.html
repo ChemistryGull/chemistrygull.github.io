@@ -2,14 +2,21 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
 
     <style media="screen">
+
       input[type=range] {
 
         -webkit-appearance: slider-vertical;
-        width: 40px;
+        width: 60px;
       }
+
+      .sliderCon {
+
+      }
+
     </style>
 
   </head>
@@ -17,12 +24,11 @@
     <br>
     <br>
 
-    <input type="range" min="1" max="100" value="50" oninput="rangeChange(this)">
+    <div class="sliderCon">
+      <input id="slider_L" type="range" min="1" max="100" value="50" oninput="rangeChange(this)">
+      <input id="slider_R" type="range" min="1" max="100" value="50" oninput="rangeChange(this)">
+    </div>
 
-
-
-
-    <input type="range" min="1" max="100" value="50" oninput="rangeChange(this)">
 
 
     <script type="text/javascript">
