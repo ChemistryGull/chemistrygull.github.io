@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <style media="screen">
+      input[type=range] {
+        display: block;
+      }
+    </style>
+
+  </head>
+  <body>
+    <input type="range" min="1" max="100" value="50" oninput="rangeChange(this)">
+
+    <br>
+    <br>
+    <br>
+    
+    <input type="range" min="1" max="100" value="50" oninput="rangeChange(this)">
+
+
+    <script type="text/javascript">
+      function rangeChange(e) {
+        console.log("change");
+        console.log(e.value);
+      }
+    </script>
+  </body>
+</html>
