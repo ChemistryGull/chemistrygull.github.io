@@ -41,9 +41,9 @@
       <input id="slider_R" type="range" min="1" max="100" value="50" oninput="rangeChange(this)">
     </div>
 
-    <p>eeehooolo</p>
+    <p>eeehooolo__ 1</p>
 
-    <button type="button" name="button" onclick="fullScreen()">FullScreen</button>
+    <button type="button" name="button" onclick="toggleFullScreen()">FullScreen</button>
 
 
 
@@ -54,8 +54,31 @@
       }
 
 
-      function fullScreen() {
-        document.body.requestFullscreen()
+      function toggleFullScreen() {
+        var doc = window.document;
+        var docEl = doc.documentElement;
+
+        var requestFullScreen =
+          docEl.requestFullscreen ||
+          docEl.mozRequestFullScreen ||
+          docEl.webkitRequestFullScreen ||
+          docEl.msRequestFullscreen;
+        var cancelFullScreen =
+          doc.exitFullscreen ||
+          doc.mozCancelFullScreen ||
+          doc.webkitExitFullscreen ||
+          doc.msExitFullscreen;
+
+        if (
+          !doc.fullscreenElement &&
+          !doc.mozFullScreenElement &&
+          !doc.webkitFullscreenElement &&
+          !doc.msFullscreenElement
+        ) {
+          requestFullScreen.call(docEl);
+        } else {
+          cancelFullScreen.call(doc);
+        }
       }
     </script>
   </body>
