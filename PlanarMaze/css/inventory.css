@@ -1,0 +1,52 @@
+.inventoryConCon {
+  /* display: flex; */
+  /* height: 49%; */
+  /* width: 100%; */
+  /* align-items: flex-start; */
+  /* flex-direction: column; */
+  /* border: 1px outset darkgray; */
+  /* box-sizing: border-box; */
+  user-select: none;
+
+
+}
+.inventoryConCon h1 {
+  padding: 5px 0;
+  margin: 0;
+  text-align: center;
+  user-select: none;
+}
+.inventoryConCon p {
+  padding: 5px 0;
+  margin: 0;
+}
+.inventoryCon {
+  display: flex;
+  justify-content: center;
+}
+.inventory {
+  display: grid;
+  grid-template-columns: repeat(8, 12.5%);
+  width: 100%;
+  cursor: cell;
+
+  /* width: 90%; */
+
+  /* height: 400px; */
+}
+.itemCon {
+  border: 1px inset darkgray;
+  height: 20px;
+  margin: 1px;
+  image-rendering: pixelated;
+
+}
+.itemCon div {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+}
+/* .itemCon div:active {
+  cursor: grabbing !important;
+} */

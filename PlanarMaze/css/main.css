@@ -1,0 +1,12 @@
+body {
+  margin: 0px;
+  background-color: black;
+  overflow: hidden;
+  /* overflow: hidden; */
+}
+#gameFrame {
+  width: 100vw;
+  height: 100vh;
+  cursor: crosshair;
+  /* margin: 5vw; */
+}
