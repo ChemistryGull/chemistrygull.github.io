@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <script src="lib/SimpleCrypto.min.js" charset="utf-8"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body>
+
+
+      <input type="password" name="" value="" id="key">
+      <button type="button" name="button" onclick="enc()">Submit</button>
+
+
+      <div id="resultWrapper">
+        <!-- <div>
+          <h3>Contact</h3>
+          <table>
+            <tr>
+              <th>Name</th>
+              <th>Phone Number</th>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </div> -->
+      </div>
+
+
+
+    <script type="text/javascript">
+
+
+
+      var encData = "7113f661bdf8a8bc419da66a3308e13ed3542e9dae7c73f14b7b53903dc55e95lk88y0oX6dgPMLGZBXu4g5/x1F8s8ckBgYLEXG0rq292KXUDoYIAAIwszV882nJyFVy5sd8Xo/17l/4ENtZRPYDzKcjaewCIXOroQyqopAQA+R6rRGXX6N221QsloQfynrQT4hq5I9GsbUlK50cNfJNqbbjx5diif9b87evygRA9FT94D1KZU7ZWJW4SPunoEtq6exxD3W16n4gVy+TfkTpjZCXCHbJh7L6s3I8ZIrM=2b5af1336b642ec59eab43522959e75e541468c9f09e205127c2c526f1997e65"
+
+
+      var dataPlain = {
+
+      }
+
+
+      function enc() {
+        // var simpleCrypto = new SimpleCrypto(document.getElementById("key").value)
+        // var encrypted = simpleCrypto.encrypt(dataPlain)
+        // console.log(encrypted);
+        // console.log(simpleCrypto.decrypt(encrypted));
+
+        try {
+          var simpleCrypto = new SimpleCrypto(document.getElementById("key").value)
+          var encrypted = simpleCrypto.decrypt(encData)
+          console.log(encrypted);
+
+          document.getElementById("resultWrapper").innerHTML =
+          `
+          <div id="resultWrapper">
+            <div>
+              <h3>Contact</h3>
+              <table>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone Number</th>
+                </tr>
+                <tr>
+                  <td>${encrypted.contact[0].name}</td>
+                  <td>${encrypted.contact[0].phone}</td>
+                </tr>
+                <tr>
+                  <td>${encrypted.contact[1].name}</td>
+                  <td>${encrypted.contact[1].phone}</td>
+                </tr>
+                <tr>
+                  <td>${encrypted.contact[2].name}</td>
+                  <td>${encrypted.contact[2].phone}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          `
+        } catch (e) {
+          document.getElementById("resultWrapper").innerHTML = "Wrong Password"
+        }
+
+
+
+
+
+      }
+
+
+
+    </script>
+  </body>
+</html>
