@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  background-color: gray
+}
+
+.mGameCon {
+  display: flex;
+  justify-content: center;
+}
+
+.mGameGrid {
+  display: grid;
+  grid-template-columns: repeat(9, 40px);
+  grid-template-rows: repeat(9, 40px);
+  user-select: none;
+  /* border: 2px outset darkgray; */
+  /* justify-content: center; */
+}
+
+.mGameGrid div {
+  /* width: 20px; */
+  /* height: 40px; */
+  border: 1px outset darkgray;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-shadow: 2px 2px 5px black;
+  font-family: sans-serif;
+  /* font-family: monospace; */
+  font-size: 30px;
+  color: Gainsboro;
+
+}
+
+.testdiv {
+  height: 40px;
+  width: 40px;
+  background-color: darkslategray;
+  margin: 20px;
+}
