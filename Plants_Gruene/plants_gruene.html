@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Plants Grüne</title>
+
+    <style media="screen">
+      body {
+        margin: 0;
+        background-color: lightgray;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: center; */
+        align-items: center;
+      }
+
+      .tableG {
+        display: grid;
+        grid-template-columns: repeat(9, auto);
+        grid-template-rows: repeat(4, auto);
+        border: 2px outset darkgray;
+      }
+
+      .tableG div {
+
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 40px;
+        border: solid 1px gray;
+        cursor: pointer;
+      }
+      .tableG div:hover {
+        border-style: outset;
+        border-color: darkgray;
+      }
+      .tableG div:active {
+        border-style: inset;
+        border-color: darkgray;
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+    <h1>Plants Grüne</h1>
+    <button type="button" name="button" onclick="saveTable()">Save Table</button> <br><br>
+    <label for="searchIMGinp">Search IMG: </label>
+    <input type="text" id="searchIMGinp" name="" value="">
+
+    <button type="button" name="button" id="searchBTN">Search</button>
+
+    <br>
+    <br>
+
+    <div class="tableG" id="tableG">
+
+    </div>
+
+    <div class="dataDisplay">
+      <img src="img/A3.jpg" id="imageOutput" lt="" width="300px">
+      <h3>Feld ID</h3>
+      <table>
+
+        <tr>
+          <th colspan="2">Allgemein</th>
+        </tr>
+        <tr>
+          <td>Name:</td>
+          <td><input type="text" id="dD_name"></td>
+        </tr>
+        <tr>
+          <td>Keimtag:</td>
+          <td><input type="text" id="dD_keimtag"></td>
+        </tr>
+
+        <tr>
+          <th colspan="2">Aussehen Pflanze</th>
+        </tr>
+        <tr>
+          <td>Keimling:</td>
+          <td><input type="text" id="dD_lookS"></td>
+        </tr>
+        <tr>
+          <td title="Z. B. bei erstem Blattzuwachs">Junge Pflanze:</td>
+          <td><input type="text" id="dD_lookM"></td>
+        </tr>
+        <tr>
+          <td title="Z. B. bei mehreren Blattzuwachs">Große Pflanze:</td>
+          <td><input type="text" id="dD_lookL"></td>
+        </tr>
+
+        <tr>
+          <th colspan="2">Blüte</th>
+        </tr>
+        <tr>
+          <td>Blütetag:</td>
+          <td><input type="text" id="dD_bloomDay"></td>
+        </tr>
+        <tr>
+          <td>Farbe:</td>
+          <td><input type="text" id="dD_bloomCol"></td>
+        </tr>
+        <tr>
+          <td>Größe:</td>
+          <td><input type="text" id="dD_bloomSiz"></td>
+        </tr>
+        <tr>
+          <td>Aussehen:</td>
+          <td><input type="text" id="dD_bloomLook"></td>
+        </tr>
+
+      </table>
+
+    </div>
+
+
+    <br>
+    <br>
+
+    <!-- <img src="img/A3.jpg" id="imageOutput" lt="" width="300px"> -->
+
+    <script type="text/javascript">
+      var searchBTN = document.getElementById("searchBTN");
+      var searchIMGinp = document.getElementById("searchIMGinp");
+      var imageOutput = document.getElementById("imageOutput");
+
+      var tableG = document.getElementById("tableG");
+
+      var table = [
+
+        {
+          "id": "A1"
+        },
+        {
+          "id": "A2"
+        },
+        {
+          "id": "A3"
+        },
+        {
+          "id": "A4"
+        },
+        {
+          "id": "A5"
+        },
+        {
+          "id": "A6"
+        },
+        {
+          "id": "A7"
+        },
+        {
+          "id": "A8"
+        },
+        {
+          "id": "A9"
+        },
+        {
+          "id": "B1"
+        },
+        {
+          "id": "B2"
+        },
+        {
+          "id": "B3"
+        },
+        {
+          "id": "B4"
+        },
+        {
+          "id": "B5"
+        },
+        {
+          "id": "B6"
+        },
+        {
+          "id": "B7"
+        },
+        {
+          "id": "B8"
+        },
+        {
+          "id": "B9"
+        },
+        {
+          "id": "C1"
+        },
+        {
+          "id": "C2"
+        },
+        {
+          "id": "C3"
+        },
+        {
+          "id": "C4"
+        },
+        {
+          "id": "C5"
+        },
+        {
+          "id": "C6"
+        },
+        {
+          "id": "C7"
+        },
+        {
+          "id": "C8"
+        },
+        {
+          "id": "C9"
+        },
+        {
+          "id": "D1"
+        },
+        {
+          "id": "D2"
+        },
+        {
+          "id": "D3"
+        },
+        {
+          "id": "D4"
+        },
+        {
+          "id": "D5"
+        },
+        {
+          "id": "D6"
+        },
+        {
+          "id": "D7"
+        },
+        {
+          "id": "D8"
+        },
+        {
+          "id": "D9"
+        }
+
+      ]
+
+
+      window.onload = function () {
+        table = JSON.parse(localStorage.PLGR_DataTable);
+
+        // for (var i = 0; i < table.length; i++) {
+        //   table[i].name = "";
+        //   table[i].keimtag = "";
+        //   table[i].lookS = "";
+        //   table[i].lookM = "";
+        //   table[i].lookL = "";
+        //   table[i].bloomDay = "";
+        //   table[i].bloomCol = "";
+        //   table[i].bloomSiz = "";
+        //   table[i].bloomLook = "";
+        //
+        // }
+
+        tableGraphic();
+      }
+
+      function saveTable() {
+        localStorage.setItem("PLGR_DataTable", JSON.stringify(table));
+      }
+
+      function tableGraphic() {
+        for (var i = 0; i < table.length; i++) {
+
+          var tit = JSON.stringify(table[i]).replace("{", "").replace("}", "").replace(/"/g, "").replace(/,/g, "\n").replace(/:/g, ":\t\t\t")
+          var div = '<div title="' + tit + '" class="tableItem" id="tI_' + table[i].id + '" onclick="showTableData(\'' + table[i].id + '\')">' + table[i].id + '</div>'
+
+          tableG.innerHTML = tableG.innerHTML + div;
+        }
+      }
+
+      searchBTN.onclick = function () {
+        imageOutput.src = "img/" + searchIMGinp.value + ".jpg";
+
+      }
+
+      function showTableData(id) {
+        imageOutput.src = "img/" + id + ".jpg";
+      }
+
+
+
+
+
+      function createTable() {
+        for (var j = 0; j < 4; j++) {
+
+          switch (j) {
+            case 0:
+              var fl = "A"; // --- fl = first letter
+              break;
+            case 1:
+              var fl = "B"; // --- fl = first letter
+              break;
+            case 2:
+              var fl = "C"; // --- fl = first letter
+              break;
+            case 3:
+              var fl = "D"; // --- fl = first letter
+              break;
+            default:
+
+          }
+
+
+          for (var i = 1; i < 10; i++) {
+            table[table.length] = {"id": fl + i}
+          }
+
+        }
+
+        console.log(table);
+      }
+
+      // createTable()
+
+
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<!-- v1.1.3 -->
+<!-- 09.03.2022 -->
+<!-- 14.03.2022 -->
+<!--
+Changelog:
+
+# 14.03.2022 - Fixed Bug: Time Bug (AddEntry dates were calculated wrong) -> .toJSON() Dates are now standard (UTC-Time), and are converted to current timezone in simpleDate()
+
+
+BUG: Empty Hashtag appears when no hashtag is set
+TODO: Dropdowns shall close when click on window
+TODO: Save FilterSettings in Storage
+
+
+ -->
+ <!-- By: ChemistryGull -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Schmierzettel</title>
+    <style media="screen">
+      * {
+        /* font-family: consolas; */
+      }
+      body {
+        margin: 0px;
+      }
+      button {
+        cursor: pointer;
+      }
+      a:link {
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .header {
+        display: grid;
+        grid-template-columns: minmax(86px, 15%) minmax(86px, 15%) auto minmax(86px, 15%) minmax(86px, 15%);
+        margin: 0px 1px;
+      }
+      .stickyHeader {
+        position: sticky;
+        top: 0;
+        /* background: linear-gradient(to top, #ff9900 0%, #ff6600 100%); */
+        background-color: lightgray;
+
+
+      }
+      .searchContainer {
+        display: grid;
+        grid-template-columns: auto 60px auto 60px 60px 60px;
+      }
+      .header h1 {
+        text-align: center;
+      }
+
+
+
+
+      .saveNewCont {
+        position: fixed;
+        margin: auto;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 80vw;
+        height: 80vh;
+        background-color: lightgray;
+        border-radius: 10px;
+        text-align: center;
+        display: none;
+        overflow-y: auto;
+      }
+      .saveNewCont::-webkit-scrollbar {
+        /* display: none; */
+        width: 12px;
+      }
+      .saveNewCont::-webkit-scrollbar-thumb {
+        background-color: gray;
+
+        border: 6px solid rgba(0, 0, 0, 0);
+        border-left: none;
+        background-clip: padding-box;
+        border-radius: 20px;
+      }
+
+      .menuForm p {
+        font-size: 20px;
+        margin-bottom: 2px;
+      }
+      .menuForm hr {
+        width: 70%;
+      }
+
+
+      .closeBTN {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 2px;
+        padding: 8px;
+        background-color: transparent;
+        border: none;
+        border-radius: 4px;
+        font-size: 20px;
+      }
+      .wideInput {
+        width: 300px;
+      }
+
+      .zParent {
+        display: grid;
+        grid-template-columns: minmax(120px, 20vw) minmax(20px, 50vw) minmax(100px, 30vw) 100px;
+      }
+      .zParent:hover {
+        background-color: Gainsboro;
+      }
+      .z {
+        padding: 10px;
+        border: solid black 1px;
+        height: 30px;
+      }
+      .zTitle {
+        font-size: 20px;
+        overflow: hidden;
+        /* line-height: 40px; */
+        display: flex;
+        align-items: center;
+      }
+      .zDesc {
+        overflow-x: hidden;
+        overflow-y: hidden;
+      }
+      .zUrl {
+        overflow: hidden;
+        /* line-height: 40px; */
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+      .zDate {
+        text-align: center;
+        display: flex;
+        align-items: center;
+      }
+
+
+
+      .contextM {
+        /* width: 100px;
+        height: 100px; */
+        background-color: gray;
+        position: absolute;
+        display: none;
+      }
+      .cM button {
+        display: block;
+        padding: 5;
+        font-size: 20px;
+        width: 80px;
+        margin: 5px;
+      }
+
+      .filterDD {
+        position: absolute;
+        right: 0;
+        background-color: lightgray;
+        padding: 15px;
+        margin: 10px;
+        margin-top: 40px;
+        text-align: left;
+        display: none;
+        border-radius: 10px;
+        height: 50vh;
+        overflow-y: scroll;
+      }
+      .filterDD::-webkit-scrollbar {
+        display: none;
+      }
+      #openSaveFile {
+        font-size: 70px;
+        color: limegreen;
+        font-weight: bold;
+      }
+      #makeBackup {
+        font-size: 35px;
+        color: limegreen;
+        font-weight: bold;
+      }
+      #lableLoadFile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #loadFile {
+        display: none;
+      }
+      #lableLoadFile{
+        font-size: 40px;
+      }
+      #openSettings {
+        font-size: 40px;
+      }
+
+      .headItems {
+        margin: 2px 1px;
+        border-radius: 5px;
+      }
+      .btnDesign:hover {
+        background-color: rgb(229, 229, 229);
+      }
+      .btnDesign:active {
+        background-color: rgb(239, 239, 239);
+        border-style: inset;
+      }
+      .btnDesign {
+        cursor: pointer;
+        background-color: rgb(239, 239, 239);
+        border-color: rgb(118, 118, 118);
+        border-width: 1px;
+        border-style: outset;
+      }
+
+
+    </style>
+
+  </head>
+  <body>
+    <div class="stickyHeader">
+      <div class="header">
+        <button type="button" class="headItems btnDesign" name="button" title="Settings" id="openSettings">☰</button>
+        <label for="loadFile" class="headItems btnDesign" id="lableLoadFile" title="Open Backup">
+          <input type="file" name="" value="" id="loadFile" title="Open Backup">
+          📂
+        </label>
+        <h1 class="ueberschrift" title="v1.1.3">Schmierzettel</h1>
+
+        <button type="button" class="headItems btnDesign" name="button" title="Save new Entry" id="openSaveFile">+</button>
+        <button type="button" class="headItems btnDesign" name="button" title="Make Backup" id="makeBackup">💾</button>
+
+      </div>
+      <div class="searchContainer" id="searchContainer">
+
+        <input type="text" name="" value="" class="btnDesign" placeholder="Search for Query" id="inputSearchQuery">
+        <button type="button" name="button" class="btnDesign" id="searchQuery">Search</button>
+        <button type="button" name="button" class="filterDDbtn btnDesign" id="filterDDbtn">Filter Hashtags</button>
+        <button type="button" name="button" class="btnDesign" id="filterDDSettingsbtn">Filter Settings</button>
+        <button type="button" name="button" class="btnDesign" id="applyFilter">Apply Filter</button>
+        <button type="button" name="button" class="btnDesign" id="resetFilter">Reset Filter</button>
+        <div class="filterDD" id="filterDD">
+          <form class="" id="filterForm">
+
+          </form>
+        </div>
+        <div class="filterDD" id="filterDDSettings">
+          <div class="">
+            <h3>Search:</h3>
+            <input type="radio" name="filterSet_incl" value="filterSet_or" id="filterSet_or" checked>
+            <label for="filterSet_or" title="Shows all items that have at least one of the selected parameters">Must include one or more parameters</label><br>
+
+            <input type="radio" name="filterSet_incl" value="filterSet_and" id="filterSet_and">
+            <label for="filterSet_and" title="Only shows items that have all of the selected parameters">Must include all selected parameters</label><br>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="" id="zettel">
+
+
+    </div>
+
+    <div class="saveNewCont settings" id="settings">
+      <h1>Setting</h1>
+      <button class="closeBTN" id="closeSettings">❌</button>
+      <form class="menuForm" id="settingsForm">
+        <hr>
+        <p>Mode</p>
+
+        <input type="radio" name="mode" value="mode_LM" id="mode_LM" checked>
+        <label for="mode_LM">Light Mode</label><br>
+
+        <input type="radio" name="mode" value="mode_DM" id="mode_DM">
+        <label for="mode_DM">Dark Mode</label><br>
+
+        <br>
+        <hr>
+        <p>Font</p>
+        <input type="radio" name="font" value="font_TNR" id="font_TNR" checked>
+        <label for="font_TNR">Times New Roman</label><br>
+
+        <input type="radio" name="font" value="font_Arial" id="font_Arial">
+        <label for="font_Arial">Arial</label><br>
+
+        <input type="radio" name="font" value="font_Cons" id="font_Cons">
+        <label for="font_Cons">Consolas</label><br>
+
+        <input type="radio" name="font" value="font_Other" id="font_Other">
+        <label for="font_Other"><input type="text" name="font_ip" value="" id="font_Other_inp"></label><br>
+
+
+        <br>
+        <hr>
+        <p>Color</p>
+        <input type="radio" name="color" value="c_red" id="c_red">
+        <label for="c_red" id="c_red">Red</label><br>
+
+        <input type="radio" name="color" value="c_orange" id="c_orange">
+        <label for="c_orange" id="c_orange">Orange</label><br>
+
+        <input type="radio" name="color" value="c_green" id="c_green">
+        <label for="c_green" id="c_green">Green</label><br>
+
+        <input type="radio" name="color" value="c_blue" id="c_blue" checked>
+        <label for="c_blue" id="c_blue">Blue</label><br>
+
+        <br>
+        <hr>
+
+        <input type="button" name="" value="Save Changes" id="saveSettings">
+      </form>
+    </div>
+
+
+
+    <div class="saveNewCont" id="saveNewCont">
+      <h1>New Entry</h1>
+      <button class="closeBTN" id="closeEntryForm">❌</button>
+      <form class="menuForm" id="saveNewForm">
+
+        <p>Title</p>
+        <input type="text" name="" value="">
+
+        <p>Description</p>
+        <textarea name="name" rows="6" cols="50"></textarea>
+
+        <p>URL</p>
+        <input type="url" name="" value="" class="wideInput">
+
+        <p>Hashtags</p>
+        <input type="text" name="" value="" class="wideInput">
+
+        <p></p>
+        <input type="button" name="" value="Save Entry" id="saveEntry">
+      </form>
+    </div>
+
+    <div class="saveNewCont" id="editCont">
+      <h1>New Entry</h1>
+      <button class="closeBTN" id="closeChangeEntryForm">❌</button>
+      <form class="menuForm" id="editEntryForm">
+
+        <p>Title</p>
+        <input type="text" name="" value="">
+
+        <p>Description</p>
+        <textarea name="name" rows="6" cols="50"></textarea>
+
+        <p>URL</p>
+        <input type="url" name="" value="" class="wideInput">
+
+        <p>Hashtags</p>
+        <input type="text" name="" value="" class="wideInput">
+
+        <p></p>
+        <input type="button" name="" value="Save Change" id="saveChange">
+      </form>
+    </div>
+
+    <div class="cM contextM dontCloseWin" id="contextM">
+      <button type="button" name="button" class="cM dontCloseWin" id="editEntry">Edit</button>
+      <button type="button" name="button" class="cM dontCloseWin" id="delEntry">Delete</button>
+    </div>
+
+<!--
+    <div>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+ -->
+
+    <script type="text/javascript">
+
+
+      const loadFile = document.getElementById("loadFile")
+      const saveEntry = document.getElementById("saveEntry")
+      const makeBackup = document.getElementById("makeBackup")
+      const openSettings = document.getElementById("openSettings")
+      const settings = document.getElementById("settings")
+
+      const closeBTN = document.getElementsByClassName("closeBTN")
+      const zettel = document.getElementById("zettel")
+      const saveNewCont = document.getElementById("saveNewCont")
+      const openSaveFile = document.getElementById("openSaveFile")
+      const saveNewForm = document.getElementById("saveNewForm")
+      const contextM = document.getElementById("contextM")
+      const delEntry = document.getElementById("delEntry")
+      const editEntry = document.getElementById("editEntry")
+      const editEntryForm = document.getElementById("editEntryForm")
+      const saveChange = document.getElementById("saveChange")
+      const editCont = document.getElementById("editCont")
+
+      const searchContainer = document.getElementById("searchContainer")
+      const filterDD = document.getElementById("filterDD")
+      const filterForm = document.getElementById("filterForm")
+
+      const filterDDSettings = document.getElementById("filterDDSettings")
+
+      const inputSearchQuery = document.getElementById("inputSearchQuery")
+      const searchQuery = document.getElementById("searchQuery")
+      const filterDDbtn = document.getElementById("filterDDbtn")
+      const filterDDSettingsbtn = document.getElementById("filterDDSettingsbtn")
+      const applyFilter = document.getElementById("applyFilter")
+      const resetFilter = document.getElementById("resetFilter")
+
+      const saveSettings = document.getElementById("saveSettings")
+      const settingsForm = document.getElementById("settingsForm")
+
+
+      var ces; // --- Current Entry Selected [int]
+      var saveData = [
+        {
+          title: "First Link",
+          desc: "Thist is for first test",
+          url: "https://www.youtube.com/",
+          date: "20.01.2022 22:06",
+          hash: ["some","hashtags"]
+        },
+        {
+          title: "Second Test",
+          desc: "Thist is for test and this is gull typing random shit. very important",
+          url: "https://www.youtube.com/",
+          date: "20.01.2022 22:06",
+          hash: ["some","hashtags"]
+        },
+        {
+          title: "Long m test",
+          desc: "was wie wo wer warum wamamw wewa wakwatulis warutena wawawa",
+          url: "https://www.youtube.com/",
+          date: "20.01.2022 22:06",
+          hash: ["some","hashtags"]
+        },
+        {
+          title: "LOOOOOOONG",
+          desc: "des möwes.",
+          url: "https://www.youtube.com/",
+          date: "20.01.2022 22:06",
+          hash: ["some","hashtags"]
+        }
+      ]
+      var hashtags = [];
+      var sz_personalisation = {
+        mode: "mode_LM",
+        font: "font_TNR",
+        color: "c_blue"
+      }
+
+      var type = "txt";
+      var filename = "Schmierzettel_Daten_";
+
+      function simpleDate(d) {
+        var da = d.replace("Z", "").split(/[-:T]+/);
+        var tz = new Date().getTimezoneOffset();
+        da[3] = da[3] - ~~(tz / 60); // Fit Hours to timezone
+
+        // da[3] = ("0" + da[3]).substring(("0" + da[3]).length - 2)
+
+        if (tz % 60 != 0) {
+          da[4] = da[4] - ~~(tz % 60); // Fit Minutes to timezone
+        }
+
+        var retDA = new Date(Date.UTC(da[0], da[1] - 1, da[2], da[3], da[4], da[5])).toJSON().replace("Z", "").split(/[-:T]+/); // Clean date by recreating it
+
+        return retDA;
+      }
+
+      window.onload = function () {
+
+
+
+
+
+
+        if (localStorage.getItem("saveData")) {
+          saveData = JSON.parse(localStorage.getItem("saveData"));
+        }
+        if (localStorage.getItem("sz_personalisation")) {
+          sz_personalisation = JSON.parse(localStorage.getItem("sz_personalisation"));
+
+          document.getElementById(sz_personalisation.mode).checked = true;
+
+          document.getElementById(sz_personalisation.font.split("|")[0]).checked = true;
+          if (sz_personalisation.font.split("|")[1]) {
+            document.getElementById("font_Other_inp").value = sz_personalisation.font.split("|")[1];
+          }
+
+          document.getElementById(sz_personalisation.color).checked = true;
+        }
+
+        changeSettings();
+        listFile(saveData);
+
+      }
+
+      window.onclick = function (e) {
+
+        if (!e.target.classList.contains("dontCloseWin")) {
+
+          contextM.style.display = "none";
+        }
+      }
+
+
+      function listFile(d) {
+        if (d != undefined) {
+          if (typeof(d) == "object") {
+            var data = d;
+          }
+          if (typeof(d) == "string") {
+            var data = JSON.parse(d);
+          }
+
+        } else {
+          var data = saveData;
+        }
+        console.log("--- LIST_FILE");
+        console.log("--- No. of displayed Entries: " + data.length);
+        zettel.innerHTML = "";
+        for (var i = 0; i < data.length; i++) {
+          var tda = simpleDate(data[i].date); // this Date Array
+          var tDate = tda[2] + "." + tda[1] + "." + tda[0] + " " + tda[3] + ":" + tda[4];
+
+          var div = document.createElement('div');
+
+          var dots = "";
+          div.innerHTML = `
+            <div class="z zTitle" id="${'Entry_'+ i}" title="${data[i].title}" oncontextmenu="contextRC(event)">${data[i].title}</div>
+            <div class="z zDesc" title="${data[i].desc}">${data[i].desc}${dots}</div>
+
+            <a class="z zUrl" title="${data[i].url}" target="_blank" href="${data[i].url}">${data[i].url}</a>
+            <div class="z zDate" title="${data[i].hash.toString().replace(/,/g, '\n')}">${tDate}${dots}</div>
+
+
+          `;
+
+          for (var j = 0; j < data[i].hash.length; j++) {
+            if (!hashtags.includes(data[i].hash[j])) {
+              hashtags.push(data[i].hash[j]);
+            }
+          }
+
+
+
+          div.classList.add("zParent")
+          zettel.appendChild(div);
+        }
+
+
+
+
+      }
+
+      function contextRC(e) {
+        console.log("--- Open Context Menu on Entry:");
+        console.log(saveData.find(o => o.title == e.target.innerHTML));
+        e.preventDefault();
+        contextM.style.top = e.pageY + "px";
+        contextM.style.left = e.pageX + "px";
+        contextM.style.display = "block";
+
+
+        ces = saveData.indexOf(saveData.find(o => o.title == e.target.innerHTML));
+        if (ces < 0) {
+          alert("Oh no, something went wrong! :( \n Current Entry Selected is " + ces);
+        }
+
+      }
+
+
+      editEntry.onclick = function (entry) {
+        console.log("Edit Entry...");
+        contextM.style.display = "none";
+        editCont.style.display = "block";
+
+        editEntryForm.elements[0].value = saveData[ces].title;
+        editEntryForm.elements[1].value = saveData[ces].desc;
+        editEntryForm.elements[2].value = saveData[ces].url;
+        editEntryForm.elements[3].value = saveData[ces].hash.toString().replace(/,/g, " ");
+
+      }
+
+      delEntry.onclick = function (entry) {
+        if (window.confirm("Do you really want to delete this Entry?\nEntry No.: " + ces)) {
+          console.log("--- Delete Entry...");
+          saveData.splice(ces, 1);
+          listFile(saveData);
+          saveStorage(saveData);
+          contextM.style.display = "none";
+        }
+
+
+      }
+
+
+
+      // --- Open Backup
+      loadFile.onchange = (e) => {
+        if (!window.confirm("Do you want to open a backup? The current data will be overwritten!\nHowever, a backup will be made automatically.")) {
+          console.log("--- Cancelled backup load");
+          return;
+        }
+        console.log("--- opened");
+        download(saveData, filename, type);
+        console.log("--- made backup");
+
+
+        const file = loadFile.files[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          // e.target points to the reader
+          const textContent = e.target.result
+          // console.log("The content of " + file.name + " is " + textContent);
+          saveData = JSON.parse(textContent);
+          listFile(saveData);
+          saveStorage(saveData);
+        }
+        reader.onerror = (e) => {
+          const error = e.target.error
+          console.error(`Error occured while reading ${file.name}`, error)
+        }
+        reader.readAsText(file)
+
+      }
+
+
+      // --- Save New Entry
+      saveEntry.onclick = function (e) {
+        console.log("--- Working on save...");
+        var TempData = {};
+        if (saveNewForm.elements[0].value.includes("&")) {
+          alert("&-Caracter is not allowed in Title due to strange JavaScript stuff :( \n Sorry for inconvenience!")
+          console.error("&-Caracter is not allowed in Title");
+          return;
+        }
+        TempData.title = saveNewForm.elements[0].value;
+        TempData.desc = saveNewForm.elements[1].value;
+        TempData.url = saveNewForm.elements[2].value;
+
+        TempData.date = new Date().toJSON();
+        TempData.hash = [];
+        var TempHashs = saveNewForm.elements[3].value.split(" ");
+        for (var i = 0; i < TempHashs.length; i++) {
+          TempData.hash.push(TempHashs[i]);
+          if (!hashtags.includes(TempHashs[i])) {
+            hashtags.push(TempHashs[i]);
+          }
+        }
+
+        // --- check if title already exists
+        if (saveData.find(o => o.title == TempData.title)) {
+          console.error("entry already exists");
+          alert("Some entry already has that title. Please try another.");
+          return;
+        }
+
+        saveData.unshift(TempData);
+        listFile();
+        saveStorage(saveData);
+
+
+        // download(JSON.stringify(saveData), filename, type)
+        console.log("--- Entry Saved successfully");
+        console.log("Results:");
+        console.log(TempData);
+
+        saveNewCont.style.display = "none";
+
+
+      }
+
+
+      saveChange.onclick = function () {
+        console.log("saveChange");
+        var TempData = {};
+        if (saveNewForm.elements[0].value.includes("&")) {
+          alert("&-Caracter is not allowed in Title due to strange JavaScript stuff :( \n Sorry for inconvenience!")
+          console.error("&-Caracter is not allowed in Title");
+          return;
+        }
+        TempData.title = editEntryForm.elements[0].value;
+        TempData.desc = editEntryForm.elements[1].value;
+        TempData.url = editEntryForm.elements[2].value;
+
+        TempData.date = saveData[ces].date;
+        TempData.hash = [];
+        var TempHashs = editEntryForm.elements[3].value.split(" ");
+        for (var i = 0; i < TempHashs.length; i++) {
+          TempData.hash.push(TempHashs[i]);
+          if (!hashtags.includes(TempHashs[i])) {
+            hashtags.push(TempHashs[i]);
+          }
+        }
+
+
+
+
+        saveData.splice(ces, 1, TempData);
+        listFile(saveData);
+        saveStorage(saveData);
+
+        editCont.style.display = "none";
+
+
+      }
+
+      makeBackup.onclick = function () {
+        download(saveData, filename, type);
+      }
+
+
+
+      function download(data, filename, type) {
+        if (typeof(data) == "object") {
+          data = JSON.stringify(data);
+        }
+        console.log(data);
+
+        filename = filename + new Date().toJSON() + ".txt"
+        var file = new Blob([data], {type: type});
+        if (window.navigator.msSaveOrOpenBlob) // IE10+
+          window.navigator.msSaveOrOpenBlob(file, filename);
+        else { // Others
+          var a = document.createElement("a"),
+                  url = URL.createObjectURL(file);
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function() {
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+          }, 0);
+        }
+      }
+
+      function saveStorage(d) {
+        if (typeof(Storage) !== "undefined") {
+
+          localStorage.setItem("saveData", JSON.stringify(d));
+
+          console.log("--- Saved in Local Storage");
+        } else {
+          console.error("--- oof...");
+          alert("Storage not working... oof")
+
+        }
+      }
+
+      openSaveFile.onclick = function () {
+        saveNewForm.elements[0].value = "";
+        saveNewForm.elements[1].value = "";
+        saveNewForm.elements[2].value = "";
+        saveNewForm.elements[3].value = "";
+
+        saveNewCont.style.display = "block";
+      }
+
+
+      inputSearchQuery.onkeyup = function (e) {
+        if (e.keyCode == 13) {
+          searchForQuery();
+        }
+      }
+
+      searchQuery.onclick = function () {
+        searchForQuery();
+      }
+
+      function searchForQuery() {
+        var stSearch = performance.now()
+
+        console.log("--- Search for Query: " + inputSearchQuery.value);
+        var tfd = []; // --- Temporary Filter Data [object]
+        for (var i = 0; i < saveData.length; i++) {
+          if (saveData[i].title.toLowerCase().replace(/\s/g, '').includes(inputSearchQuery.value.toLowerCase().replace(/\s/g, '')) || saveData[i].desc.toLowerCase().replace(/\s/g, '').includes(inputSearchQuery.value.toLowerCase().replace(/\s/g, '')) || saveData[i].url.toLowerCase().replace(/\s/g, '').includes(inputSearchQuery.value.toLowerCase().replace(/\s/g, ''))) {
+            if (filterForm.elements.length == 0) {
+              tfd.push(saveData[i]);
+              continue;
+            }
+            for (var j = 0; j < filterForm.elements.length; j++) {
+              if (!Object.values(filterForm.elements).some(elem => elem.checked)) {
+                console.log("is dooing");
+                tfd.push(saveData[i]);
+                break;
+              }
+              if (filterForm.elements[j].checked && saveData[i].hash.includes(filterForm.elements[j].value)) {
+                tfd.push(saveData[i]);
+                break;
+              }
+            }
+          }
+        }
+        listFile(tfd);
+        window.scrollTo(0, 0);
+        var etSearch = performance.now()
+        console.log("--- Searching Performance: " + Math.round((etSearch - stSearch)*1000)/1000);
+      }
+
+      filterDDbtn.onclick = function () {
+        if (filterDD.style.display == "block") {
+          filterDD.style.display = "none";
+          filterDDSettings.style.display = "none";
+          console.log("--- Close Filter Dropdown");
+        } else {
+          filterDD.style.display = "block";
+          filterDDSettings.style.display = "none";
+          console.log("--- Open Filter Dropdown");
+        }
+        if (filterForm.innerHTML.trim() != "") {
+          return;
+        }
+
+        var div = document.createElement('div');
+        var divcontent = '';
+
+        for (var i = 0; i < hashtags.length; i++) {
+          divcontent += `
+          <input type="checkbox" name="" value="` + hashtags[i] + `" id="` + hashtags[i] + `">
+          <label for="` + hashtags[i] + `">` + hashtags[i] + `</label><br>
+          `;
+        }
+
+        div.innerHTML = divcontent;
+
+        filterForm.appendChild(div);
+      }
+
+      filterDDSettingsbtn.onclick = function () {
+        if (filterDDSettings.style.display == "block") {
+          filterDDSettings.style.display = "none";
+          filterDD.style.display = "none";
+          console.log("--- Close FilterSettings Dropdown");
+        } else {
+          filterDDSettings.style.display = "block";
+          filterDD.style.display = "none";
+          console.log("--- Open FilterSettings Dropdown");
+        }
+        // if (filterForm.innerHTML.trim() != "") {
+        //   return;
+        // }
+
+      }
+
+      applyFilter.onclick = function () {
+        console.log("--- Apply Filter");
+        var tfd = []; // --- Temporary Filter Data [object]
+        var filterSetIncl = document.querySelector('input[name="filterSet_incl"]:checked').value;
+
+        if (filterSetIncl == "filterSet_or") {
+          for (var i = 0; i < saveData.length; i++) {
+            for (var j = 0; j < filterForm.elements.length; j++) {
+              if (filterForm.elements[j].checked && saveData[i].hash.includes(filterForm.elements[j].value)) {
+                tfd.push(saveData[i]);
+                break;
+              }
+            }
+          }
+          console.log("OOOORRRR");
+        } else if (filterSetIncl == "filterSet_and") {
+
+          searchNextItem:
+          for (var i = 0; i < saveData.length; i++) {
+            for (var j = 0; j < filterForm.elements.length; j++) {
+              if (filterForm.elements[j].checked) {
+                if (saveData[i].hash.includes(filterForm.elements[j].value)) {
+                  console.log(saveData[i].hash + " -Is In- " + filterForm.elements[j].value);
+                  continue;
+                } else {
+                  console.log(saveData[i].hash + " -Not- " + filterForm.elements[j].value);
+
+                  continue searchNextItem;
+                }
+
+              }
+
+            }
+            tfd.push(saveData[i]);
+
+
+
+            // console.log(Object.values(filterForm.elements).every(r => saveData[i].hash.includes(r.value)));
+            // console.log(Object.values(filterForm.elements).every(r => saveData[i].hash.includes(r.value)));
+            // if (Object.values(filterForm.elements).forEach(r => console.log(r))) {
+            //   tfd.push(saveData[i]);
+            // }
+
+
+          }
+
+
+          console.log("AAAAAAANNNNNNDDDDDDD");
+
+        } else {
+          console.log(filterSetIncl);
+        }
+
+
+
+
+        listFile(tfd);
+        window.scrollTo(0, 0);
+
+      }
+
+      resetFilter.onclick = function () {
+        console.log("--- Reset Filter");
+        listFile(saveData);
+        for (var i = 0; i < filterForm.elements.length; i++) {
+          filterForm.elements[i].checked = false;
+        }
+        filterDD.style.display = "none";
+        inputSearchQuery.value = "";
+        window.scrollTo(0, 0);
+
+      }
+
+
+      openSettings.onclick = function () {
+        settings.style.display = "block";
+      }
+
+      saveSettings.onclick = function () {
+
+        sz_personalisation.mode = document.querySelector('input[name="mode"]:checked').value;
+        sz_personalisation.font = document.querySelector('input[name="font"]:checked').value;
+
+        if (sz_personalisation.font == "font_Other") {
+          try {
+            if (document.fonts.check("16px " + settingsForm.elements["font_ip"].value)) {
+              sz_personalisation.font += ("|" + settingsForm.elements["font_ip"].value);
+            } else {
+              sz_personalisation.font += ("|_FNF_"); // --- FNF => FontNotFound
+            }
+
+          } catch (err) {
+            sz_personalisation.font += ("|_FIE_"); // --- FIE => FontInputEmpty
+          }
+        }
+
+        sz_personalisation.color = document.querySelector('input[name="color"]:checked').value;
+
+
+
+
+
+        console.log(sz_personalisation);
+        localStorage.setItem("sz_personalisation", JSON.stringify(sz_personalisation));
+        changeSettings();
+      }
+
+
+
+      function changeSettings() {
+        // --- Standard ---
+
+        document.querySelectorAll('.personalStyle').forEach(e => e.remove());
+
+
+        // --- Mode ---
+        // console.log(settingsForm.elements["mode"][0].checked);
+        // console.log(document.querySelector('input[name="mode"]:checked').value);
+        // document.body.style = "background-color: gray;";
+        // document.body.style = "background-color: gray;";
+        //
+        // var modeStyle = document.createElement('style').innerHTML = "body: {background-color: black;}"
+        // console.log(modeStyle);
+        // document.getElementsByTagName('head')[0].appendChild(modeStyle);
+
+
+        switch (sz_personalisation.mode) {
+          case "mode_LM":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              body {
+                background-color: white;
+                color: black !important;
+              }
+
+              .z {
+                border-color: black;
+              }
+              .zParent:hover {
+                background-color: Gainsboro;
+              }
+              .stickyHeader {
+                background-color: #BBC;
+              }
+
+              .btnDesign {
+                background-color: rgb(239, 239, 239);
+                border-color: #888;
+                color: black;
+              }
+              .btnDesign:hover {
+                background-color: rgb(229, 229, 229);
+              }
+              .btnDesign:active {
+                background-color: rgb(239, 239, 239);
+              }
+              .saveNewCont {
+                background-color: lightgray;
+              }
+              .filterDD {
+                background-color: lightgray;
+              }
+
+
+            </style>
+            `;
+            break;
+
+          case "mode_DM":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              body {
+                background-color: #080808;
+                color: white !important;
+              }
+
+              .z {
+                border-color: darkgray;
+              }
+              .zParent:hover {
+                background-color: #222;
+              }
+              .stickyHeader {
+                background-color: #040909;
+                /* background-color: #4F4F56; */
+              }
+
+              .btnDesign {
+                background-color: #111;
+                border-color: #888;
+                color: lightgray;
+              }
+              .btnDesign:hover {
+                background-color: #222;
+              }
+              .btnDesign:active {
+                background-color: #111;
+              }
+              .saveNewCont {
+                background-color: #333;
+              }
+              .filterDD {
+                background-color: #333;
+              }
+
+            </style>
+            `;
+
+            break;
+          default: alert("Please select mode in settings!")
+        }
+
+        // --- Font ---
+
+        switch (sz_personalisation.font.split("|")[0]) {
+          case "font_TNR":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              *  > :not(.headItems){
+                font-family: timesnewroman !important;
+              }
+            </style>
+            `;
+
+            break;
+
+          case "font_Arial":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              *  > :not(.headItems){
+                font-family: Arial !important;
+              }
+            </style>
+            `;
+
+            break;
+
+          case "font_Cons":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              *  > :not(.headItems){
+                font-family: Consolas !important;
+              }
+            </style>
+            `;
+
+            break;
+
+          case "font_Other":
+            console.log(sz_personalisation.font.split("|"));
+            if (sz_personalisation.font.split("|")[1] != "_FNF_" && sz_personalisation.font.split("|")[1] != "_FIE_") {
+              document.querySelector('head').innerHTML += `
+
+              <style media="screen" class="personalStyle">
+                *  > :not(.headItems){
+                  font-family: ` + settingsForm.elements["font_ip"].value + ` !important;
+                }
+              </style>
+              `;
+            } else if (sz_personalisation.font.split("|")[1] == "_FNF_") {
+              alert("Font does not exist")
+            } else if (sz_personalisation.font.split("|")[1] == "_FIE_") {
+              alert("Font input empty")
+            } else {
+              alert("Some shit went pretty wrong with personalisation.")
+            }
+
+
+
+            break;
+
+          default:
+
+        }
+
+        // --- Color ---
+
+        switch (sz_personalisation.color) {
+          case "c_red":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              a:link {
+                color: red;
+              }
+              a:visited {
+                color: orangered;
+              }
+              a:hover {
+                color: orange;
+              }
+              a:active {
+                color: purple;
+              }
+            </style>
+            `;
+            break;
+
+          case "c_orange":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              a:link {
+                color: orangered;
+              }
+              a:visited {
+                color: #ff8800;
+              }
+              a:hover {
+                color: red;
+              }
+              a:active {
+                color: purple;
+              }
+            </style>
+            `;
+            break;
+
+          case "c_green":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              a:link {
+                color: forestgreen;
+              }
+              a:visited {
+                color: green;
+              }
+              a:hover {
+                color: limegreen;
+              }
+              a:active {
+                color: yellow;
+              }
+            </style>
+            `;
+            break;
+
+          case "c_blue":
+
+            document.querySelector('head').innerHTML += `
+            <style media="screen" class="personalStyle">
+              a:link {
+                color: #0000EE;
+              }
+              a:visited {
+                color: #551A8B;
+              }
+              a:hover {
+                color: #0000AA;
+              }
+              a:active {
+                color: red;
+              }
+            </style>
+            `;
+            break;
+
+          default:
+
+        }
+
+
+      }
+
+      for (var i = 0; i < closeBTN.length; i++) {
+        closeBTN[i].onclick = function () {
+          saveNewCont.style.display = "none";
+          editCont.style.display = "none";
+          settings.style.display = "none";
+        }
+      }
+
+  // download(data, filename, type)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<!-- v1.0.0 -->
+<!-- 26.01.2022 -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Schmierzettel</title>
+    <style media="screen">
+      * {
+        /* font-family: consolas; */
+      }
+      body {
+        margin: 0px;
+      }
+
+      .header {
+        display: grid;
+        grid-template-columns: auto 15% 15% 15% 10%;
+      }
+      .stickyHeader {
+        position: sticky;
+        top: 0;
+        background-color: lightgray;
+      }
+      .searchContainer {
+        display: grid;
+        grid-template-columns: auto 60px auto 60px 60px;
+      }
+      .header h1 {
+        text-align: center;
+      }
+
+
+
+      .saveNewCont {
+        position: fixed;
+        margin: auto;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 80vw;
+        height: 80vh;
+        background-color: lightgray;
+        border-radius: 10px;
+        text-align: center;
+        display: none;
+      }
+      .saveNewForm p {
+        font-size: 20px;
+        margin-bottom: 2px;
+      }
+      .closeSaveNew {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 2px;
+        padding: 8px;
+        background-color: transparent;
+        border: none;
+        border-radius: 4px;
+      }
+      .wideInput {
+        width: 300px;
+      }
+
+      .zParent {
+        display: grid;
+        grid-template-columns: minmax(120px, 20vw) minmax(20px, 50vw) minmax(100px, 30vw) 100px;
+      }
+      .z {
+        padding: 10px;
+        border: solid black 1px;
+        height: 30px;
+      }
+      .zTitle {
+        font-size: 20px;
+        overflow: hidden;
+        /* line-height: 40px; */
+        display: flex;
+        align-items: center;
+      }
+      .zDesc {
+        overflow-x: hidden;
+        overflow-y: hidden;
+      }
+      .zUrl {
+        overflow: hidden;
+        /* line-height: 40px; */
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+      .zDate {
+        text-align: center;
+        display: flex;
+        align-items: center;
+      }
+
+
+
+      .contextM {
+        /* width: 100px;
+        height: 100px; */
+        background-color: gray;
+        position: absolute;
+        display: none;
+      }
+      .cM button {
+        display: block;
+        padding: 5;
+        font-size: 20px;
+        width: 80px;
+        margin: 5px;
+      }
+
+      .filterDD {
+        position: absolute;
+        right: 0;
+        background-color: lightgray;
+        padding: 15px;
+        margin: 10px;
+        margin-top: 40px;
+        text-align: left;
+        display: none;
+        border-radius: 10px;
+        height: 50vh;
+        overflow-y: scroll;
+      }
+      .filterDD::-webkit-scrollbar {
+        display: none;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <div class="stickyHeader">
+      <div class="header">
+        <h1 class="ueberschrift" title="v1.0.0">Schmierzettel</h1>
+        <input type="file" name="" value="" id="loadFile">
+        <button type="button" name="button" id="openSaveFile">Save new Entry</button>
+        <button type="button" name="button" id="makeBackup">Make Backup</button>
+        <button type="button" name="button" id="openSearchCont">Search</button>
+      </div>
+      <div class="searchContainer" id="searchContainer">
+
+        <input type="text" name="" value="" placeholder="Search for Query" id="inputSearchQuery">
+        <button type="button" name="button" id="searchQuery">Search</button>
+        <button type="button" name="button" class="filterDDbtn" id="filterDDbtn">Filter Hashtags</button>
+        <button type="button" name="button" id="applyFilter">Apply Filter</button>
+        <button type="button" name="button" id="resetFilter">Reset Filter</button>
+        <div class="filterDD" id="filterDD">
+          <form class="" id="filterForm">
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="" id="zettel">
+
+
+    </div>
+    <div class="saveNewCont" id="saveNewCont">
+      <h1>New Entry</h1>
+      <button class="closeSaveNew" id="closeEntryForm">❌</button>
+      <form class="saveNewForm" id="saveNewForm">
+
+        <p>Title</p>
+        <input type="text" name="" value="">
+
+        <p>Description</p>
+        <textarea name="name" rows="6" cols="50"></textarea>
+
+        <p>URL</p>
+        <input type="url" name="" value="" class="wideInput">
+
+        <p>Hashtags</p>
+        <input type="text" name="" value="" class="wideInput">
+
+        <p></p>
+        <input type="button" name="" value="Save Entry" id="saveEntry">
+      </form>
+    </div>
+
+    <div class="saveNewCont" id="editCont">
+      <h1>New Entry</h1>
+      <button class="closeSaveNew" id="closeChangeEntryForm">❌</button>
+      <form class="saveNewForm" id="editEntryForm">
+
+        <p>Title</p>
+        <input type="text" name="" value="">
+
+        <p>Description</p>
+        <textarea name="name" rows="6" cols="50"></textarea>
+
+        <p>URL</p>
+        <input type="url" name="" value="" class="wideInput">
+
+        <p>Hashtags</p>
+        <input type="text" name="" value="" class="wideInput">
+
+        <p></p>
+        <input type="button" name="" value="Save Change" id="saveChange">
+      </form>
+    </div>
+
+    <div class="cM contextM" id="contextM">
+      <button type="button" name="button" class="cM" id="editEntry">Edit</button>
+      <button type="button" name="button" class="cM" id="delEntry">Delete</button>
+    </div>
+
+    <div>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+
+
+    <script type="text/javascript">
+
+
+      const loadFile = document.getElementById("loadFile")
+      const saveEntry = document.getElementById("saveEntry")
+      const makeBackup = document.getElementById("makeBackup")
+      const zettel = document.getElementById("zettel")
+      const closeEntryForm = document.getElementById("closeEntryForm")
+      const saveNewCont = document.getElementById("saveNewCont")
+      const openSaveFile = document.getElementById("openSaveFile")
+      const saveNewForm = document.getElementById("saveNewForm")
+      const contextM = document.getElementById("contextM")
+      const delEntry = document.getElementById("delEntry")
+      const editEntry = document.getElementById("editEntry")
+      const editEntryForm = document.getElementById("editEntryForm")
+      const closeChangeEntryForm = document.getElementById("closeChangeEntryForm")
+      const saveChange = document.getElementById("saveChange")
+      const editCont = document.getElementById("editCont")
+
+      const openSearchCont = document.getElementById("openSearchCont")
+      const searchContainer = document.getElementById("searchContainer")
+      const filterDD = document.getElementById("filterDD")
+      const filterForm = document.getElementById("filterForm")
+
+      const inputSearchQuery = document.getElementById("inputSearchQuery")
+      const searchQuery = document.getElementById("searchQuery")
+      const filterDDbtn = document.getElementById("filterDDbtn")
+      const applyFilter = document.getElementById("applyFilter")
+      const resetFilter = document.getElementById("resetFilter")
+
+
+      var ces; // --- Current Entry Selected [int]
+      var saveData = [
+        {
+          title: "First Link",
+          desc: "Thist is for first test",
+          url: "https://www.youtube.com/",
+          date: "20.01.2022 22:06",
+          hash: ["some","hashtags"]
+        },
+        {
+          title: "Second Test",
+          desc: "Thist is for test and this is gull typing random shit. very important",
+          url: "https://www.youtube.com/",
+          date: "20.01.2022 22:06",
+          hash: ["some","hashtags"]
+        },
+        {
+          title: "Long m test",
+          desc: "was wie wo wer warum wamamw wewa wakwatulis warutena wawawa",
+          url: "https://www.youtube.com/",
+          date: "20.01.2022 22:06",
+          hash: ["some","hashtags"]
+        },
+        {
+          title: "LOOOOOOONG",
+          desc: "des möwes.",
+          url: "https://www.youtube.com/",
+          date: "20.01.2022 22:06",
+          hash: ["some","hashtags"]
+        }
+      ]
+      var hashtags = [];
+
+      var type = "txt";
+      var filename = "Schmierzettel_Daten_";
+
+      window.onload = function () {
+        if (localStorage.getItem("saveData")) {
+          saveData = JSON.parse(localStorage.getItem("saveData"));
+        }
+        listFile(saveData);
+      }
+
+      window.onclick = function (e) {
+        if (!e.target.classList.contains("cM")) {
+          contextM.style.display = "none";
+        }
+      }
+
+
+      function listFile(d) {
+        if (d != undefined) {
+          if (typeof(d) == "object") {
+            var data = d;
+            console.log("was object");
+          }
+          if (typeof(d) == "string") {
+            var data = JSON.parse(d);
+            console.log("was String");
+          }
+
+        } else {
+          var data = saveData;
+        }
+        console.log(data);
+        zettel.innerHTML = "";
+        for (var i = 0; i < data.length; i++) {
+          console.log(i);
+          var div = document.createElement('div');
+
+          var dots = "";
+          div.innerHTML = `
+            <div class="z zTitle" id="${'Entry_'+ i}" title="${data[i].title}" oncontextmenu="contextRC(event)">${data[i].title}</div>
+            <div class="z zDesc" title="${data[i].desc}">${data[i].desc}${dots}</div>
+            <div class="z zUrl" title="${data[i].url}"><a target="_blank" href="${data[i].url}">${data[i].url}</a></div>
+            <div class="z zDate" title="${data[i].hash.toString().replace(/,/g, '\n')}">${data[i].date}${dots}</div>
+
+
+          `;
+
+          for (var j = 0; j < data[i].hash.length; j++) {
+            if (!hashtags.includes(data[i].hash[j])) {
+              hashtags.push(data[i].hash[j]);
+            }
+          }
+
+
+          div.classList.add("zParent")
+          zettel.appendChild(div);
+        }
+      }
+
+      function contextRC(e) {
+        console.log(e.target.innerHTML);
+        e.preventDefault();
+        contextM.style.top = e.pageY + "px";
+        contextM.style.left = e.pageX + "px";
+        contextM.style.display = "block";
+
+        console.log(saveData.find(o => o.title == e.target.innerHTML));
+        console.log(saveData.indexOf(saveData.find(o => o.title == e.target.innerHTML)));
+        ces = saveData.indexOf(saveData.find(o => o.title == e.target.innerHTML));
+
+        console.log("Open Context Menu");
+      }
+
+
+      editEntry.onclick = function (entry) {
+        console.log("Edit Entry...");
+        contextM.style.display = "none";
+        editCont.style.display = "block";
+
+        editEntryForm.elements[0].value = saveData[ces].title;
+        editEntryForm.elements[1].value = saveData[ces].desc;
+        editEntryForm.elements[2].value = saveData[ces].url;
+        editEntryForm.elements[3].value = saveData[ces].hash.toString().replace(/,/g, " ");
+
+      }
+
+      delEntry.onclick = function (entry) {
+        if (window.confirm("Do you really want to delete this Entry?\nEntry No.: " + ces)) {
+          console.log("Delete Entry...");
+          saveData.splice(ces, 1);
+          listFile(saveData);
+          saveStorage(saveData);
+          contextM.style.display = "none";
+        }
+
+
+      }
+
+
+
+      // --- Open Backup
+      loadFile.onchange = (e) => {
+        if (!window.confirm("Do you want to open a backup? The current data will be overwritten!")) {
+          console.log("Cancelled backup load");
+          return;
+        }
+        console.log("opened");
+
+
+        const file = loadFile.files[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          // e.target points to the reader
+          const textContent = e.target.result
+          // console.log("The content of " + file.name + " is " + textContent);
+          listFile(textContent);
+        }
+        reader.onerror = (e) => {
+          const error = e.target.error
+          console.error(`Error occured while reading ${file.name}`, error)
+        }
+        reader.readAsText(file)
+      }
+
+
+      // --- Save New Entry
+      saveEntry.onclick = function (e) {
+        console.log("Operating...");
+        var TempData = {};
+        TempData.title = saveNewForm.elements[0].value;
+        TempData.desc = saveNewForm.elements[1].value;
+        TempData.url = saveNewForm.elements[2].value;
+        TempD = new Date();
+        TempData.date = TempD.getDate() + "." + TempD.getMonth() + 1 + "." + TempD.getFullYear() + " " + ("0" + TempD.getHours()).substr(("0" + TempD.getHours()).length - 2, 2) + ":" + ("0" + TempD.getMinutes()).substr(("0" + TempD.getMinutes()).length - 2, 2);
+        TempData.hash = [];
+        var TempHashs = saveNewForm.elements[3].value.split(" ");
+        for (var i = 0; i < TempHashs.length; i++) {
+          TempData.hash.push(TempHashs[i]);
+          if (!hashtags.includes(TempHashs[i])) {
+            hashtags.push(TempHashs[i]);
+          }
+        }
+
+        // --- check if title already exists
+        if (saveData.find(o => o.title == TempData.title)) {
+          console.error("entry already exists");
+          alert("Some entry already has that title. Please try another.");
+          return;
+        }
+
+        saveData.unshift(TempData);
+        listFile();
+        saveStorage(saveData);
+
+
+        // download(JSON.stringify(saveData), filename, type)
+        console.log("Done");
+        console.log("Results:");
+        console.log(TempData);
+
+        saveNewCont.style.display = "none";
+
+
+      }
+
+
+      saveChange.onclick = function () {
+        console.log("saveChange");
+        var TempData = {};
+        TempData.title = editEntryForm.elements[0].value;
+        TempData.desc = editEntryForm.elements[1].value;
+        TempData.url = editEntryForm.elements[2].value;
+        TempD = new Date();
+        // TempData.date = TempD.getDate() + "." + TempD.getMonth() + 1 + "." + TempD.getFullYear() + " " + TempD.getHours() + ":" + TempD.getMinutes();
+        TempData.date = saveData[ces].date;
+        TempData.hash = [];
+        var TempHashs = editEntryForm.elements[3].value.split(" ");
+        for (var i = 0; i < TempHashs.length; i++) {
+          TempData.hash.push(TempHashs[i]);
+          if (!hashtags.includes(TempHashs[i])) {
+            hashtags.push(TempHashs[i]);
+          }
+        }
+
+
+
+
+        saveData.splice(ces, 1, TempData);
+        listFile(saveData);
+        saveStorage(saveData);
+
+        editCont.style.display = "none";
+
+
+      }
+
+      makeBackup.onclick = function () {
+        download(saveData, filename, type);
+      }
+
+
+
+      function download(data, filename, type) {
+        if (typeof(data) == "object") {
+          data = JSON.stringify(data);
+        }
+        console.log(data);
+        TempD = new Date();
+        filename = filename + TempD.getDate() + "-" + TempD.getMonth() + 1 + "-" + TempD.getFullYear() + "_" + TempD.getHours() + "-" + TempD.getMinutes();
+        var file = new Blob([data], {type: type});
+        if (window.navigator.msSaveOrOpenBlob) // IE10+
+          window.navigator.msSaveOrOpenBlob(file, filename);
+        else { // Others
+          var a = document.createElement("a"),
+                  url = URL.createObjectURL(file);
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function() {
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+          }, 0);
+        }
+      }
+
+      function saveStorage(d) {
+        if (typeof(Storage) !== "undefined") {
+
+          localStorage.setItem("saveData", JSON.stringify(d));
+
+          console.log("Saved in Local Storage");
+        } else {
+          console.log("oof...");
+          alert("Storage not working... oof")
+
+        }
+      }
+
+
+      closeEntryForm.onclick = function () {
+        saveNewCont.style.display = "none";
+      }
+
+      closeChangeEntryForm.onclick = function () {
+        editCont.style.display = "none";
+      }
+
+      openSaveFile.onclick = function () {
+        saveNewCont.style.display = "block";
+      }
+
+      openSearchCont.onclick = function () {
+
+        if (searchContainer.style.display != "grid") {
+          searchContainer.style.display = "grid";
+          return;
+        }
+        searchContainer.style.display = "none";
+      }
+
+
+
+      searchQuery.onclick = function () {
+        console.log("Search for Query");
+        var tfd = []; // --- Temporary Filter Data [object]
+        for (var i = 0; i < saveData.length; i++) {
+          if (saveData[i].title.toLowerCase().includes(inputSearchQuery.value.toLowerCase()) || saveData[i].desc.toLowerCase().includes(inputSearchQuery.value.toLowerCase()) || saveData[i].url.toLowerCase().includes(inputSearchQuery.value.toLowerCase())) {
+            tfd.push(saveData[i]);
+          }
+        }
+        listFile(tfd);
+        window.scrollTo(0, 0);
+
+      }
+
+      filterDDbtn.onclick = function () {
+        console.log("Open Filter Dropdown");
+        if (filterDD.style.display == "block") {
+          filterDD.style.display = "none";
+        } else {
+          filterDD.style.display = "block";
+        }
+        if (filterForm.innerHTML.trim() != "") {
+          return;
+        }
+
+        var div = document.createElement('div');
+        var divcontent = '';
+
+        for (var i = 0; i < hashtags.length; i++) {
+          divcontent += `
+          <input type="checkbox" name="" value="` + hashtags[i] + `" id="` + hashtags[i] + `">
+          <label for="` + hashtags[i] + `">` + hashtags[i] + `</label><br>
+          `;
+        }
+
+        div.innerHTML = divcontent;
+
+        filterForm.appendChild(div);
+      }
+
+      applyFilter.onclick = function () {
+        console.log("Apply Filter");
+        var tfd = []; // --- Temporary Filter Data [object]
+
+        for (var i = 0; i < saveData.length; i++) {
+          for (var j = 0; j < filterForm.elements.length; j++) {
+            if (filterForm.elements[j].checked && saveData[i].hash.includes(filterForm.elements[j].value)) {
+              tfd.push(saveData[i]);
+              break;
+            }
+          }
+        }
+
+
+        listFile(tfd);
+        window.scrollTo(0, 0);
+      }
+
+      resetFilter.onclick = function () {
+        console.log("Reset Filter");
+        listFile(saveData);
+        for (var i = 0; i < filterForm.elements.length; i++) {
+          filterForm.elements[i].checked = false;
+        }
+        filterDD.style.display = "none";
+        inputSearchQuery.value = "";
+        window.scrollTo(0, 0);
+
+      }
+
+  // download(data, filename, type)
+    </script>
+  </body>
+</html>

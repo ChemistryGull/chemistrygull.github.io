@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>QR 0304</title>
+
+
+    <style media="screen">
+      body {
+        margin: 0;
+        background-color: white;
+
+      }
+      #qrCon {
+        display: inline-grid;
+        /* grid-template-columns: repeat(5, auto); */
+      }
+      .qrWrap {
+        display: inline-grid;
+        grid-template-columns: 20px auto 20px;
+        grid-template-rows: 20px auto 20px;
+        /* padding: 10px; */
+        /* background-image: url(img/watermark_2.png); */
+        /* background: image(img/watermark_1.png); */
+        /* background-position: center; */
+        /* background-repeat: no-repeat; */
+        /* background-size: cover; */
+
+      }
+      .qrWrap div:not(.qrCodeC) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        text-align: center;
+        font-family: consolas;
+      }
+
+      .qrBorderL {
+        /* text-orientation: upright; */
+        /* writing-mode: vertical-rl; */
+        transform: rotate(-90deg);
+        white-space: nowrap
+      }
+      .qrBorderR {
+        /* text-orientation: upright; */
+        /* writing-mode: vertical-rl; */
+        /* transform: rotate(180deg); */
+        transform: rotate(90deg);
+        white-space: nowrap
+
+      }
+
+
+
+      #qrCon img {
+        /* opacity: 0.5; */
+        image-rendering: pixelated;
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <h1>QR 0304</h1>
+    <button type="button" name="button" onclick="toCanvas()">Print QR Codes</button>
+    <!-- <button type="button" name="button" onclick="toPDF()">To PDF</button> -->
+    <div id="qrCanvas">
+      <!-- <div style="height: 3px; width: 600px; background-color: gray; margin: 1px;"></div>
+      <div style="height: 3px; width: 800px; background-color: gray; margin: 1px;"></div>
+      <div style="height: 3px; width: 1000px; background-color: gray; margin: 1px;"></div>
+      <div style="height: 3px; width: 1200px; background-color: gray; margin: 1px;"></div> -->
+    </div>
+    <br>
+
+    <div id="qrCon">
+
+      <!-- This is where QR-codes end up -->
+    </div>
+
+    <div id="qrPPCon">
+
+    </div>
+
+
+
+    <!-- <div id="qrCon">
+      <div class="qrWrap">
+        <div class="qrBorderTL"></div>
+        <div class="qrBorderT">Matura 2023</div>
+        <div class="qrBorderTR"></div>
+        <div class="qrBorderL">HTL Kramsach</div>
+
+        <div class="qrCodeC" id="qrCodeC_0"></div>
+
+        <div class="qrBorderR">Glas & Chemie</div>
+        <div class="qrBorderBL"></div>
+        <div class="qrBorderB">- 03|04 -</div>
+        <div class="qrBorderBR"></div>
+      </div>
+
+
+      <div class="qrWrap">
+        <div class="qrBorderTL"></div>
+        <div class="qrBorderT"></div>
+        <div class="qrBorderTR"></div>
+        <div class="qrBorderL"></div>
+
+        <div class="qrCodeC" id="qrCodeC_1"></div>
+
+        <div class="qrBorderR"></div>
+        <div class="qrBorderBL"></div>
+        <div class="qrBorderB"></div>
+        <div class="qrBorderBR"></div>
+      </div>
+    </div> -->
+
+
+
+    <script src="lib/qrcode.min.js" charset="utf-8"></script>
+    <script src="lib/qrious.min.js" charset="utf-8"></script>
+    <script src="lib/jquery-3.6.0.min.js" charset="utf-8"></script>
+    <script src="lib/html2canvas.min.js" charset="utf-8"></script>
+    <script src="lib/print.min.js" charset="utf-8"></script>
+
+
+    <script type="text/javascript">
+
+
+
+      var qrSettings = {
+        col: 6,
+        row: 8,
+        qrSize: 256
+      }
+
+
+      var qrBorderText = {
+        t: "Matura 2023",
+        l: "HTL Kramsach",
+        r: "Glas & Chemie",
+        b: "- 03|04 -"
+      }
+      var qrList = [
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://github.com/neocotic/qrious", "github"],
+        ["https://github.com/neocotic/qrious", "github2"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/", "yt"],
+        ["lol", "Short 1"],
+        ["sus", "Short 2"],
+        ["https://stackoverflow.com/", "stackoverflow"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://de.wikipedia.org/wiki/QR-Code#Generieren_von_Codes", "wiki"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"],
+        ["https://www.youtube.com/watch?v=kgtkkkIA3kY", "Name"]
+      ];
+
+      var qrCodes = [];
+
+      $(window).on("load", function () {
+        qrFormatSize();
+
+        DRAW_QR.rand_(100);
+        // DRAW_QR.all_();
+
+
+      })
+
+
+      var DRAW_QR = {
+        all_: function () {
+          var perfStart = performance.now();
+          for (var i = 0; i < qrList.length; i++) {
+
+            var qrWrap = $("<div>").attr({class: "qrWrap"});
+
+            var qrBorderTL = $("<div>").attr({class: "qrBorderTL"});
+            var qrBorderT = $("<div>").attr({class: "qrBorderT"}).text(qrBorderText.t);
+            var qrBorderTR = $("<div>").attr({class: "qrBorderTR"});
+            var qrBorderL = $("<div>").attr({class: "qrBorderL"}).text(qrBorderText.l);
+
+            var qrCodeC = $("<div>").attr({class: "qrCodeC", id: "qrCodeC_" + i});
+
+            var qrBorderR = $("<div>").attr({class: "qrBorderR"}).text(qrBorderText.r);
+            var qrBorderBL = $("<div>").attr({class: "qrBorderBL"});
+            var qrBorderB = $("<div>").attr({class: "qrBorderB"}).text(qrBorderText.b);
+            var qrBorderBR = $("<div>").attr({class: "qrBorderBR"});
+
+
+            qrCodes[i] = new QRCode(qrCodeC[0], {
+              text: qrList[i][0],
+              width: qrSettings.qrSize,
+              height: qrSettings.qrSize,
+              colorDark : "#000000",
+              colorLight : "transparent",
+              correctLevel : QRCode.CorrectLevel.L
+            });
+
+            qrCodeC.attr({title: qrList[i][1]})
+
+            qrWrap.append(qrBorderTL);
+            qrWrap.append(qrBorderT);
+            qrWrap.append(qrBorderTR);
+            qrWrap.append(qrBorderL);
+
+            qrWrap.append(qrCodeC);
+
+            qrWrap.append(qrBorderR);
+            qrWrap.append(qrBorderBL);
+            qrWrap.append(qrBorderB);
+            qrWrap.append(qrBorderBR);
+
+            $("#qrCon").append(qrWrap);
+
+            console.log("QR-Code #" + i + " finished");
+          }
+
+          var perfEnd = performance.now();
+
+          console.log("Performance: " + (perfEnd - perfStart));
+        },
+
+        rand_: function (num) {
+          var perfStart = performance.now();
+          for (var e = 0; e < num; e++) {
+
+            var i = Math.floor(Math.random() * qrList.length);
+
+            var qrWrap = $("<div>").attr({class: "qrWrap"});
+
+            var qrBorderTL = $("<div>").attr({class: "qrBorderTL"});
+            var qrBorderT = $("<div>").attr({class: "qrBorderT"}).text(qrBorderText.t);
+            var qrBorderTR = $("<div>").attr({class: "qrBorderTR"});
+            var qrBorderL = $("<div>").attr({class: "qrBorderL"}).text(qrBorderText.l);
+
+            var qrCodeC = $("<div>").attr({class: "qrCodeC", id: "qrCodeC_" + e});
+            // var qrCodeCanvas = $("<canvas>").attr({class: "qrCodeCanvas", id: "qrCodeCanvas_" + e});
+            // qrCodeC.append(qrCodeCanvas);
+
+            var qrBorderR = $("<div>").attr({class: "qrBorderR"}).text(qrBorderText.r);
+            var qrBorderBL = $("<div>").attr({class: "qrBorderBL"});
+            var qrBorderB = $("<div>").attr({class: "qrBorderB"}).text(qrBorderText.b);
+            var qrBorderBR = $("<div>").attr({class: "qrBorderBR"});
+
+
+            qrCodes[e] = new QRCode(qrCodeC[0], {
+              text: qrList[i][0],
+              width: qrSettings.qrSize,
+              height: qrSettings.qrSize,
+              colorDark : "#000000",
+              colorLight : "#ffffff",
+              correctLevel : QRCode.CorrectLevel.L
+            });
+
+
+            // var qrcode = new QRious({
+            //   element: qrCodeCanvas[0],
+            //   background: '#ffffff',
+            //   backgroundAlpha: 1,
+            //   foreground: '#000000',
+            //   foregroundAlpha: 1,
+            //   level: 'M',
+            //   padding: 0,
+            //   size: 113,
+            //   value: qrList[i][0]
+            // });
+
+            qrCodeC.attr({title: qrList[i][1]})
+
+            qrWrap.append(qrBorderTL);
+            qrWrap.append(qrBorderT);
+            qrWrap.append(qrBorderTR);
+            qrWrap.append(qrBorderL);
+
+            qrWrap.append(qrCodeC);
+
+            qrWrap.append(qrBorderR);
+            qrWrap.append(qrBorderBL);
+            qrWrap.append(qrBorderB);
+            qrWrap.append(qrBorderBR);
+
+            $("#qrCon").append(qrWrap);
+
+            console.log("QR-Code #" + e + " finished (" + i + ")");
+          }
+
+          var perfEnd = performance.now();
+
+          console.log("Performance: " + (perfEnd - perfStart));
+        }
+
+      }
+
+      function printDiv(divId, title) {
+        let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
+
+        mywindow.document.write(`<html><head><title>${title}</title>`);
+        mywindow.document.write('</head><body >');
+        // console.log(divId);
+        // console.log(document.getElementById(divId));
+        // console.log(document.getElementById(divId).innerHTML);
+        mywindow.document.write(document.getElementById(divId).innerHTML);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+      }
+
+      function toCanvas() {
+        var crashprev = 0
+        while ($("#qrCon").children().length != 0) {
+
+          var qrPP = $("<div>").attr({class: "qrPagePack"})
+          for (var e = 0; e < 48; e++) {
+            qrPP.append($("#qrCon").children().eq(0))
+            $("#qrCon").children().eq(0).remove();
+          }
+
+          $("#qrPPCon").append(qrPP);
+
+
+          if (crashprev > 1000) {
+            console.error("while overflow");
+            break;
+          }
+        }
+
+        // for (var i = 0; i < ($("#qrCon").children().length / 48 + 1); i++) {
+        //   var qrPP = $("<div>").attr({class: "qrPagePack"})
+        //   for (var e = 0; e < 48; e++) {
+        //
+        //   }
+        // }
+
+
+
+
+        // html2canvas(document.querySelector("#qrCon")).then(canvas => {
+        //   document.getElementById("qrCanvas").appendChild(canvas);
+        // });
+        // $("#qrCon").hide();
+        // setTimeout(function () {
+        //   var w_o = $("#qrCanvas canvas").width();
+        //   var h_o = $("#qrCanvas canvas").height();
+        //   var w_n = 800;
+        //   var h_n = w_n * h_o / w_o;
+        //   $("#qrCanvas canvas").width(w_n);
+        //   $("#qrCanvas canvas").height(h_n);
+        //
+        //   // $("#qrCon img").width(113);
+        //
+        //   printJS('qrCanvas', 'html')
+        // }, 1000);
+
+
+      }
+
+      function qrFormatSize() {
+
+        $("#qrCon").css("grid-template-columns", "repeat(" + qrSettings.col + ", auto)")
+
+
+
+      }
+
+      function drawQR() {
+        // var perfStart = performance.now();
+        // for (var i = 0; i < qrList.length; i++) {
+        //
+        //   var qrWrap = $("<div>").attr({class: "qrWrap"});
+        //
+        //   var qrBorderTL = $("<div>").attr({class: "qrBorderTL"});
+        //   var qrBorderT = $("<div>").attr({class: "qrBorderT"}).text(qrBorderText.t);
+        //   var qrBorderTR = $("<div>").attr({class: "qrBorderTR"});
+        //   var qrBorderL = $("<div>").attr({class: "qrBorderL"}).text(qrBorderText.l);
+        //
+        //   var qrCodeC = $("<div>").attr({class: "qrCodeC", id: "qrCodeC_" + i});
+        //
+        //   var qrBorderR = $("<div>").attr({class: "qrBorderR"}).text(qrBorderText.r);
+        //   var qrBorderBL = $("<div>").attr({class: "qrBorderBL"});
+        //   var qrBorderB = $("<div>").attr({class: "qrBorderB"}).text(qrBorderText.b);
+        //   var qrBorderBR = $("<div>").attr({class: "qrBorderBR"});
+        //
+        //
+        //
+        //   // var qrDiv = $("<div>").attr({id: "qrOut_" + i, title: qrList[i][1]})
+        //
+        //   // var qrDivL = $("<div>").attr({class: "qrDivL", text: "H"})
+        //   // qrDiv.append(qrDivL);
+        //
+        //
+        //
+        //
+        //
+        //
+        //   qrCodes[i] = new QRCode(qrCodeC[0], {
+        //   	text: qrList[i][0],
+        //   	width: 128,
+        //   	height: 128,
+        //   	colorDark : "#000000",
+        //   	colorLight : "transparent",
+        //   	correctLevel : QRCode.CorrectLevel.L
+        //   });
+        //
+        //   qrWrap.append(qrBorderTL);
+        //   qrWrap.append(qrBorderT);
+        //   qrWrap.append(qrBorderTR);
+        //   qrWrap.append(qrBorderL);
+        //
+        //   qrWrap.append(qrCodeC);
+        //
+        //   qrWrap.append(qrBorderR);
+        //   qrWrap.append(qrBorderBL);
+        //   qrWrap.append(qrBorderB);
+        //   qrWrap.append(qrBorderBR);
+        //
+        //   $("#qrCon").append(qrWrap);
+        //
+        //
+        //
+        //   console.log("QR-Code #" + i + " finished");
+        // }
+        //
+        // var perfEnd = performance.now();
+        //
+        // console.log("Performance: " + (perfEnd - perfStart));
+
+      }
+
+
+
+
+
+      // var qrCode = new QRCode(document.getElementById("qrOutTest"), {
+      // 	text: "https://de.wikipedia.org/wiki/QR-Code",
+      // 	width: 128,
+      // 	height: 128,
+      // 	colorDark : "#000000",
+      // 	colorLight : "transparent",
+      // 	correctLevel : QRCode.CorrectLevel.H
+      // });
+
+
+    </script>
+
+
+  </body>
+</html>
