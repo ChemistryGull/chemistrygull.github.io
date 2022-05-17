@@ -61,6 +61,7 @@
 
       <div class="controller" id="controller_L">
 
+        <span id="c_L_val" class="cVal">-</span>
 
         <div class="sliderWrap" id="slider_L">
           <div class="sliderThumb">
@@ -71,7 +72,7 @@
       </div>
       <div class="controller" id="controller_R">
 
-
+        <span id="c_R_val" class="cVal">-</span>
         <div class="sliderWrap" id="slider_R">
           <div class="sliderThumb">
 
@@ -136,13 +137,35 @@
 
           valS[currSlider] = parseInt($(this).children().css("margin-top"));
 
-
-          // console.log(parseInt($(this).children().css("margin-top")));
-          $(this).children().css("margin-top", valS[currSlider] + e.originalEvent.movementY)
+          $(this).children().css("margin-top", valS[currSlider] + e.originalEvent.movementY);
+          $(this).siblings(".cVal").text(valS[currSlider] + e.originalEvent.movementY);
         }
 
       })
 
+
+      $(".sliderWrap").on("touchstart", function () {
+        console.log("down");
+        mouseDown = true;
+      })
+
+
+      $(window).on("touchend", function () {
+        console.log("up");
+        mouseDown = false;
+      })
+
+
+      $(".sliderWrap").on("touchmove", function (e) {
+        if (mouseDown) {
+          var currSlider = $(this).attr("id")
+
+          valS[currSlider] = parseInt($(this).children().css("margin-top"));
+
+          $(this).children().css("margin-top", valS[currSlider] + e.originalEvent.movementY)
+        }
+
+      })
 
 
     </script>
