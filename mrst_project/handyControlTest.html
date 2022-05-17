@@ -84,16 +84,12 @@
 
       } */
 
-      #slider_R {
+      /* #slider_R {
         position: fixed;
         right: 0;
         bottom: 0;
         transform: translateX(100%) rotate(-90deg) ;
         transform-origin: left bottom;
-        /* transform: rotateZ(90deg) ;
-        transform-origin: top right; */
-        /* transform: rotate(180deg);
-        transform-origin: center; */
       }
       #slider_L {
         position: fixed;
@@ -101,6 +97,28 @@
         bottom: 0;
         transform: translateY(100%) rotate(-90deg);
         transform-origin: left top;
+      } */
+
+
+
+      #slider_R {
+        transform: translateX(100%) rotate(-90deg) ;
+        transform-origin: left bottom;
+      }
+      #slider_L {
+        transform: translateY(100%) rotate(-90deg);
+        transform-origin: left top;
+      }
+
+      #slider_R_W {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+      }
+      #slider_L_W {
+        position: fixed;
+        left: 0;
+        bottom: 0;
       }
 
 
@@ -115,8 +133,15 @@
       <br>
 
       <div class="sliderCon">
-        <input class="slider" id="slider_L" type="range" min="-100" max="100" value="0" oninput="rangeChange(this)">
-        <input class="slider" id="slider_R" type="range" min="-100" max="100" value="0" oninput="rangeChange(this)">
+        <div class="sliderWrap" id="slider_L_W">
+          <input type="button" name="" value="STOP"><br>
+          <input class="slider" id="slider_L" type="range" min="-100" max="100" value="0" oninput="rangeChange(this)">
+        </div>
+        <div class="sliderWrap" id="slider_R_W">
+          <input type="button" name="" value="STOP"><br>
+          <input class="slider" id="slider_R" type="range" min="-100" max="100" value="0" oninput="rangeChange(this)">
+        </div>
+
 
       </div>
 

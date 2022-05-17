@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <link rel="manifest" href="manifest.json" />
+
+    <title>Test Slider</title>
+
+    <style media="screen">
+
+      .page {
+        overflow-x: hidden;
+        overflow-y: hidden;
+        position: fixed;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      .sliderWrap {
+        background-color: lightgray;
+      }
+
+      .sliderThumb {
+        border-radius: 50%;
+        background-color: red;
+        position: absolute;
+      }
+
+
+      .controller {
+        margin: 10px;
+      }
+
+      #controller_L {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+      }
+
+      #controller_R {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+      }
+
+
+
+    </style>
+
+
+
+  </head>
+  <body>
+    <div class="page">
+      <h1>HCT2.html</h1>
+
+
+      <div class="controller" id="controller_L">
+
+
+        <div class="sliderWrap" id="slider_L">
+          <div class="sliderThumb">
+
+          </div>
+        </div>
+
+      </div>
+      <div class="controller" id="controller_R">
+
+
+        <div class="sliderWrap" id="slider_R">
+          <div class="sliderThumb">
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- !!!!!!!!!!!!!!!!!!!!! DISABLE DRAGABLE OBJECTS !!!!!!!!!!!!!!!!!!!!!!! -->
+    </div>
+
+
+
+    <script src="jquery-3.6.0.min.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+
+      mouseDown = false;
+
+      sAttr = {
+        w: 60,
+        h: 200,
+        wT: 60,
+        hT: 20
+      }
+
+
+      valS = {
+        mid: sAttr.h / 2,
+        slider_L: sAttr.h / 2,
+        slider_R: sAttr.h / 2,
+      }
+
+
+      $(".sliderWrap").css({"width": sAttr.w, "height": sAttr.h})
+      $(".sliderThumb").css({"width": sAttr.w, "height": sAttr.hT})
+
+
+      $("#slider_L").children().css({"margin-top": valS.slider_L + "px", "transform": "translate(0px, -" + sAttr.hT / 2 + "px)"})
+      $("#slider_R").children().css({"margin-top": valS.slider_R + "px", "transform": "translate(0px, -" + sAttr.hT / 2 + "px)"})
+
+
+
+
+
+
+      $(".sliderWrap").on("mousedown", function () {
+        console.log("down");
+        mouseDown = true;
+      })
+
+
+      $(window).on("mouseup", function () {
+        console.log("up");
+        mouseDown = false;
+      })
+
+
+      $(".sliderWrap").on("mousemove", function (e) {
+        if (mouseDown) {
+          var currSlider = $(this).attr("id")
+
+          valS[currSlider] = parseInt($(this).children().css("margin-top"));
+
+
+          // console.log(parseInt($(this).children().css("margin-top")));
+          $(this).children().css("margin-top", valS[currSlider] + e.originalEvent.movementY)
+        }
+
+      })
+
+
+
+    </script>
+
+  </body>
+</html>
