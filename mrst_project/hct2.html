@@ -162,7 +162,8 @@
 
           valS[currSlider] = parseInt($(this).children().css("margin-top"));
 
-          $(this).children().css("margin-top", valS[currSlider] + e.originalEvent.movementY)
+          $(this).children().css("margin-top", valS[currSlider] + e.originalEvent.movementY);
+          $(this).siblings(".cVal").text(valS[currSlider] + e.originalEvent.movementY);
         }
 
       })
