@@ -103,7 +103,16 @@
       valS = {
         mid: sAttr.h / 2,
         slider_L: sAttr.h / 2,
-        slider_R: sAttr.h / 2,
+        slider_R: sAttr.h / 2
+      }
+      valSvM = {
+        slider_L: 0,
+        slider_R: 0
+      }
+
+      VAL = {
+        slider_L: 0,
+        slider_R: 0
       }
 
 
@@ -138,14 +147,20 @@
           valS[currSlider] = parseInt($(this).children().css("margin-top"));
 
           $(this).children().css("margin-top", valS[currSlider] + e.originalEvent.movementY);
-          $(this).siblings(".cVal").text(valS[currSlider] + e.originalEvent.movementY);
+
+          VAL[currSlider] = Math.round(-1 * ((valS[currSlider] + e.originalEvent.movementY) / sAttr.h * 200 - sAttr.h / 2));
+
+          $(this).siblings(".cVal").text(VAL[currSlider]);
+
         }
 
       })
 
 
-      $(".sliderWrap").on("touchstart", function () {
+      $(".sliderWrap").on("touchstart", function (e) {
         console.log("down");
+        var currSlider = $(this).attr("id");
+        valSvM[currSlider] = Math.round(e.targetTouches[0].pageY - $(this).offset().top);
         mouseDown = true;
       })
 
@@ -158,12 +173,27 @@
 
       $(".sliderWrap").on("touchmove", function (e) {
         if (mouseDown) {
-          var currSlider = $(this).attr("id")
+
+          var currSlider = $(this).attr("id");
 
           valS[currSlider] = parseInt($(this).children().css("margin-top"));
 
-          $(this).children().css("margin-top", valS[currSlider] + e.originalEvent.movementY);
-          $(this).siblings(".cVal").text(valS[currSlider] + e.originalEvent.movementY);
+          var moveM = valSvM[currSlider] - Math.round(e.targetTouches[0].pageY - $(this).offset().top);
+
+          // console.log(Math.floor(e.targetTouches[0].pageY - $(this).offset().top))
+          console.log(valSvM[currSlider]);
+
+          valSvM[currSlider] = Math.round(e.targetTouches[0].pageY - $(this).offset().top);
+
+
+
+
+
+          $(this).children().css("margin-top", Math.round(valS[currSlider] - moveM));
+
+          VAL[currSlider] = Math.round(-1 * ((valS[currSlider] - moveM) / sAttr.h * 200 - sAttr.h / 2));
+
+          $(this).siblings(".cVal").text(VAL[currSlider]);
         }
 
       })
