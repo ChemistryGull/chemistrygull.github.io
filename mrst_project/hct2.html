@@ -163,8 +163,8 @@
       $(".sliderWrap").on("touchstart", function (e) {
         console.log("down");
         var currSlider = $(this).attr("id");
-        for (var i = 0; i < e.targetTouches.length; i++) {
-          valSvM[currSlider][i] = Math.round(e.targetTouches[i].pageY - $(this).offset().top);
+        for (var i = 0; i < e.touches.length; i++) {
+          valSvM[currSlider][i] = Math.round(e.touches[i].pageY - $(this).offset().top);
         }
         mouseDown = true;
       })
@@ -179,16 +179,16 @@
       $(".sliderWrap").on("touchmove", function (e) {
         e.preventDefault
         if (mouseDown) {
-          for (var i = 0; i < e.targetTouches.length; i++) {
+          for (var i = 0; i < e.touches.length; i++) {
 
             var currSlider = $(this).attr("id");
 
             valS[currSlider] = parseInt($(this).children().css("margin-top"));
 
-            var moveM = valSvM[currSlider][i] - Math.round(e.targetTouches[i].pageY - $(this).offset().top);
+            var moveM = valSvM[currSlider][i] - Math.round(e.touches[i].pageY - $(this).offset().top);
 
 
-            valSvM[currSlider][i] = Math.round(e.targetTouches[i].pageY - $(this).offset().top);
+            valSvM[currSlider][i] = Math.round(e.touches[i].pageY - $(this).offset().top);
 
             // $("#log").text(JSON.stringify(valSvM))
             $("#log").text(JSON.stringify(e.touches))
