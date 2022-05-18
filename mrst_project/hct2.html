@@ -58,7 +58,7 @@
     <div class="page">
       <h1>HCT2.html</h1>
       <p id="log">LOG</p>
-      <p>test1</p>
+      <p>test2</p>
 
 
       <div class="controller" id="controller_L">
@@ -108,8 +108,8 @@
         slider_R: sAttr.h / 2
       }
       valSvM = {
-        slider_L: 0,
-        slider_R: 0
+        slider_L: [],
+        slider_R: []
       }
 
       VAL = {
@@ -162,7 +162,9 @@
       $(".sliderWrap").on("touchstart", function (e) {
         console.log("down");
         var currSlider = $(this).attr("id");
-        valSvM[currSlider] = Math.round(e.targetTouches[0].pageY - $(this).offset().top);
+        for (var i = 0; i < e.targetTouches.length; i++) {
+          valSvM[currSlider][i] = Math.round(e.targetTouches[i].pageY - $(this).offset().top);
+        }
         mouseDown = true;
       })
 
@@ -180,12 +182,12 @@
 
             valS[currSlider] = parseInt($(this).children().css("margin-top"));
 
-            var moveM = valSvM[currSlider] - Math.round(e.targetTouches[i].pageY - $(this).offset().top);
+            var moveM = valSvM[currSlider][i] - Math.round(e.targetTouches[i].pageY - $(this).offset().top);
 
 
-            valSvM[currSlider] = Math.round(e.targetTouches[i].pageY - $(this).offset().top);
+            valSvM[currSlider][i] = Math.round(e.targetTouches[i].pageY - $(this).offset().top);
 
-            $("#log").text(JSON.stringify(e.targetTouches.length))
+            $("#log").text(JSON.stringify(valSvM))
             console.log(e.targetTouches.length);
 
 
