@@ -59,7 +59,7 @@
       <h1>HCT2.html</h1>
       <p id="log">LOG</p>
       <p id="log2">LOG2</p>
-      <p>test3</p>
+      <p>test4</p>
 
 
       <div class="controller" id="controller_L">
@@ -190,9 +190,11 @@
 
             valSvM[currSlider][i] = Math.round(e.targetTouches[i].pageY - $(this).offset().top);
 
-            $("#log").text(JSON.stringify(valSvM))
-            $("#log2").text(i + " | " + currSlider)
-            console.log(e.targetTouches.length);
+            // $("#log").text(JSON.stringify(valSvM))
+            $("#log").text(JSON.stringify(e.touches))
+            $("#log2").text(e.touches.length)
+            // $("#log2").text(i + " | " + currSlider)
+            console.log(e.touches.length);
 
 
 
