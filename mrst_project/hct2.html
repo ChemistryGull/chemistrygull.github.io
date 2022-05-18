@@ -57,6 +57,7 @@
   <body>
     <div class="page">
       <h1>HCT2.html</h1>
+      <p id="log">LOG</p>
 
 
       <div class="controller" id="controller_L">
@@ -180,10 +181,11 @@
 
           var moveM = valSvM[currSlider] - Math.round(e.targetTouches[0].pageY - $(this).offset().top);
 
-          // console.log(Math.floor(e.targetTouches[0].pageY - $(this).offset().top))
-          console.log(valSvM[currSlider]);
 
           valSvM[currSlider] = Math.round(e.targetTouches[0].pageY - $(this).offset().top);
+
+          $("#log").text(JSON.stringify(e.targetTouches.length))
+          console.log(e.targetTouches.length);
 
 
 
