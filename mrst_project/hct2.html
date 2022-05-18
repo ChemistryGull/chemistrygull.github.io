@@ -191,7 +191,7 @@
             valSvM[currSlider][i] = Math.round(e.targetTouches[i].pageY - $(this).offset().top);
 
             $("#log").text(JSON.stringify(valSvM))
-            $("#log2").text(i)
+            $("#log2").text(i + " | " + currSlider)
             console.log(e.targetTouches.length);
 
 
