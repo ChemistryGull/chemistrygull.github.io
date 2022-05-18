@@ -174,28 +174,30 @@
 
       $(".sliderWrap").on("touchmove", function (e) {
         if (mouseDown) {
+          for (var i = 0; i < e.targetTouches.length; i++) {
+            var currSlider = $(this).attr("id");
 
-          var currSlider = $(this).attr("id");
+            valS[currSlider] = parseInt($(this).children().css("margin-top"));
 
-          valS[currSlider] = parseInt($(this).children().css("margin-top"));
-
-          var moveM = valSvM[currSlider] - Math.round(e.targetTouches[0].pageY - $(this).offset().top);
-
-
-          valSvM[currSlider] = Math.round(e.targetTouches[0].pageY - $(this).offset().top);
-
-          $("#log").text(JSON.stringify(e.targetTouches.length))
-          console.log(e.targetTouches.length);
+            var moveM = valSvM[currSlider] - Math.round(e.targetTouches[i].pageY - $(this).offset().top);
 
 
+            valSvM[currSlider] = Math.round(e.targetTouches[i].pageY - $(this).offset().top);
+
+            $("#log").text(JSON.stringify(e.targetTouches.length))
+            console.log(e.targetTouches.length);
 
 
 
-          $(this).children().css("margin-top", Math.round(valS[currSlider] - moveM));
 
-          VAL[currSlider] = Math.round(-1 * ((valS[currSlider] - moveM) / sAttr.h * 200 - sAttr.h / 2));
 
-          $(this).siblings(".cVal").text(VAL[currSlider]);
+            $(this).children().css("margin-top", Math.round(valS[currSlider] - moveM));
+
+            VAL[currSlider] = Math.round(-1 * ((valS[currSlider] - moveM) / sAttr.h * 200 - sAttr.h / 2));
+
+            $(this).siblings(".cVal").text(VAL[currSlider]);
+          }
+
         }
 
       })
