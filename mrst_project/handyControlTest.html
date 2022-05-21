@@ -19,6 +19,13 @@
       }
       body {
         /* position: relative; */
+
+      }
+
+      * {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
       }
 
       .slider {
@@ -134,12 +141,12 @@
 
       <div class="sliderCon">
         <div class="sliderWrap" id="slider_L_W">
-          <input type="button" name="" value="STOP"><br>
-          <input class="slider" id="slider_L" type="range" min="-100" max="100" value="0" oninput="rangeChange(this)">
+          <!-- <input type="button" name="" value="STOP"><br> -->
+          <input class="slider" id="slider_L" type="range" min="-100" max="100" value="0">
         </div>
         <div class="sliderWrap" id="slider_R_W">
-          <input type="button" name="" value="STOP"><br>
-          <input class="slider" id="slider_R" type="range" min="-100" max="100" value="0" oninput="rangeChange(this)">
+          <!-- <input type="button" name="" value="STOP"><br> -->
+          <input class="slider" id="slider_R" type="range" min="-100" max="100" value="0">
         </div>
 
 
@@ -173,12 +180,25 @@
 
     </div>
 
+    <script src="jquery-3.6.0.min.js" charset="utf-8"></script>
 
     <script type="text/javascript">
-      function rangeChange(e) {
+
+      $(".slider").on("input", function () {
         console.log("change");
-        console.log(e.value);
-      }
+        console.log($(this).val());
+
+      })
+
+      $(".slider").on("mouseup", function () {
+        $(this).val(0)
+      })
+
+      $(".slider").on("touchend", function () {
+        $(this).val(0)
+      })
+
+
 
 
       function toggleFullScreen() {
