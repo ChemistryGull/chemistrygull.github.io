@@ -30,6 +30,7 @@
 
       .slider {
         -webkit-appearance: none;
+
         width: 200px;
         height: 40px;
         border-radius: 20px;
@@ -38,13 +39,12 @@
         /* border: 4px inset darkgray; */
 
 
-
       }
       .slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
         width: 50px;
-        height: 50px;
+        height: 70px;
         border-radius: 50%;
         background: red;
         /* border: red outset 4px; */
@@ -54,56 +54,22 @@
 
       }
 
-
-
-
-
-      /* .slider {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 25px;
-        background: #d3d3d3;
-        outline: none;
-        opacity: 0.7;
-        -webkit-transition: .2s;
-        transition: opacity .2s;
-      }
-
-      .slider:hover {
-        opacity: 1;
-      }
-      .slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 25px;
-        height: 25px;
-        background: #04AA6D;
-        cursor: pointer;
-      }
-      .slider::-moz-range-thumb {
-        width: 25px;
-        height: 25px;
-        background: #04AA6D;
-        cursor: pointer;
-      }
-
-      .sliderCon {
-
-      } */
-
-      /* #slider_R {
+      .s_value {
         position: fixed;
-        right: 0;
-        bottom: 0;
-        transform: translateX(100%) rotate(-90deg) ;
-        transform-origin: left bottom;
+        padding: 10px;
+        /* margin: 10px 0; */
+        text-align: center;
+        font-weight: bolder;
+        font-size: 20px;
       }
-      #slider_L {
-        position: fixed;
+
+      /* #s_v_L {
+        top: 0;
         left: 0;
-        bottom: 0;
-        transform: translateY(100%) rotate(-90deg);
-        transform-origin: left top;
+      }
+      #s_v_R {
+        top: 0;
+        right: 0;
       } */
 
 
@@ -142,10 +108,12 @@
       <div class="sliderCon">
         <div class="sliderWrap" id="slider_L_W">
           <!-- <input type="button" name="" value="STOP"><br> -->
+          <span class="s_value" id="s_v_L">0</span>
           <input class="slider" id="slider_L" type="range" min="-100" max="100" value="0">
         </div>
         <div class="sliderWrap" id="slider_R_W">
           <!-- <input type="button" name="" value="STOP"><br> -->
+          <span class="s_value" id="s_v_R">0</span>
           <input class="slider" id="slider_R" type="range" min="-100" max="100" value="0">
         </div>
 
@@ -184,19 +152,47 @@
 
     <script type="text/javascript">
 
+      $(window).on("load", configLayout);
+
+      $(window).on("resize", configLayout);
+
+
+      function configLayout() {
+        var destination = $('#slider_L').offset();
+        $('#s_v_L').css({top: destination.top - $('#s_v_L').outerHeight(true), left: 0});
+        var destination = $('#slider_R').offset();
+        $('#s_v_R').css({top: destination.top - $('#s_v_L').outerHeight(true), right: 0});
+
+        console.log($(".slider").outerHeight(true));
+
+        $('#s_v_L').outerWidth($('#slider_L').outerHeight(true))
+        $('#s_v_R').outerWidth($('#slider_R').outerHeight(true))
+      }
+
+
+
       $(".slider").on("input", function () {
         console.log("change");
-        console.log($(this).val());
+        var speed = $(this).val();
+        console.log(speed);
+        $(this).siblings(".s_value").text(speed);
 
       })
 
       $(".slider").on("mouseup", function () {
         $(this).val(0)
+        $(this).siblings(".s_value").text(0);
+
       })
 
       $(".slider").on("touchend", function () {
         $(this).val(0)
+        $(this).siblings(".s_value").text(0);
+
       })
+
+
+
 
 
 
