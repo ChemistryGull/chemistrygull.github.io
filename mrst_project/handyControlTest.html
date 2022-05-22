@@ -154,10 +154,14 @@
 
       $(window).on("load", configLayout);
 
-      $(window).on("resize", configLayout);
+      $(window).on("resize", function () {
+        $(".s_value").hide();
+        setTimeout(configLayout, 100);
+      });
 
 
       function configLayout() {
+        $(".s_value").hide();
         var destination = $('#slider_L').offset();
         $('#s_v_L').css({top: destination.top - $('#s_v_L').outerHeight(true), left: 0});
         var destination = $('#slider_R').offset();
@@ -167,6 +171,8 @@
 
         $('#s_v_L').outerWidth($('#slider_L').outerHeight(true))
         $('#s_v_R').outerWidth($('#slider_R').outerHeight(true))
+
+        $(".s_value").show();
       }
 
 
