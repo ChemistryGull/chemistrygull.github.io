@@ -28,7 +28,7 @@ var gameMetaData = {
 }
 
 
-var doStorage = false;
+var doStorage = true;
 
 
 var ctx = null;
@@ -90,18 +90,36 @@ window.onload = function () {
 }
 
 window.onbeforeunload = function () {
+  console.log(doStorage);
+
+
   if (doStorage) {
+
     var playerStorage = {
       playerInv: player.inv,
       playerStartPos: [player.x, player.y],
     }
 
-    localStorage.setItem("PM_player", JSON.stringify(playerStorage));
-    localStorage.setItem("PM_entities", JSON.stringify(entities));
+
+
+    // localStorage.setItem("PM_player", JSON.stringify(playerStorage));
+    // localStorage.setItem("PM_entities", JSON.stringify(entities));
+
+    // localStorage.setItem("PM_currentLevel", JSON.stringify(currentLevel));
+
+    var currDataObj = {entityList: entities, player: playerStorage, map: gameMap}
+
+
+    localStorage.setItem("PM_" + currentLevel, JSON.stringify(currDataObj));
 
     // localStorage.removeItem("PM_entities");
   }
   localStorage.setItem("PM_doStorage", JSON.stringify(doStorage));
+
+
+
+
+
 
 }
 
@@ -111,16 +129,22 @@ function startGame() {
 
 
 
-    // --- Load localStorage
+    // --- Load localStorage (here to overwrite value in level files)
+
     if (localStorage.PM_doStorage != undefined) {
       doStorage = JSON.parse(localStorage.PM_doStorage);
+
       if (doStorage) {
-        entityList = JSON.parse(localStorage.PM_entities);
-        playerInv = JSON.parse(localStorage.PM_player).playerInv;
-        playerStartPos = JSON.parse(localStorage.PM_player).playerStartPos;
+        currentLevel = JSON.parse(localStorage.PM_currentLevel);
+
+        if (localStorage["PM_" + currentLevel] != undefined) {
+          entityList = JSON.parse(localStorage["PM_" + currentLevel]).entityList;
+          playerInv = JSON.parse(localStorage["PM_" + currentLevel]).player.playerInv;
+          playerStartPos = JSON.parse(localStorage["PM_" + currentLevel]).player.playerStartPos;
+          gameMap = JSON.parse(localStorage["PM_" + currentLevel]).map;
+        }
       }
     }
-
 
 
 
