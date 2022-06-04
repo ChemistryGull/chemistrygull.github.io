@@ -1,11 +1,6 @@
 var entityList = [
 
-  {type: "book", id: 0, texture: "book1", x: 3, y: 1, action: [{act: "openMenu", menu: "text", activate: "clickNear", header: "PlanarMaze", text: "Welcome To PlanarMaze! This level will guid you throug the basic functionality of this game. You will learn what certein entities and objects can do (and what they probably don't). There isn't going to be anything scary on this level! ... or will there ... Aaaanyway, have fun! First lection: press the button on the ground! (You can close this message now) -ChemistryGull"}]},
-  {type: "text", id: 1, texture: "Use A W S D to move and Space to interact", x: 3, y: 4, custom: {color: "orange", font: "bold 10px Courier New", fontSize: 10}},
-  {type: "text", id: 2, texture: "Read this book first! (Space Bar)", x: 3, y: 0, custom: {color: "orange", font: "bold 10px Courier New", fontSize: 10}},
-  {type: "button", id: 3, texture: "btn_w", x: 5, y: 3, action: [{act: "tileChange", activate: "click", target: 186, changeTo: "d1" }]},
-  {type: "text", id: 4, texture: "Buttons do stuff. They can only be clicked once.", x: 8, y: 2, custom: {color: "orange", font: "bold 10px Courier New", fontSize: 10}},
-  {type: "text", id: 5, texture: "Pressure plates activate when you walk over them.", x: 14, y: 4, custom: {color: "orange", font: "bold 10px Courier New", fontSize: 10}},
+    {type: "text", id: 5, texture: "Pressure plates activate when you walk over them.", x: 14, y: 4, custom: {color: "orange", font: "bold 10px Courier New", fontSize: 10}},
   {type: "pressureplate", id: 6, texture: "ppl_w", x: 14, y: 3, action: [{act: "tileChange", activate: "hover", target: 195, changeTo: "d1" }]},
   {type: "lever", id: 7, texture: "lvr_down_w", x: 21, y: 2, action: [{act: "changeSelf", activate: "click"}, {act: "tileChange", providing: [[7, "state", true]], activate: "click", target: [202, 82], changeTo: ["sw1", "g1"] }, {act: "tileChange", providing: [[7, "state", false]], activate: "click", target: [202, 82], changeTo: ["g1", "sw1"] }], custom: {state: false}},
   {type: "button", id: 8, texture: "btn_w", x: 25, y: 3, action: [{act: "tileChange", activate: "click", target: 505, changeTo: "d1" }]},
@@ -15,7 +10,6 @@ var entityList = [
   {type: "lever", id: 12, texture: "lvr_down_w", x: 25, y: 14, action: [{act: "changeSelf", activate: "click"}, {act: "tileChange", providing: [[11, "state", true], [12, "state", false], [13, "state", false], [14, "state", true]], activate: "click", target: 690, changeTo: "g1" }], custom: {state: false}},
   {type: "lever", id: 13, texture: "lvr_down_w", x: 26, y: 14, action: [{act: "changeSelf", activate: "click"}, {act: "tileChange", providing: [[11, "state", true], [12, "state", false], [13, "state", false], [14, "state", true]], activate: "click", target: 690, changeTo: "g1" }], custom: {state: false}},
   {type: "lever", id: 14, texture: "lvr_down_w", x: 27, y: 14, action: [{act: "changeSelf", activate: "click"}, {act: "tileChange", providing: [[11, "state", true], [12, "state", false], [13, "state", false], [14, "state", true]], activate: "click", target: 690, changeTo: "g1" }], custom: {state: false}},
-  {type: "book", id: 15, texture: "book1", x: 27, y: 9, action: [{act: "openMenu", menu: "html", activate: "clickNear", html: '<div><h1>Your first Puzzle!</h1><p>This one is very easy. You probably already saw the 4 leavers at the other end of the room - use them.</p><ol><li>ln(1) = 0</li><li>8 + 2 * 3 = 30</li><li>red = #0000FF</li><li>(a + b)² = a² + 2ab + b²</li></ol><p>As you probably know, leaver up means true, leaver down means false.</p></div>'}]},
   {type: "pressureplate", id: 16, texture: "ppl_w", x: 36, y: 1, action: [{act: "tileChange", activate: "hover", target: 97, changeTo: "g1" }]},
 
 
