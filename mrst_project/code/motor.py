@@ -65,3 +65,68 @@ def motorSet(side, value):
     else:
         GPIO.cleanup()
         print("Code ends here, no idea how we got there")
+
+
+
+while True:
+    inp = input("---> ")
+
+    if inp == " ":
+        motorSet("L", 0)
+        motorSet("R", 0)
+
+    elif inp == "w":
+        motorSet("L", 50)
+        motorSet("R", 50)
+
+    elif inp == "a":
+        motorSet("L", -50)
+        motorSet("R", 50)
+
+    elif inp == "d":
+        motorSet("L", 50)
+        motorSet("R", -50)
+
+    elif inp == "s":
+        motorSet("L", -50)
+        motorSet("R", -50)
+
+    elif inp == "1":
+        motorSet("L", 10)
+        motorSet("R", 10)
+
+    elif inp == "2":
+        motorSet("L", 20)
+        motorSet("R", 20)
+
+    elif inp == "3":
+        motorSet("L", 30)
+        motorSet("R", 30)
+
+    elif inp == "4":
+        motorSet("L", 40)
+        motorSet("R", 40)
+
+    elif inp == "5":
+        motorSet("L", 50)
+        motorSet("R", 50)
+
+    elif inp == "6":
+        motorSet("L", 60)
+        motorSet("R", 60)
+
+    elif inp == "7":
+        motorSet("L", 70)
+        motorSet("R", 70)
+
+    elif inp == "8":
+        motorSet("L", 80)
+        motorSet("R", 80)
+
+    elif inp == "9":
+        motorSet("L", 90)
+        motorSet("R", 90)
+
+    elif inp == "0":
+        motorSet("L", 100)
+        motorSet("R", 100)
