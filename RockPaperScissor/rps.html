@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RPS</title>
+
     <style media="screen">
       body {
         background-color: lightgray;
@@ -12,15 +13,35 @@
       #canvas {
         background-color: white;
         margin: 10px;
+        border: inset 2px;
       }
       input[type=range] {
         width: 300px;
       }
     </style>
+
+    <style media="only screen and (max-width: 600px)">
+      /* .canCon {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      } */
+      #canvas {
+        width: 100vw;
+        height: 100vw;
+        margin: 0px;
+        box-sizing: border-box;
+      }
+
+
+    </style>
+
   </head>
   <body>
+    <div class="canCon">
+      <canvas id="canvas" width="400" height="400"></canvas>
+    </div>
 
-    <canvas id="canvas" width="400" height="400"></canvas>
 
     <h3>Settings:</h3>
 
@@ -46,7 +67,6 @@
         rock: 100,
         paper: 100,
         scissor: 100,
-        log: 10
       }
       var domList = {
         rock: ["scissors"]
