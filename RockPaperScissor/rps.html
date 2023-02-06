@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>RPS</title>
+    <style media="screen">
+      body {
+        background-color: lightgray;
+        margin: 0;
+      }
+      #canvas {
+        background-color: white;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+
+    <script src="lib/jQuery.js" charset="utf-8"></script>
+    <script type="text/javascript">
+
+      var cH = 400;
+      var cW = 400;
+      var ctx;
+
+
+      var size = 10;
+      var speed = 1;
+
+      var stE = { // amount of startEnities
+        rock: 100,
+        paper: 100,
+        scissor: 100,
+      }
+
+      var entityList = []; // Where all the entitys are storde during game
+      var posList = {
+        x: [],
+        y: []
+      }
+
+      function ranPos(ax) {
+        if (ax == "x") {
+          return Math.floor(Math.random() * cW)
+        } else if (ax == "y") {
+          return Math.floor(Math.random() * cH)
+        } else {
+          alert("The Input of ranPos() has to be either x or y.\nIts not dumbass. :(")
+        }
+      }
+
+      function entity(type, x, y) {
+        this.type = type;
+        this.h = size;
+        this.w = size;
+        this.speed = speed;
+        this.x = x;
+        this.y = y;
+        this.collide = function () {
+
+          if (this.x < 0) {
+            this.x += speed;
+          } else if (this.x + size > cW) {
+            this.x -= speed;
+          }
+          if (this.y < 0) {
+            this.y += speed;
+          } else if (this.y + size > cH) {
+            this.y -= speed;
+          }
+
+        }
+        this.moveRan = function () { // moving Random; // DEBUG: Make more efficient
+          if (Math.random() > 0.5) {
+            this.x += speed;
+          }
+          if (Math.random() > 0.5) {
+            this.x -= speed;
+          }
+          if (Math.random() > 0.5) {
+            this.y += speed;
+          }
+          if (Math.random() > 0.5) {
+            this.y -= speed;
+          }
+        }
+      }
+
+      function createGame() {
+        for (var type in stE) {
+          for (var i = 0; i < stE[type]; i++) {
+            entityList.push(new entity(type, ranPos("x"), ranPos("y")));
+          }
+        }
+      }
+
+
+
+
+      function drawGame() {
+
+        ctx.fillStyle = "#FFFFFF";
+      	ctx.fillRect(0, 0, cH, cW);
+
+        for (var i = 0; i < entityList.length; i++) {
+          switch (entityList[i].type) {
+            case "rock":
+              ctx.fillStyle = "SlateGray";
+              break;
+            case "paper":
+              ctx.fillStyle = "DarkGray"
+              break;
+            case "scissor":
+              ctx.fillStyle = "red"
+              break;
+            default:
+              ctx.fillStyle = "blue"
+
+          }
+          // console.log(entityList[i].type);
+          ctx.fillRect(entityList[i].x, entityList[i].y, entityList[i].h, entityList[i].w);
+
+          posList.x.push(entityList[i].x)
+          posList.y.push(entityList[i].y)
+
+        }
+
+        for (var i = 0; i < entityList.length; i++) {
+
+          for (var j = 0; j < entityList.length; j++) {
+            if ((entityList[i].x <= entityList[j].x + size && entityList[i].x + size >= entityList[j].x) && (entityList[i].y <= entityList[j].y + size && entityList[i].y + size >= entityList[j].y)) {
+
+
+
+              var myType = entityList[i].type;
+              var oppType = entityList[j].type; // Opponent Type
+
+              if (myType == "rock") {
+                if (oppType == "scissor") {
+                  console.log("scissor -> rock 1 _1");
+                  entityList[j].type = "rock"; // WIN
+                  continue;
+                }
+                if (oppType == "paper") {
+                  console.log("rock -> paper 1 _2");
+                  entityList[i].type = "paper"; // LOOSE
+                  continue;
+                }
+              }
+              if (myType == "paper") {
+                if (oppType == "rock") {
+                  console.log("rock -> paper 2 _3");
+                  entityList[j].type = "paper"; // WIN
+                  continue;
+                }
+                if (oppType == "scissor") {
+                  console.log("paper -> scissor 1 _4");
+                  entityList[i].type = "scissor"; // LOOSE
+                  continue;
+                }
+              }
+              if (myType == "scissor") {
+                if (oppType == "paper") {
+                  console.log("paper -> scissor 2 _5");
+                  entityList[j].type = "scissor"; // WIN
+                  continue;
+                }
+                if (oppType == "rock") {
+                  console.log("scissor -> rock 2 _6");
+                  entityList[i].type = "rock"; // LOOSE
+                  continue;
+                }
+              }
+
+            }
+          }
+          entityList[i].moveRan();
+          entityList[i].collide();
+        }
+
+
+        // for (var i = 0; i < entityList.length; i++) {
+        //   posList.x.shift()
+        //   posList.y.shift()
+        //
+        //   if (posList.x.includes(entityList[i].x) || posList.y.includes(entityList[i].y) || (posList.x.includes(entityList[i].x + size) || posList.y.includes(entityList[i].y + size))) { // checks if someone else hase the same x of y values
+        //     var posIndex = posList.x.indexOf(entityList[i].x)
+        //
+        //     if (posIndex == posList.y.indexOf(entityList[i].y)) { // checks if x an y belonge to the same Entity
+        //
+        //       var myType = entityList[i].type;
+        //       var oppType = entityList[posIndex].type; // Opponent Type
+        //
+        //       if (myType == "rock") {
+        //         if (oppType == "scissor") {
+        //           console.log("scissor -> rock 1 _1");
+        //           entityList[posIndex].type = "rock"; // WIN
+        //           continue;
+        //         }
+        //         if (oppType == "paper") {
+        //           console.log("rock -> paper 1 _2");
+        //           entityList[i].type = "paper"; // LOOSE
+        //           continue;
+        //         }
+        //       }
+        //       if (myType == "paper") {
+        //         if (oppType == "rock") {
+        //           console.log("rock -> paper 2 _3");
+        //           entityList[posIndex].type = "paper"; // WIN
+        //           continue;
+        //         }
+        //         if (oppType == "scissor") {
+        //           console.log("paper -> scissor 1 _4");
+        //           entityList[i].type = "scissor"; // LOOSE
+        //           continue;
+        //         }
+        //       }
+        //       if (myType == "scissor") {
+        //         if (oppType == "paper") {
+        //           console.log("paper -> scissor 2 _5");
+        //           entityList[posIndex].type = "scissor"; // WIN
+        //           continue;
+        //         }
+        //         if (oppType == "rock") {
+        //           console.log("scissor -> rock 2 _6");
+        //           entityList[i].type = "rock"; // LOOSE
+        //           continue;
+        //         }
+        //       }
+        //
+        //       // ctx.fillStyle = "lime";
+        //       // ctx.fillRect(entityList[i].x - 2, entityList[i].y - 2, 4, 4);
+        //       // alert("found one at " + entityList[i].x + " | " + entityList[i].y)
+        //       // return;
+        //     }
+        //   }
+        //
+        //   entityList[i].moveRan();
+        // }
+
+
+        requestAnimationFrame(drawGame)
+
+
+      }
+
+
+      window.onload = function () {
+        ctx = document.getElementById("canvas").getContext("2d");
+
+        createGame()
+
+        requestAnimationFrame(drawGame)
+      }
+
+
+
+
+
+
+
+    </script>
+
+  </body>
+</html>
