@@ -13,19 +13,22 @@
       #canvas {
         background-color: white;
         margin: 10px;
-        border: inset 2px;
+        border: inset 3px;
       }
       input[type=range] {
         width: 300px;
       }
+
     </style>
 
     <style media="only screen and (max-width: 600px)">
-      /* .canCon {
-        width: 100%;
+      .canCon {
+        /* width: 100%;
         display: flex;
-        justify-content: center;
-      } */
+        justify-content: center; */
+        position: sticky;
+        top: 0;
+      }
       #canvas {
         width: 100vw;
         height: 100vw;
@@ -33,6 +36,12 @@
         box-sizing: border-box;
       }
 
+      .selLine {
+        padding: 5px 10px;
+      }
+      .selLine input {
+        float: right;
+      }
 
     </style>
 
@@ -51,6 +60,49 @@
 
 
 
+    <br>
+    <br>
+
+    <div class="selLine">
+      <label for="doSticky">Keep canvas at the top</label>
+      <input id="doSticky" type="checkbox" name="doSticky" checked>
+    </div>
+
+
+    <div class="">
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
 
     <script src="lib/jQuery.js" charset="utf-8"></script>
     <script type="text/javascript">
@@ -84,6 +136,17 @@
         speed = Number($(this).val())
         $("#speedVal").text(speed)
       })
+
+      $("#doSticky").on("input", function () {
+        if ($(this).is(':checked')) {
+          $(".canCon").css("position", "sticky");  // checked
+        } else {
+          $(".canCon").css("position", "relative");  // unchecked
+        }
+
+      })
+
+
 
       // --- Functions
 
