@@ -8,23 +8,66 @@
     <style media="screen">
       body {
         background-color: lightgray;
-        margin: 0;
+        margin: 0 20vw;
+      }
+      .canCon {
+        display: flex;
+        justify-content: center;
       }
       #canvas {
         background-color: white;
-        margin: 10px;
+        /* margin: 10px auto;
+        left: 0px;
+        right: 0px; */
         border: inset 3px;
+        width: 40vw;
+        height: 40vw;
+        box-sizing: border-box;
       }
       input[type=range] {
-        width: 300px;
+        width: 280px;
       }
       hr {
         margin: 8px 5px;
       }
 
+      .selLine {
+        display: flex;
+        justify-content: space-between;
+
+      }
+
+      #rankTab td,th {
+        text-align: center;
+        border: black 1px solid;
+      }
+      .perfMonitorCon {
+        width: 100%;
+        overflow-x: hidden;
+      }
+      .perfBar {
+        height: 20px;
+        background-color: orange;
+        border: outset 1px;
+        display: flex;
+        align-items: center;
+
+      }
+      .perfNum {
+        color: black;
+        margin-left: 10px;
+        flex: 0 0 100px;
+        /* height: 80%; */
+
+      }
+
+
     </style>
 
     <style media="only screen and (max-width: 600px)">
+      body {
+        margin: 0;
+      }
       .canCon {
         /* width: 100%;
         display: flex;
@@ -45,6 +88,10 @@
       .selLine input {
         float: right;
       }
+      #rankTab {
+        width: 100%
+
+      }
 
     </style>
 
@@ -53,15 +100,45 @@
     <div class="canCon">
       <canvas id="canvas" width="400" height="400"></canvas>
     </div>
+    <br>
+
+    <!-- <div class="btnLine">
+      <button type="button" name="restart">Restart</button>
+    </div> -->
+
+    <div class="" id="rankCon">
+      <table id="rankTab">
+
+      </table>
+    </div>
+
+    <div class="perfMonitorCon">
+      <div class="perfBar" id="timeBar">
+        <span class="perfNum" id="timeNum">X.XX</span>
+      </div>
+    </div>
+
+    <hr>
 
 
     <h3>Settings:</h3>
 
-    <label for="speed">Speed: </label>
-    <input type="range" name="speed" id="speed" value="1" name="points" min="0" max="10">
-    <span id="speedVal">1</span>
+    <div class="selLine">
+      <label for="speed">Speed: </label>
+      <input type="range" name="speed" id="speed" value="1" name="points" min="-9" max="10">
+      <span id="speedVal">1</span>
+    </div>
 
 
+    <div class="selLine">
+      <label for="doSearchMove">Look for opponents</label>
+      <input id="doSearchMove" type="checkbox" name="doSearchMove" checked>
+    </div>
+
+    <div class="selLine">
+      <label for="doCollideSimple">Let entities collide (beta)</label>
+      <input id="doCollideSimple" type="checkbox" name="doCollideSimple" checked>
+    </div>
 
 
 
@@ -113,19 +190,53 @@
     <script src="lib/jQuery.js" charset="utf-8"></script>
     <script type="text/javascript">
 
+      // --- performance Variables
+      var stopRun = false;
+      var timeStor = 0;
+
+      var timeArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      var timeArrayBig = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      // --- canvas Variables
       var cH = 400;
       var cW = 400;
       var ctx;
+      var gameInterval;
 
 
       var size = 10;
       var speed = 1;
+      var view = 100;
+      var intervalTime = 15;
+
+      var doCollideSimple = true;
+      var doCollideFull = false; // TODO: Coming soon
+      var doSearchMove = true;
 
       var stE = { // amount of startEnities
-        rock: 100,
-        paper: 100,
-        scissor: 100,
+        rock: 50,
+        paper: 50,
+        scissor: 50,
       }
+
+      var rank = { // rank[first][second] == win/lose/equal | if first wins over second == 1 | if first looses over second == -1 | else == 0
+        rock: {
+          rock: 0,
+          paper: -1,
+          scissor: 1
+        },
+        paper: {
+          rock: 1,
+          paper: 0,
+          scissor: -1
+        },
+        scissor: {
+          rock: -1,
+          paper: 1,
+          scissor: 0
+        }
+      }
+
       var domList = {
         rock: ["scissors"]
       }
@@ -139,8 +250,25 @@
       // --- Variables Change
 
       $("#speed").on("input", function () {
-        speed = Number($(this).val())
-        $("#speedVal").text(speed)
+
+        if (Number($(this).val()) > 0) {
+          speed = Number($(this).val())
+          intervalTime = 16;
+          clearInterval(gameInterval)
+          gameInterval = setInterval(drawGame, intervalTime);
+          $("#speedVal").text(speed);
+        } else if (Number($(this).val()) == -9) {
+          speed = 0;
+          $("#speedVal").text(0);
+        } else {
+          speed = 1;
+          intervalTime = 15 * Math.pow(0.65, Number($(this).val()));
+          clearInterval(gameInterval)
+          gameInterval = setInterval(drawGame, intervalTime);
+          $("#speedVal").text(Math.floor((0.09 * Number($(this).val()) + 0.9) * 10) / 10);
+          console.log(intervalTime);
+        }
+
       })
 
       $("#doSticky").on("input", function () {
@@ -148,6 +276,40 @@
           $(".canCon").css("position", "sticky");  // checked
         } else {
           $(".canCon").css("position", "relative");  // unchecked
+        }
+      })
+
+      $("#doCollideSimple").on("input", function () {
+        if ($(this).is(':checked')) {
+          doCollideSimple = true;
+        } else {
+          doCollideSimple = false;
+        }
+      })
+
+      $("#doSearchMove").on("input", function () {
+        if ($(this).is(':checked')) {
+          doSearchMove = true;
+        } else {
+          doSearchMove = false;
+        }
+      })
+
+      // --- Listeners
+
+      window.addEventListener("keydown", function (e) {
+        // console.log(e.keyCode);
+        e.preventDefault();
+        if (e.keyCode == 27) { // Escape
+          console.log("### RPS stopped with ESC ###");
+          stopRun = true;
+          clearInterval(gameInterval)
+        }
+        if (e.keyCode == 32) { // Space
+          console.log("### RPS started with Space ###");
+          console.log(gameInterval);
+          clearInterval(gameInterval)
+          gameInterval = setInterval(drawGame, intervalTime);
         }
       })
 
@@ -175,14 +337,14 @@
         this.collide = function () {
 
           if (this.x < 0) {
-            this.x += speed;
+            this.x -= this.x;
           } else if (this.x + size > cW) {
-            this.x -= speed;
+            this.x += cW - (this.x + size);
           }
           if (this.y < 0) {
-            this.y += speed;
+            this.y -= this.y;
           } else if (this.y + size > cH) {
-            this.y -= speed;
+            this.y += cW - (this.y + size);
           }
 
         }
@@ -200,6 +362,9 @@
             this.y -= speed;
           }
         }
+        this.moveAI = function () {
+
+        }
       }
 
       function createGame() {
@@ -208,12 +373,50 @@
             entityList.push(new entity(type, ranPos("x"), ranPos("y")));
           }
         }
+
+        var rankContent = "";
+
+
+        rankContent += "<tr>";
+        rankContent += "<th> x </th>";
+
+        for (var second in rank[Object.keys(rank)[0]]) {
+          rankContent += "<th>" + second + "</th>";
+        }
+
+        rankContent += "</tr>";
+
+
+        for (var first in rank) {
+
+          rankContent += "<tr>";
+          rankContent += "<td class='rankfirstRow'>" + first + "</td>";
+
+          for (var second in rank[first]) {
+            rankContent += "<td title='" + second + "'>" + rank[first][second] + "</td>";
+          }
+
+          rankContent += "</tr>";
+        }
+
+        rankContent = rankContent.replaceAll("-1", "-").replaceAll("1", "+")
+
+        $("#rankTab").append(rankContent);
+
+        gameInterval = setInterval(drawGame, intervalTime);
+
+
       }
 
 
 
 
       function drawGame() {
+
+
+
+        timeStor = performance.now()
+
 
         ctx.fillStyle = "#FFFFFF";
       	ctx.fillRect(0, 0, cH, cW);
@@ -241,123 +444,188 @@
 
         }
 
+        var distList = {x: [], y: []};
+
         for (var i = 0; i < entityList.length; i++) {
 
+
           for (var j = 0; j < entityList.length; j++) {
+            if (i == j) {
+              continue;
+            }
+
+            // distList.x.push(Math.abs(entityList[i].x - entityList[j].x));
+            // distList.y.push(Math.abs(entityList[i].x - entityList[j].x));
+            // console.log(distList);
+            // distList.x[0] = (Math.abs(entityList[i].x - entityList[j].x));
+            // distList.y[0] = (Math.abs(entityList[i].x - entityList[j].x));
+
+            var myType = entityList[i].type;
+            var oppType = entityList[j].type; // Opponent Type
+
             if ((entityList[i].x <= entityList[j].x + size && entityList[i].x + size >= entityList[j].x) && (entityList[i].y <= entityList[j].y + size && entityList[i].y + size >= entityList[j].y)) {
 
+              if (rank[myType][oppType] == 1) {
+                entityList[j].type = myType;
+              } else if (rank[myType][oppType] == -1) {
+                entityList[i].type = oppType;
+              } else if (doCollideSimple) { // --- Collide with Entity
 
-
-              var myType = entityList[i].type;
-              var oppType = entityList[j].type; // Opponent Type
-
-              if (myType == "rock") {
-                if (oppType == "scissor") {
-                  // console.log("scissor -> rock 1 _1");
-                  entityList[j].type = "rock"; // WIN
-                  continue;
+                if (entityList[i].x <= entityList[j].x + (size - 1)) {
+                  entityList[i].x -= speed;
+                } else if (entityList[i].x + (size - 1) >= entityList[j].x) {
+                  entityList[i].x += speed;
                 }
-                if (oppType == "paper") {
-                  // console.log("rock -> paper 1 _2");
-                  entityList[i].type = "paper"; // LOOSE
-                  continue;
+                if (entityList[i].y <= entityList[j].y + (size - 1)) {
+                  entityList[i].y -= speed;
+                } else if (entityList[i].y + (size - 1) >= entityList[j].y) {
+                  entityList[i].y += speed;
+                }
+              } else if (doCollideFull) { // TODO: Coming soon
+
+                // if (entityList[i].x <= entityList[j].x + (size - 1)) {
+                //   entityList[i].x -= (entityList[j].x) - entityList[i].x;
+                // } else if (entityList[i].x + (size - 1) >= entityList[j].x) {
+                //   entityList[i].x += (entityList[i].x) - entityList[j].x;
+                // }
+                // if (entityList[i].y <= entityList[j].y + (size - 1)) {
+                //   entityList[i].y -= (entityList[j].y) - entityList[i].y;
+                // } else if (entityList[i].y + (size - 1) >= entityList[j].y) {
+                //   entityList[i].y += (entityList[i].y) - entityList[j].y;
+                // }
+
+                // if (entityList[i].x <= entityList[j].x + (size - 1)) {
+                //   entityList[i].x -= (entityList[j].x + (size - 1)) - entityList[i].x;
+                // } else if (entityList[i].x + (size - 1) >= entityList[j].x) {
+                //   entityList[i].x += (entityList[i].x + (size - 1)) - entityList[j].x;
+                // }
+                // if (entityList[i].y <= entityList[j].y + (size - 1)) {
+                //   entityList[i].y -= (entityList[j].y + (size - 1)) - entityList[i].y;
+                // } else if (entityList[i].y + (size - 1) >= entityList[j].y) {
+                //   entityList[i].y += (entityList[i].y + (size - 1)) - entityList[j].y;
+                // }
+
+
+                // if (entityList[i].x <= entityList[j].x + (size - 1)) {
+                //   entityList[i].x -= (entityList[j].x) - (entityList[i].x - (size - 1))
+                // } else if (entityList[i].x + (size - 1) >= entityList[j].x) {
+                //   entityList[i].x += (entityList[i].x) - (entityList[j].x - (size - 1))
+                // }
+                // if (entityList[i].y <= entityList[j].y + (size - 1)) {
+                //   entityList[i].y -= (entityList[j].y) - (entityList[i].y - (size - 1))
+                // } else if (entityList[i].y + (size - 1) >= entityList[j].y) {
+                //   entityList[i].y += (entityList[i].y) - (entityList[j].y - (size - 1))
+                // }
+
+                // if (entityList[i].x <= entityList[j].x + (size - 1)) {
+                //   entityList[i].x +=  entityList[i].x - (entityList[j].x + (size - 1));
+                // } else if (entityList[i].x + (size - 1) >= entityList[j].x) {
+                //   entityList[i].x -= entityList[j].x - (entityList[i].x + (size - 1));
+                // }
+                // if (entityList[i].y <= entityList[j].y + (size - 1)) {
+                //   entityList[i].y += entityList[i].y - (entityList[j].y + (size - 1));
+                // } else if (entityList[i].y + (size - 1) >= entityList[j].y) {
+                //   entityList[i].y -= entityList[j].y - (entityList[i].y + (size - 1));
+                // }
+
+                // if (entityList[i].x <= entityList[j].x + (size - 1)) {
+                //   entityList[i].x +=  entityList[i].x - (entityList[j].x);
+                // } else if (entityList[i].x + (size - 1) >= entityList[j].x) {
+                //   entityList[i].x -= entityList[j].x - (entityList[i].x);
+                // }
+                // if (entityList[i].y <= entityList[j].y + (size - 1)) {
+                //   entityList[i].y += entityList[i].y - (entityList[j].y);
+                // } else if (entityList[i].y + (size - 1) >= entityList[j].y) {
+                //   entityList[i].y -= entityList[j].y - (entityList[i].y);
+                // }
+
+              }
+            }
+
+          }
+
+          // console.log("---------------------");
+          if (doSearchMove) {
+            enemyloop:
+            for (var j = 0; j < entityList.length; j++) {
+
+              for (var e = 10; e < view; e++) {
+                // console.log(e);
+                // console.log(entityList[i].type);
+                // console.log(entityList[j].type);
+
+                if ((entityList[i].x - e <= entityList[j].x && entityList[i].x + e >= entityList[j].x) && (entityList[i].y <= entityList[j].y + e && entityList[i].y + e >= entityList[j].y)) {
+
+                  var myType = entityList[i].type;
+                  var oppType = entityList[j].type;
+
+                  if (myType == oppType) {
+                    break;
+                  }
+
+                  // console.log(myType + " sees " + oppType + " ... res = " + rank[myType][oppType]);
+
+                  if ((entityList[i].x - e <= entityList[j].x) && (entityList[i].x + e >= entityList[j].x)) {
+                    if (entityList[i].x - entityList[j].x < 0) { // move right if hunting
+                      if (rank[myType][oppType] == 1) {
+                        entityList[i].x += speed;
+                      } else if (rank[myType][oppType] == -1) {
+                        entityList[i].x -= speed;
+                      }
+                    } else if (entityList[i].x - entityList[j].x > 0) { // move left if hunting
+                      if (rank[myType][oppType] == 1) {
+                        entityList[i].x -= speed;
+                      } else if (rank[myType][oppType] == -1) {
+                        entityList[i].x += speed;
+                      }
+                    }
+                  }
+                  if (entityList[i].y <= entityList[j].y + e && entityList[i].y + e >= entityList[j].y) {
+                    if (entityList[i].y - entityList[j].y < 0) { // move up if hunting
+                      if (rank[myType][oppType] == 1) {
+                        entityList[i].y += speed;
+                      } else if (rank[myType][oppType] == -1) {
+                        entityList[i].y -= speed;
+                      }
+                    }
+                    if (entityList[i].y - entityList[j].y > 0) {
+                      if (rank[myType][oppType] == 1) {
+                        entityList[i].y -= speed;
+                      } else if (rank[myType][oppType] == -1) {
+                        entityList[i].y += speed;
+                      }
+                    }
+                  }
+                  break enemyloop;
                 }
               }
-              if (myType == "paper") {
-                if (oppType == "rock") {
-                  // console.log("rock -> paper 2 _3");
-                  entityList[j].type = "paper"; // WIN
-                  continue;
-                }
-                if (oppType == "scissor") {
-                  // console.log("paper -> scissor 1 _4");
-                  entityList[i].type = "scissor"; // LOOSE
-                  continue;
-                }
-              }
-              if (myType == "scissor") {
-                if (oppType == "paper") {
-                  // console.log("paper -> scissor 2 _5");
-                  entityList[j].type = "scissor"; // WIN
-                  continue;
-                }
-                if (oppType == "rock") {
-                  // console.log("scissor -> rock 2 _6");
-                  entityList[i].type = "rock"; // LOOSE
-                  continue;
-                }
-              }
-
             }
           }
+
+
+
+
           entityList[i].moveRan();
           entityList[i].collide();
         }
 
 
-        // for (var i = 0; i < entityList.length; i++) {
-        //   posList.x.shift()
-        //   posList.y.shift()
-        //
-        //   if (posList.x.includes(entityList[i].x) || posList.y.includes(entityList[i].y) || (posList.x.includes(entityList[i].x + size) || posList.y.includes(entityList[i].y + size))) { // checks if someone else hase the same x of y values
-        //     var posIndex = posList.x.indexOf(entityList[i].x)
-        //
-        //     if (posIndex == posList.y.indexOf(entityList[i].y)) { // checks if x an y belonge to the same Entity
-        //
-        //       var myType = entityList[i].type;
-        //       var oppType = entityList[posIndex].type; // Opponent Type
-        //
-        //       if (myType == "rock") {
-        //         if (oppType == "scissor") {
-        //           console.log("scissor -> rock 1 _1");
-        //           entityList[posIndex].type = "rock"; // WIN
-        //           continue;
-        //         }
-        //         if (oppType == "paper") {
-        //           console.log("rock -> paper 1 _2");
-        //           entityList[i].type = "paper"; // LOOSE
-        //           continue;
-        //         }
-        //       }
-        //       if (myType == "paper") {
-        //         if (oppType == "rock") {
-        //           console.log("rock -> paper 2 _3");
-        //           entityList[posIndex].type = "paper"; // WIN
-        //           continue;
-        //         }
-        //         if (oppType == "scissor") {
-        //           console.log("paper -> scissor 1 _4");
-        //           entityList[i].type = "scissor"; // LOOSE
-        //           continue;
-        //         }
-        //       }
-        //       if (myType == "scissor") {
-        //         if (oppType == "paper") {
-        //           console.log("paper -> scissor 2 _5");
-        //           entityList[posIndex].type = "scissor"; // WIN
-        //           continue;
-        //         }
-        //         if (oppType == "rock") {
-        //           console.log("scissor -> rock 2 _6");
-        //           entityList[i].type = "rock"; // LOOSE
-        //           continue;
-        //         }
-        //       }
-        //
-        //       // ctx.fillStyle = "lime";
-        //       // ctx.fillRect(entityList[i].x - 2, entityList[i].y - 2, 4, 4);
-        //       // alert("found one at " + entityList[i].x + " | " + entityList[i].y)
-        //       // return;
-        //     }
-        //   }
-        //
-        //   entityList[i].moveRan();
+        timeArray.shift();
+        timeArray.push(performance.now() - timeStor);
+
+        timeArrayBig.shift();
+        timeArrayBig.push(performance.now() - timeStor);
+
+        $("#timeBar").css("width", 30 * (timeArray.reduce((a, b) => a + b) / timeArray.length) + "px")
+        $("#timeNum").text((Math.round((timeArray.reduce((a, b) => a + b) / timeArray.length) * 10) / 10) + " | " + (Math.round((timeArrayBig.reduce((a, b) => a + b) / timeArrayBig.length) * 100) / 100))
+
+        // $("#timeBar").css("width", 8 * (performance.now() - timeStor) + "px")
+
+        // if (stopRun) {
+        //   // console.log("### RPS stopped with ESC ###");
+        //   return;
         // }
-
-
-        requestAnimationFrame(drawGame)
-
-
+        // requestAnimationFrame(drawGame)
       }
 
 
@@ -366,7 +634,6 @@
 
         createGame()
 
-        requestAnimationFrame(drawGame)
       }
 
 
