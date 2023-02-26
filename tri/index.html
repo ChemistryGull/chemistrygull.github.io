@@ -37,13 +37,13 @@
       var canvas = document.getElementById("canvas")
       var ctx = canvas.getContext("2d")
 
-      var startPos = [500, 500]
+      var startPos = [540,100]
       var cur;
 
       var w = 600;
       var size = 1;
       var b = 10; // --- Border size
-      var freq = 100; // --- Interval Frequency
+      var freq = 1; // --- Interval Frequency
       var P;
       // var P[0] = [];
       // var P[1] = [];
@@ -69,28 +69,28 @@
 
 
 
-        // ctx.fillStyle = "orange";
-        // ctx.fillRect(cur[0],cur[1],size,size)
-        // ctx.fillStyle = "red";
-        // ctx.fillRect(P[0][0],P[0][1],size,size)
-        // ctx.fillStyle = "blue";
-        // ctx.fillRect(P[1][0],P[1][1],size,size)
-        // ctx.fillStyle = "green";
-        // ctx.fillRect(P[2][0],P[2][1],size,size)
-        //
-        //
-        // ctx.beginPath()
-        // ctx.moveTo(P[0][0] + size/2, P[0][1] + size/2)
-        // ctx.lineTo(P[1][0] + size/2, P[1][1] + size/2)
-        // ctx.stroke();
-        // ctx.beginPath()
-        // ctx.moveTo(P[1][0] + size/2, P[1][1] + size/2)
-        // ctx.lineTo(P[2][0] + size/2, P[2][1] + size/2)
-        // ctx.stroke();
-        // ctx.beginPath()
-        // ctx.moveTo(P[2][0] + size/2, P[2][1] + size/2)
-        // ctx.lineTo(P[0][0] + size/2, P[0][1] + size/2)
-        // ctx.stroke();
+        ctx.fillStyle = "orange";
+        ctx.fillRect(cur[0],cur[1],size,size)
+        ctx.fillStyle = "red";
+        ctx.fillRect(P[0][0],P[0][1],size,size)
+        ctx.fillStyle = "blue";
+        ctx.fillRect(P[1][0],P[1][1],size,size)
+        ctx.fillStyle = "green";
+        ctx.fillRect(P[2][0],P[2][1],size,size)
+
+
+        ctx.beginPath()
+        ctx.moveTo(P[0][0] + size/2, P[0][1] + size/2)
+        ctx.lineTo(P[1][0] + size/2, P[1][1] + size/2)
+        ctx.stroke();
+        ctx.beginPath()
+        ctx.moveTo(P[1][0] + size/2, P[1][1] + size/2)
+        ctx.lineTo(P[2][0] + size/2, P[2][1] + size/2)
+        ctx.stroke();
+        ctx.beginPath()
+        ctx.moveTo(P[2][0] + size/2, P[2][1] + size/2)
+        ctx.lineTo(P[0][0] + size/2, P[0][1] + size/2)
+        ctx.stroke();
       }
 
 
@@ -98,29 +98,29 @@
       function doTri() {
         // counter ++;
         // console.log(counter);
-        console.log("cur");
-        console.log(cur);
+        // console.log("cur");
+        // console.log(cur);
 
         var n = choose();
 
-        console.log("n");
-        console.log(n);
+        // console.log("n");
+        // console.log(n);
         // var n = 1;
         var pc = [cur[0] - P[n][0], cur[1] - P[n][1]];
-        console.log("pc");
-        console.log(pc);
+        // console.log("pc");
+        // console.log(pc);
         var l = len(pc[0], pc[1]);
-        console.log("l");
-        console.log(l);
+        // console.log("l");
+        // console.log(l);
         var pce = [1/l * pc[0], 1/l * pc[1]]; // pc einheitsvektor
-        console.log("pce");
-        console.log(pce);
+        // console.log("pce");
+        // console.log(pce);
         var pch = [pce[0] * l/2, pce[1] * l/2]; // pc half
-        console.log("pch");
-        console.log(pch);
+        // console.log("pch");
+        // console.log(pch);
         cur = [pch[0] + P[n][0], pch[1] + P[n][1]];
-        console.log("cur");
-        console.log(cur);
+        // console.log("cur");
+        // console.log(cur);
 
 
         ctx.fillStyle = "lime";
@@ -148,9 +148,11 @@
         if (running) {
           clearInterval(triInterval)
           running = false;
+          console.log("### stop ###");
         } else {
           triInterval = setInterval(doTri, freq)
           running = true;
+          console.log("### play ###");
         }
       })
 
