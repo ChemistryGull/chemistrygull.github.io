@@ -1,15 +1,41 @@
-var g = 0.05;
-var friction = 0.001;
+
+
+var g = 0.5;
+var friction = 0.01;
+
+var running = false;
+var gameInterval;
+var gameIntTime = 20;
+
+var bls = [];
+
+function ran(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+function ranColor() {
+  return "#" + (ran(0, 255).toString(16) + "00").substring(0, 2) + (ran(0, 255).toString(16) + "00").substring(0, 2) + (ran(0, 255).toString(16) + "00").substring(0, 2);
+}
+
 function startGame() {
   gameArea.start();
-  ball1 = new ball(60, "red", 100 , 200);
-  // setInterval(mainFunction, 20);
-  window.requestAnimationFrame(drawGame);
+  // bls.push(new ball(60, "red", 100 , 200, 10, 2));
+  // bls.push(new ball(40, "green", 100 , 200, 100, -100));
+  // bls.push(new ball(100, "blue", 200 , 200, 20, 0));
+  for (var i = 0; i < 10; i++) {
+    bls.push(new ball(ran(10, 100), ranColor(), ran(100, window.innerWidth - 100), ran(100, window.innerHeight - 100), ran(0, 30), ran(1, 30)));
+
+  }
+
+  running = true;
+  gameInterval = setInterval(drawGame, gameIntTime);
+
+
 }
 
 window.onload = function () {
   gameArea.canvas.width = window.innerWidth - 2;
   gameArea.canvas.height = window.innerHeight - 2;
+
   startGame();
 }
 
@@ -30,13 +56,13 @@ var gameArea = {
   }
 }
 
-function ball(r, color, x, y) {
+function ball(r, color, x, y, sx, sy) {
   this.radius = r;
   this.color = color;
   this.x = x;
   this.y = y;
-  this.speedX = 0;
-  this.speedY = 0;
+  this.speedX = sx;
+  this.speedY = sy;
   ctx = gameArea.ctx;
 
   this.update = function () {
@@ -50,12 +76,28 @@ function ball(r, color, x, y) {
     this.y += this.speedY;
   }
   this.bounce = function () {
-    if (this.x + this.radius >= gameArea.canvas.width || this.x - this.radius <= 0) {
+    if (this.x + this.radius >= gameArea.canvas.width) {
       this.speedX = this.speedX * -1;
+      this.x = gameArea.canvas.width - this.radius;
+      console.log("Collide Right Walls");
     }
-    if (this.y + this.radius >= gameArea.canvas.height || this.y - this.radius <= 0) {
+    if (this.x - this.radius <= 0) {
+      this.speedX = this.speedX * -1;
+      this.x = this.radius;
+      console.log("Collide Left Wall");
+
+    }
+    if (this.y + this.radius >= gameArea.canvas.height) {
       this.speedY *= -1;
+      this.y = gameArea.canvas.height - this.radius;
+      console.log("Collide Lower Walls");
     }
+    if (this.y - this.radius <= 0) {
+      this.speedY *= -1;
+      this.y = this.radius;
+      console.log("Collide Upper Walls");
+    }
+
   }
   this.gravity = function () {
     this.speedY += g;
@@ -80,15 +122,31 @@ function ball(r, color, x, y) {
 function drawGame() {
   gameArea.clear();
 
+  for (var i = 0; i < bls.length; i++) {
+    bls[i].update();
+    bls[i].bounce();
+    bls[i].gravity();
+    bls[i].move();
+    console.log(bls[i].speedY);
+  }
 
 
-  ball1.update();
-  ball1.bounce();
-  ball1.gravity();
-  // ball1.friction();
-  ball1.move();
-  // console.log(ball1.speedY);
-  // console.log("e");
 
-  window.requestAnimationFrame(drawGame);
+  // window.requestAnimationFrame(drawGame);
 }
+
+window.addEventListener("keydown", function (e) {
+  if (e.keyCode == 32) {
+    if (running) {
+      running = false;
+      clearInterval(gameInterval)
+      console.log("### PAUSE ###");
+      return;
+    }
+    if (!running)
+      running = true;
+      gameInterval = setInterval(drawGame, gameIntTime);
+      console.log("### START ###");
+      return;
+  }
+})
