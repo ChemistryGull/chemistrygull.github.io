@@ -334,8 +334,6 @@
         this.w = size;
         this.x = x;
         this.y = y;
-        this.nextx;
-        this.nexty;
 
         this.collide = function () {
 
@@ -357,17 +355,17 @@
 
         }
         this.moveRan = function () { // moving Random; // DEBUG: Make more efficient
-          var rannum = Math.random();
-          if (rannum > 0.2) {
-            this.nextx = 1;
-          } else if (rannum > 0.4) {
-            this.nextx = -1;
-          } else if (rannum > 0.6) {
-            this.nexty = 1;
-          } else if (rannum > 0.8) {
-            this.nexty = -1;
-          } else {
-            this.nexty = 0;
+          if (Math.random() > 0.5) {
+            this.x += speed;
+          }
+          if (Math.random() > 0.5) {
+            this.x -= speed;
+          }
+          if (Math.random() > 0.5) {
+            this.y += speed;
+          }
+          if (Math.random() > 0.5) {
+            this.y -= speed;
           }
         }
         this.moveAI = function () {
@@ -461,65 +459,6 @@
             continue;
           }
 
-          entityList[i].moveRan();
-
-          if (doSearchMove) {
-            enemyloop:
-            for (var j = 0; j < entityList.length; j++) {
-
-              for (var e = 10; e < view; e++) {
-                // console.log(e);
-                // console.log(entityList[i].type);
-                // console.log(entityList[j].type);
-
-                if ((entityList[i].x - e <= entityList[j].x && entityList[i].x + e >= entityList[j].x) && (entityList[i].y <= entityList[j].y + e && entityList[i].y + e >= entityList[j].y)) {
-
-                  var myType = entityList[i].type;
-                  var oppType = entityList[j].type;
-
-                  if (myType == oppType) {
-                    break;
-                  }
-
-                  // console.log(myType + " sees " + oppType + " ... res = " + rank[myType][oppType]);
-
-                  if ((entityList[i].x - e <= entityList[j].x) && (entityList[i].x + e >= entityList[j].x)) {
-                    if (entityList[i].x - entityList[j].x < 0) { // move right if hunting
-                      if (rank[myType][oppType] == 1) {
-                        entityList[i].nextx = 1;
-                      } else if (rank[myType][oppType] == -1) {
-                        entityList[i].nextx = -1;
-                      }
-                    } else if (entityList[i].x - entityList[j].x > 0) { // move left if hunting
-                      if (rank[myType][oppType] == 1) {
-                        entityList[i].nextx = -1;
-                      } else if (rank[myType][oppType] == -1) {
-                        entityList[i].nextx = 1;
-                      }
-                    }
-                  }
-                  if (entityList[i].y <= entityList[j].y + e && entityList[i].y + e >= entityList[j].y) {
-                    if (entityList[i].y - entityList[j].y < 0) { // move up if hunting
-                      if (rank[myType][oppType] == 1) {
-                        entityList[i].nexty = 1;
-                      } else if (rank[myType][oppType] == -1) {
-                        entityList[i].nextx = -1;
-                      }
-                    }
-                    if (entityList[i].y - entityList[j].y > 0) {
-                      if (rank[myType][oppType] == 1) {
-                        entityList[i].nexty = -1;
-                      } else if (rank[myType][oppType] == -1) {
-                        entityList[i].nexty = 1;
-                      }
-                    }
-                  }
-                  break enemyloop;
-                }
-              }
-            }
-          }
-
           for (var j = 0; j < entityList.length; j++) {
             if (i == j) {
               continue;
@@ -545,17 +484,17 @@
               if (doCollideSimple) { // --- Collide with Entity
 
                 if (entityList[i].x <= entityList[j].x + (size - 1)) {
-                  entityList[i].nextx = -1;
+                  entityList[i].x -= speed;
                   // continue currentloop;
                 } else if (entityList[i].x + (size - 1) >= entityList[j].x) {
-                  entityList[i].nextx = 1;
+                  entityList[i].x += speed;
                   // continue currentloop;
                 }
                 if (entityList[i].y <= entityList[j].y + (size - 1)) {
-                  entityList[i].nexty = -1;
+                  entityList[i].y -= speed;
                   // continue currentloop;
                 } else if (entityList[i].y + (size - 1) >= entityList[j].y) {
-                  entityList[i].nexty = 1;
+                  entityList[i].y += speed;
                   // continue currentloop;
                 }
               } else if (doCollideFull) { // TODO: Coming soon
@@ -622,15 +561,67 @@
           }
 
           // console.log("---------------------");
+          if (!doSearchMove) {
+            enemyloop:
+            for (var j = 0; j < entityList.length; j++) {
+
+              for (var e = 10; e < view; e++) {
+                // console.log(e);
+                // console.log(entityList[i].type);
+                // console.log(entityList[j].type);
+
+                if ((entityList[i].x - e <= entityList[j].x && entityList[i].x + e >= entityList[j].x) && (entityList[i].y <= entityList[j].y + e && entityList[i].y + e >= entityList[j].y)) {
+
+                  var myType = entityList[i].type;
+                  var oppType = entityList[j].type;
+
+                  if (myType == oppType) {
+                    break;
+                  }
+
+                  // console.log(myType + " sees " + oppType + " ... res = " + rank[myType][oppType]);
+
+                  if ((entityList[i].x - e <= entityList[j].x) && (entityList[i].x + e >= entityList[j].x)) {
+                    if (entityList[i].x - entityList[j].x < 0) { // move right if hunting
+                      if (rank[myType][oppType] == 1) {
+                        entityList[i].x += speed;
+                      } else if (rank[myType][oppType] == -1) {
+                        entityList[i].x -= speed;
+                      }
+                    } else if (entityList[i].x - entityList[j].x > 0) { // move left if hunting
+                      if (rank[myType][oppType] == 1) {
+                        entityList[i].x -= speed;
+                      } else if (rank[myType][oppType] == -1) {
+                        entityList[i].x += speed;
+                      }
+                    }
+                  }
+                  if (entityList[i].y <= entityList[j].y + e && entityList[i].y + e >= entityList[j].y) {
+                    if (entityList[i].y - entityList[j].y < 0) { // move up if hunting
+                      if (rank[myType][oppType] == 1) {
+                        entityList[i].y += speed;
+                      } else if (rank[myType][oppType] == -1) {
+                        entityList[i].y -= speed;
+                      }
+                    }
+                    if (entityList[i].y - entityList[j].y > 0) {
+                      if (rank[myType][oppType] == 1) {
+                        entityList[i].y -= speed;
+                      } else if (rank[myType][oppType] == -1) {
+                        entityList[i].y += speed;
+                      }
+                    }
+                  }
+                  break enemyloop;
+                }
+              }
+            }
+          }
 
 
 
 
-
-
-
-          entityList[i].x += entityList[i].nextx * speed;
-          entityList[i].y += entityList[i].nexty * speed;
+          entityList[i].moveRan();
 
         }
 

@@ -5,7 +5,7 @@ var friction = 0.01;
 
 var running = false;
 var gameInterval;
-var gameIntTime = 500;
+var gameIntTime = 10;
 
 var bls = [];
 
@@ -17,9 +17,9 @@ function startGame() {
   // // bls.push(new ball(40, "green", 100 , 200, 100, -100));
   // bls.push(new ball(60, "blue", 500 , 220, -40, 10));
 
-  bls.push(new ball(100, "red", 300 , 200, 1, 0));
-  // bls.push(new ball(40, "green", 100 , 200, 100, -100));
-  bls.push(new ball(100, "blue", 600 , 360, -16, 0));
+  bls.push(new ball(100, "red", 300 , 200, 1, 0, 70));
+  bls.push(new ball(100, "green", 600 , 300, -1, 0, 70));
+  // bls.push(new ball(100, "blue", 600 , 360, -16, 0));
 
 
   // bls.push(new ball(50, "green", 100 , 100, 1, 2));
@@ -35,14 +35,14 @@ function startGame() {
 }
 
 
-function ball(r, color, x, y, sx, sy) {
+function ball(r, color, x, y, sx, sy, m) {
   this.radius = r;
   this.color = color;
   this.x = x;
   this.y = y;
   this.sx = sx;
   this.sy = sy;
-  this.m = r;
+  this.m = m;
   ctx = gameArea.ctx;
 
   this.update = function () {
@@ -56,6 +56,7 @@ function ball(r, color, x, y, sx, sy) {
     this.y += this.sy;
   }
   this.bounce = function () {
+    console.log(this.color + " Momentum = " + (Math.sqrt(this.sx * this.sx + this.sy * this.sy)));
     if (this.x + this.radius >= gameArea.canvas.width) {
       this.sx = this.sx * -1;
       this.x = gameArea.canvas.width - this.radius;
@@ -98,9 +99,53 @@ function ball(r, color, x, y, sx, sy) {
       var dx = this.x - bls[i].x;
       var dy = this.y - bls[i].y;
       var dist = Math.abs(Math.sqrt(dx * dx + dy * dy));
+
+      ctx.fillStyle = "green"
+      ctx.fillText("Distance = " + dist, 10, 10);
+
       if (dist <= this.radius + bls[i].radius) {
         // console.log("collide");
         gameArea.canvas.style = "background-color: orange";
+
+        // --- Penetration resulution
+
+
+
+
+
+        // var v1 = Math.sqrt(this.sx * this.sx + this.sy * this.sy)
+        // var m1 = this.m
+        //
+        // var v2 = Math.sqrt(bls[i].sx * bls[i].sx + bls[i].sy * bls[i].sy)
+        // var m2 = bls[i].m
+        //
+        // var a1 = Math.acos((dx * this.sx + dy * this.sy) / (v1 * dist))
+        // var a2 = Math.acos((dx * bls[i].sx + dy * bls[i].sy) / (v1 * dist))
+        //
+        // console.log(this.color + " a1 = " + a1);
+        // console.log(bls[i].color + " a2 = " + a2);
+        //
+        //
+        // var vx1 = Math.cos(a1) * v1;
+        // var vy1 = Math.sin(a1) * v1;
+        //
+        // var vx2 = Math.cos(a2) * v2;
+        // var vy2 = Math.sin(a2) * v2;
+        //
+        // console.log(this.color + " vx1 = " + vx1);
+        // console.log(this.color + " vy1 = " + vy1);
+        //
+        // console.log(bls[i].color + " vx2 = " + vx2);
+        // console.log(bls[i].color + " vy2 = " + vy2);
+        //
+        //
+        // var vx1F = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
+        // var vx2F = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
+        //
+        //
+        // clearInterval(gameInterval)
+
+        /*
 
         var v1 = Math.sqrt(this.sx * this.sx + this.sy * this.sy)
         var m1 = this.m
@@ -192,7 +237,7 @@ function ball(r, color, x, y, sx, sy) {
 
 
 
-
+        */
 
         // --- 1D:
 
@@ -207,6 +252,9 @@ function ball(r, color, x, y, sx, sy) {
         //
         // this.sx = v1f;
         // bls[i].sx = v2f;
+
+
+
 
       }
     }
@@ -278,6 +326,8 @@ window.addEventListener("keydown", function (e) {
       console.log("### START ###");
       return;
   }
+
+
 })
 
 // --- Fuctional Functions
