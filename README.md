@@ -3,8 +3,12 @@
 This is still under development...
 Here is a list of my projects:
 
+## Balls
+A physics engine written in vanilla JS. 
+
 ## GullScreen
-Some ball jumping and stuff. May work on it in the future.
+Some ball jumping and stuff. (Moved to Balls)
+May work on it in the future?
 
 ## MiniGames
 Some MiniGames I developed / will develop in the future.
