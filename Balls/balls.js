@@ -1,10 +1,9 @@
-
 var acceleration = 0.5;
-var friction = 0.0;
+var friction = 0.0025;
 var elasticity = 1 ;
 var showVelVec = false;
 var phy = {
-  G: 0.00001
+  G: 0.0001
 }
 
 var running = false;
@@ -21,18 +20,42 @@ var i_info = 0;
 var bls = [];
 
 var Left, Up, Right, Down = false;
+var VpL, VpU, VpR, VpD = false;
 
 function startGame() {
   gameArea.start();
   canvasInfo.start();
-  // bls.push(new ball(100, "red", 300 , 200, 30, -20));
-  // // bls.push(new ball(40, "green", 100 , 200, 100, -100));
-  // bls.push(new ball(60, "blue", 500 , 220, -40, 10));
 
-  bls.push(new ball(200 , 400, 40, "red", 10));
-  bls.push(new ball(600 , 400, 60, "yellow", 100000000));
-  // bls[0].vel.x = 0;
-  bls[0].vel.y = 1;
+
+  // bls.push(new ball(300 , 600, 10, "red"));
+  // bls.push(new ball(1000 , 600, 100, "yellow"));
+
+  // bls[1].vel.x = -1;
+
+  // bls.push(new ball(900 , 600, 40, "red", 10000000));
+  // bls.push(new ball(1200 , 600, 40, "yellow", 10000000));
+  // bls.push(new ball(800 , 700, 40, "blue", 100000));
+  // bls.push(new ball(500 , 700, 40, "green", 100000));
+
+  //
+  // bls.push(new ball(300 , 600, 10, "red", 40));
+  bls.push(new ball(1000 , 600, 100, "yellow", 10000000));
+  bls.push(new ball(435, 600, 10, "#ad04bc", 10));
+
+  // bls.push(new ball(500 , 600, 15, "blue", 2));
+  // bls.push(new ball(800 , 600, 9, "green", 1));
+
+  // bls.push(new ball(280 , 600, 5, "orange", 1));
+
+
+  bls[1].vel.y = 1;
+  // // bls[0].vel.y = 1;
+  // bls[2].vel.y = 1;
+  // bls[3].vel.y = 2;
+  // bls[4].vel.y = 1.34;
+  // bls[1].vel.y = 1.1825;
+  // bls[2].vel.y = 2;
+  // bls[3].vel.y = -2;
 
   // bls[1].vel.y = -1;
 
@@ -47,14 +70,22 @@ function startGame() {
   // bls[0].vel.y = 1;
 
   for (var i = 0; i < 0; i++) {
-    bls.push(new ball(ran(100, window.innerWidth - 100), ran(100, window.innerHeight - 100), ran(5, 10), ranColor()));
+    bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor()));
 
   }
 
-  for (var i = 0; i < bls.length; i++) {
-    // bls[i].acc.y = 0.01;
-    // bls[i].acc.x = 0.01;
-  }
+  // for (var i = 0; i < bls.length; i++) {
+  //   // bls[i].acc.y = 0.01;
+  //   // bls[i].acc.x = 0.01;
+  //   bls[i].vel.y = (ran(0, 40) / 10) - 2;
+  //   bls[i].vel.x = (ran(0, 40) / 10) - 2;
+  // }
+
+  // bls.push(new ball(0 , 0, 200, "red"));
+  // bls.push(new ball(1000 , 1000, 200, "yellow"));
+  // bls.push(new ball(-1000 , -1000, 200, "green"));
+
+
 
   running = true;
   gameInterval = setInterval(drawGame, gameIntTime);
@@ -88,25 +119,27 @@ function ball(x, y, r, color, m = undefined) {
   this.update = function () {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, this.r, 0, 2 * Math.PI);
+    ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
     ctx.fill();
 
     canvasInfo.ctx.fillStyle = this.color;
     canvasInfo.ctx.beginPath();
-    canvasInfo.ctx.arc(this.pos.x, this.pos.y, 2, 0, 2 * Math.PI);
+    canvasInfo.ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, 2, 0, 2 * Math.PI);
     canvasInfo.ctx.fill();
 
     if (showVelVec) {
-      this.vel.drawVec(this.pos.x, this.pos.y, 20, "green");
-      this.acc.drawVec(this.pos.x, this.pos.y, 1, "blue");
+      this.vel.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 20, "green");
+      this.acc.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 1, "blue");
     }
   }
   this.move = function () {
     this.vel = this.vel.add(this.acc);
     this.pos = this.pos.add(this.vel);
+    this.acc = new Vector(0, 0);
+
   }
   this.friction = function () {
-    this.vel = this.vel.mult(1 - friction);
+    // this.vel = this.vel.mul(1 - friction);
 
     // --- !!! The following messes with the Total Momentum and Total Kinetic energy, leave value as low as possible
     // if (Math.abs(this.vel.x) < 0.0000001) {
@@ -133,11 +166,33 @@ function ball(x, y, r, color, m = undefined) {
       // ctx.fillText("Collision " + this.color + " & " + b2.color, gameArea.canvas.width - 250, 20);
       // var timerColl = Date.now();
 
-      var penDepth = this.r + b2.r - distVec.mag();
-      var penRes = distVec.unit().mult(penDepth / (this.m_inv + b2.m_inv))
+      if (true) { // --- Simplistic Method to combine two balls. EDIT IN FUTURE
+        if (this.m >= b2.m) {
+          // this.vel = this.vel.mul(this.m).add(b2.vel.mul(b2.m).mul(1/(this.m + b2.m)))
+          this.vel = this.vel.unit().mul((this.vel.mag() * this.m + -b2.vel.mag() * b2.m) / (b2.m + this.m));
 
-      this.pos = this.pos.add(penRes.mult(-1 * this.m_inv))
-      b2.pos = b2.pos.add(penRes.mult(b2.m_inv))
+          this.m += b2.m;
+          this.r = Math.sqrt(b2.r**2 + this.r**2);
+          bls.splice(bls.indexOf(b2), 1)
+
+        }
+        if (this.m < b2.m) {
+          b2.vel = b2.vel.unit().mul((b2.vel.mag() * b2.m + -this.vel.mag() * this.m) / (b2.m + this.m));
+
+          b2.m += this.m;
+          b2.r = Math.sqrt(b2.r**2 + this.r**2);;
+          bls.splice(bls.indexOf(this), 1)
+
+        }
+        return;
+
+      }
+
+      var penDepth = this.r + b2.r - distVec.mag();
+      var penRes = distVec.unit().mul(penDepth / (this.m_inv + b2.m_inv))
+
+      this.pos = this.pos.add(penRes.mul(-1 * this.m_inv))
+      b2.pos = b2.pos.add(penRes.mul(b2.m_inv))
 
 
       // --- Collision Code - Help from https://www.youtube.com/watch?v=vnfsA2gWWOA&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=9
@@ -146,17 +201,11 @@ function ball(x, y, r, color, m = undefined) {
       var sepVel = relVel.scalar(distVecNorm);
       let new_sepVel = -sepVel * elasticity;
       var impulse = (sepVel - new_sepVel) / (this.m_inv + b2.m_inv);
-      var impulseVec = distVecNorm.mult(impulse);
+      var impulseVec = distVecNorm.mul(impulse);
 
 
-      this.vel = this.vel.add(impulseVec.mult(this.m_inv));
-      b2.vel = b2.vel.add(impulseVec.mult(-1 * b2.m_inv));
-
-
-
-
-
-
+      this.vel = this.vel.add(impulseVec.mul(this.m_inv));
+      b2.vel = b2.vel.add(impulseVec.mul(-1 * b2.m_inv));
 
 
       // console.log(distVecNorm);
@@ -167,8 +216,8 @@ function ball(x, y, r, color, m = undefined) {
 
 
 
-      // var b1New = this.vel.subtr((this.pos.subtr(b2.pos).mult(( this.vel.subtr(b2.vel).scalar(this.pos.subtr(b2.pos)) ) / ( this.pos.subtr(b2.pos).mag()**2 ))).mult(b2.m * 2 / (this.m + b2.m)))
-      // var b2New = b2.vel.subtr((b2.pos.subtr(this.pos).mult(( b2.vel.subtr(this.vel).scalar(b2.pos.subtr(this.pos)) ) / ( b2.pos.subtr(this.pos).mag()**2 ))).mult(this.m * 2 / (b2.m + this.m)))
+      // var b1New = this.vel.subtr((this.pos.subtr(b2.pos).mul(( this.vel.subtr(b2.vel).scalar(this.pos.subtr(b2.pos)) ) / ( this.pos.subtr(b2.pos).mag()**2 ))).mul(b2.m * 2 / (this.m + b2.m)))
+      // var b2New = b2.vel.subtr((b2.pos.subtr(this.pos).mul(( b2.vel.subtr(this.vel).scalar(b2.pos.subtr(this.pos)) ) / ( b2.pos.subtr(this.pos).mag()**2 ))).mul(this.m * 2 / (b2.m + this.m)))
       //
       //
       // this.vel = b1New;
@@ -183,14 +232,28 @@ function ball(x, y, r, color, m = undefined) {
     }
   }
   this.gravity = function (b2) {
-    var distVec = b2.pos.subtr(this.pos);
-    var dist = distVec.mag();
-    var force = phy.G * this.m * b2.m / (dist * dist);
+    // var distVec = b2.pos.subtr(this.pos);
+    // var dist = distVec.mag();
+    // var force = phy.G * this.m * b2.m / (dist * dist);
+    // var vForce = distVec.unit().mul(force);
+    // this.acc = this.acc.add(vForce.mul(1 / this.m));
+    // b2.acc = b2.acc.add(vForce.mul(-1 / b2.m));
 
-    this.acc = distVec.unit().mult(force / this.m);
-    b2.acc = distVec.unit().mult(-force / b2.m);
+    // this.acc = (distVec.unit().mul(force / this.m));
+    // b2.acc = (distVec.unit().mul(-force / b2.m));
+    // this.acc = this.acc.add(distVec.unit().mul(force / this.m));
+    // b2.acc = b2.acc.add(distVec.unit().mul(-force / b2.m));
 
     // console.log(force);
+
+    var distVec = b2.pos.subtr(this.pos);
+    var dist = distVec.mag();
+    var gForce = phy.G * this.m * b2.m / (dist * dist);
+    var vGForce = distVec.unit().mul(gForce);
+    var vForce1 = vGForce.add(this.vel.unit().mul(friction*this.vel.mag()**2));
+    var vForce2 = vGForce.add(b2.vel.unit().mul(friction*b2.vel.mag()**2));
+    this.acc = this.acc.add(vForce1.mul(1 / this.m));
+    b2.acc = b2.acc.add(vForce2.mul(-1 / b2.m));
   }
   this.worldBorder = function () {
 
@@ -230,7 +293,7 @@ function Vector(x, y) {
   this.mag = function () {
     return Math.sqrt(this.x ** 2 + this.y ** 2);
   }
-  this.mult = function (n) {
+  this.mul = function (n) {
     return new Vector(this.x * n, this.y * n);
   }
   this.normal = function () {
@@ -280,14 +343,35 @@ function keyControl(b) {
     b.acc.y = 0;
   }
 
-  this.acc = this.acc.unit().mult(acceleration);
+  this.acc = this.acc.unit().mul(acceleration);
 
 
+}
+
+var download = function(){
+  // var link = document.createElement('a');
+  // link.download = 'filename.png';
+  // link.href = document.getElementById('mainCanvas').toDataURL()
+  // link.click();
+  const imageData = gameArea.ctx.getImageData(-100, -100, 1000, 1000);
+  gameArea.ctx.putImageData(imageData, 260, 0);
+  gameArea.ctx.putImageData(imageData, 380, 50);
+  gameArea.ctx.putImageData(imageData, 500, 100);
+  console.log(imageData);
+//   var link = document.createElement('a');
+//   link.download = 'BALLS.png';
+//   link.href = imageData.toDataURL()
+//   link.click();
 }
 
 function drawGame() {
   var timerGame = Date.now();
   gameArea.clear();
+
+
+  // vp.follow(bls[0])
+  vp.move();
+
 
 
 
@@ -297,19 +381,19 @@ function drawGame() {
   var momentumTotalVec = new Vector(0,0);
 
   for (var i = 0; i < bls.length; i++) {
-    bls[i].friction();
-    bls[i].move();
+    // bls[i].friction();
 
     for (var j = i+1; j < bls.length; j++) {
       bls[i].gravity(bls[j]);
       // bls[i].collision(bls[j]);
     }
     // bls[i].worldBorder();
+    bls[i].move();
 
 
     bls[i].update()
 
-    momentumTotalVec = momentumTotalVec.add(bls[i].vel.mult(bls[i].m));
+    momentumTotalVec = momentumTotalVec.add(bls[i].vel.mul(bls[i].m));
 
     kinE += bls[i].vel.mag()**2 * (bls[i].m / 2);
 
@@ -319,6 +403,7 @@ function drawGame() {
   bls[0].info();
   ctx.fillText("Total Momentum Vec = " + round(momentumTotalVec.mag(), 3), 10, 100);
   ctx.fillText("Total Kinetic Energy= " + round(kinE, 10), 10, 120);
+  ctx.fillText("Balls: " + bls.length, 10, 140);
 
   // --- FPS Counter
   if(!lastCalledTime) {
@@ -334,7 +419,7 @@ function drawGame() {
 
 
   timerGame = Date.now() - timerGame;
-  // canvasInfoDraw(kinE, 0.01);
+  canvasInfoDraw(timerGame, 100);
 
   // console.log("GameTime: " + timerGame + " ns");
 
@@ -344,17 +429,18 @@ function drawGame() {
 // --- Window Functions
 
 window.onload = function () {
-  gameArea = new Canvas("mainCanvas", 0.7, 0.7);
+  gameArea = new Canvas("mainCanvas", 0.5, 0.5);
   gameArea.canvas.width = window.innerWidth - 2;
   gameArea.canvas.height = window.innerHeight - 2;
 
-  canvasInfo = new Canvas("canvasInfo", 0.7, 0.7);
+  canvasInfo = new Canvas("canvasInfo", 0.5, 0.5);
   canvasInfo.canvas.width = window.innerWidth - 2;
   canvasInfo.canvas.height = window.innerHeight - 2;
 
 
 
   startGame();
+
 }
 
 window.onresize = function () {
@@ -386,25 +472,59 @@ function Canvas(id, sc_w, sc_h) {
   }
 }
 
+var vp = {
+  x: 0,
+  y: 0,
+  s: 0.5, // --- Scale
+  scale: function (s) {
+    this.s = s;
+    gameArea.ctx.scale(s);
+    // canvasInfo.ctx.scale(s);
+  },
+  follow: function (obj) {
+    vp.x = (gameArea.canvas.width / (2 * vp.s) - obj.pos.x);
+    vp.y = (gameArea.canvas.height / (2 * vp.s) - obj.pos.y);
+  },
+  move: function () {
+    if (VpL) {
+      this.x++;
+      canvasInfo.clear()
+    }
+    if (VpU) {
+      this.y++;
+      canvasInfo.clear()
+    }
+    if (VpR) {
+      this.x--;
+      canvasInfo.clear()
+    }
+    if (VpD) {
+      this.y--;
+      canvasInfo.clear()
+    }
 
+  }
+}
 
 function canvasInfoDraw(v, f) {
   v = v * f;
 
+
   canvasInfo.ctx.fillStyle = "red";
   canvasInfo.ctx.fillRect(i_info, canvasInfo.height - v, 1, v);
+  // canvasInfo.ctx.fillRect(100, 100, 100, 100);
   canvasInfo.ctx.clearRect(i_info + 1, 0, 10, canvasInfo.height);
 
-  canvasInfo.ctx.fillStyle = "black";
-  canvasInfo.ctx.fillRect(0, canvasInfo.height - 50, canvasInfo.width, 1)
-  canvasInfo.ctx.fillRect(0, canvasInfo.height - 100, canvasInfo.width, 1)
-  canvasInfo.ctx.fillRect(0, canvasInfo.height - 150, canvasInfo.width, 1)
-  canvasInfo.ctx.fillRect(0, canvasInfo.height - 200, canvasInfo.width, 1)
-  canvasInfo.ctx.font = "20px Monospace"
-  canvasInfo.ctx.fillText(50 / f, 5, canvasInfo.height - 50);
-  canvasInfo.ctx.fillText(100 / f, 5, canvasInfo.height - 100);
-  canvasInfo.ctx.fillText(150 / f, 5, canvasInfo.height - 150);
-  canvasInfo.ctx.fillText(200 / f, 5, canvasInfo.height - 200);
+  // canvasInfo.ctx.fillStyle = "black";
+  // canvasInfo.ctx.fillRect(0, canvasInfo.height - 50, canvasInfo.width, 1)
+  // canvasInfo.ctx.fillRect(0, canvasInfo.height - 100, canvasInfo.width, 1)
+  // canvasInfo.ctx.fillRect(0, canvasInfo.height - 150, canvasInfo.width, 1)
+  // canvasInfo.ctx.fillRect(0, canvasInfo.height - 200, canvasInfo.width, 1)
+  // canvasInfo.ctx.font = "20px Monospace"
+  // canvasInfo.ctx.fillText(50 / f, 5, canvasInfo.height - 50);
+  // canvasInfo.ctx.fillText(100 / f, 5, canvasInfo.height - 100);
+  // canvasInfo.ctx.fillText(150 / f, 5, canvasInfo.height - 150);
+  // canvasInfo.ctx.fillText(200 / f, 5, canvasInfo.height - 200);
 
 
   i_info++;
@@ -425,6 +545,19 @@ window.addEventListener("keydown", function (e) {
   }
   if (e.keyCode == 40) {
     Down = true;
+  }
+  console.log(e.keyCode);
+  if (e.keyCode == 65) {
+    VpL = true;
+  }
+  if (e.keyCode == 87) {
+    VpU = true;
+  }
+  if (e.keyCode == 68) {
+    VpR = true;
+  }
+  if (e.keyCode == 83) {
+    VpD = true;
   }
   if (e.keyCode == 9) {
     e.preventDefault();
@@ -467,6 +600,18 @@ window.addEventListener("keyup", function (e) {
   }
   if (e.keyCode == 40) {
     Down = false;
+  }
+  if (e.keyCode == 65) {
+    VpL = false;
+  }
+  if (e.keyCode == 87) {
+    VpU = false;
+  }
+  if (e.keyCode == 68) {
+    VpR = false;
+  }
+  if (e.keyCode == 83) {
+    VpD = false;
   }
 })
 
