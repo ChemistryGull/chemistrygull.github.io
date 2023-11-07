@@ -1,19 +1,21 @@
 var acceleration = 0.5;
-var friction = 0.0025;
+var friction = 0;
 var elasticity = 1 ;
 var showVelVec = false;
 var phy = {
-  G: 0.0001
+  G: 0.000001
 }
+var gameSpeed = 2
+var gameScale = 0.5;
 
 var running = false;
 var gameInterval;
-var gameIntTime = 1;
+var gameIntTime = 10;
 var lastCalledTime;
 var fps;
 var gameArea;
-var canvasInfo;
-var canvasInfo;
+var canvasPaths;
+var canvasPaths;
 var i_info = 0;
 
 
@@ -24,7 +26,8 @@ var VpL, VpU, VpR, VpD = false;
 
 function startGame() {
   gameArea.start();
-  canvasInfo.start();
+  canvasPaths.start();
+  cvInfo.start();
 
 
   // bls.push(new ball(300 , 600, 10, "red"));
@@ -39,8 +42,8 @@ function startGame() {
 
   //
   // bls.push(new ball(300 , 600, 10, "red", 40));
-  bls.push(new ball(1000 , 600, 100, "yellow", 10000000));
-  bls.push(new ball(435, 600, 10, "#ad04bc", 10));
+  bls.push(new ball(1000 , 600, 100, "yellow", 1000000000));
+  bls.push(new ball(435, 600, 10, "#ad04bc", 0.001));
 
   // bls.push(new ball(500 , 600, 15, "blue", 2));
   // bls.push(new ball(800 , 600, 9, "green", 1));
@@ -69,27 +72,24 @@ function startGame() {
   // bls[0].vel.x = 1;
   // bls[0].vel.y = 1;
 
-  for (var i = 0; i < 0; i++) {
+  for (var i = 0; i < 10; i++) {
     bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor()));
 
   }
 
-  // for (var i = 0; i < bls.length; i++) {
-  //   // bls[i].acc.y = 0.01;
-  //   // bls[i].acc.x = 0.01;
-  //   bls[i].vel.y = (ran(0, 40) / 10) - 2;
-  //   bls[i].vel.x = (ran(0, 40) / 10) - 2;
-  // }
+  for (var i = 2; i < bls.length; i++) {
+    // bls[i].acc.y = 0.01;
+    // bls[i].acc.x = 0.01;
+    bls[i].vel.y = (ran(0, 40) / 10) - 2;
+    bls[i].vel.x = (ran(0, 40) / 10) - 2;
+  }
 
   // bls.push(new ball(0 , 0, 200, "red"));
   // bls.push(new ball(1000 , 1000, 200, "yellow"));
   // bls.push(new ball(-1000 , -1000, 200, "green"));
 
-
-
   running = true;
   gameInterval = setInterval(drawGame, gameIntTime);
-
 
 }
 
@@ -100,7 +100,6 @@ function ball(x, y, r, color, m = undefined) {
   this.color = color;
   this.r = r;
   if (m == undefined) {
-    console.log(this.color);
     this.m = r;
     this.m_inv = 1 / r;
   } else if (m == 0) {
@@ -122,10 +121,10 @@ function ball(x, y, r, color, m = undefined) {
     ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
     ctx.fill();
 
-    canvasInfo.ctx.fillStyle = this.color;
-    canvasInfo.ctx.beginPath();
-    canvasInfo.ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, 2, 0, 2 * Math.PI);
-    canvasInfo.ctx.fill();
+    canvasPaths.ctx.fillStyle = this.color;
+    canvasPaths.ctx.beginPath();
+    canvasPaths.ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, 2, 0, 2 * Math.PI);
+    canvasPaths.ctx.fill();
 
     if (showVelVec) {
       this.vel.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 20, "green");
@@ -133,13 +132,13 @@ function ball(x, y, r, color, m = undefined) {
     }
   }
   this.move = function () {
-    this.vel = this.vel.add(this.acc);
-    this.pos = this.pos.add(this.vel);
+    this.vel = this.vel.add(this.acc.mul(gameSpeed));
+    this.pos = this.pos.add(this.vel.mul(gameSpeed));
     this.acc = new Vector(0, 0);
 
   }
   this.friction = function () {
-    // this.vel = this.vel.mul(1 - friction);
+    this.vel = this.vel.mul(1 - friction);
 
     // --- !!! The following messes with the Total Momentum and Total Kinetic energy, leave value as low as possible
     // if (Math.abs(this.vel.x) < 0.0000001) {
@@ -150,11 +149,12 @@ function ball(x, y, r, color, m = undefined) {
     // }
   }
   this.info = function () {
-    ctx.fillStyle = "green";
-    ctx.font = "20px Monospace";
-    ctx.fillText("Pos = " + round(this.pos.x, 3) + " | " + round(this.pos.y, 3), 10, 40);
-    ctx.fillText("Vel = " + round(this.vel.x, 1) + " | " + round(this.vel.y, 1) + " ... " + round(this.vel.mag(), 1), 10, 60);
-    ctx.fillText("Acc = " + round(this.acc.x, 1) + " | " + round(this.acc.y, 1) + " ... " + round(this.acc.mag(), 1), 10, 80);
+    cvInfo.ctx.clearRect(0, 0, cvInfo.canvas.width, 200)
+    cvInfo.ctx.fillStyle = "green";
+    cvInfo.ctx.font = "20px Monospace";
+    cvInfo.ctx.fillText("Pos = " + round(this.pos.x, 3) + " | " + round(this.pos.y, 3), 10, 40);
+    cvInfo.ctx.fillText("Vel = " + round(this.vel.x, 1) + " | " + round(this.vel.y, 1) + " ... " + round(this.vel.mag(), 1), 10, 60);
+    cvInfo.ctx.fillText("Acc = " + round(this.acc.x, 1) + " | " + round(this.acc.y, 1) + " ... " + round(this.acc.mag(), 1), 10, 80);
 
 
   }
@@ -232,12 +232,12 @@ function ball(x, y, r, color, m = undefined) {
     }
   }
   this.gravity = function (b2) {
-    // var distVec = b2.pos.subtr(this.pos);
-    // var dist = distVec.mag();
-    // var force = phy.G * this.m * b2.m / (dist * dist);
-    // var vForce = distVec.unit().mul(force);
-    // this.acc = this.acc.add(vForce.mul(1 / this.m));
-    // b2.acc = b2.acc.add(vForce.mul(-1 / b2.m));
+    var distVec = b2.pos.subtr(this.pos);
+    var dist = distVec.mag();
+    var force = phy.G * this.m * b2.m / (dist * dist);
+    var vForce = distVec.unit().mul(force);
+    this.acc = this.acc.add(vForce.mul(1 / this.m));
+    b2.acc = b2.acc.add(vForce.mul(-1 / b2.m));
 
     // this.acc = (distVec.unit().mul(force / this.m));
     // b2.acc = (distVec.unit().mul(-force / b2.m));
@@ -246,14 +246,14 @@ function ball(x, y, r, color, m = undefined) {
 
     // console.log(force);
 
-    var distVec = b2.pos.subtr(this.pos);
-    var dist = distVec.mag();
-    var gForce = phy.G * this.m * b2.m / (dist * dist);
-    var vGForce = distVec.unit().mul(gForce);
-    var vForce1 = vGForce.add(this.vel.unit().mul(friction*this.vel.mag()**2));
-    var vForce2 = vGForce.add(b2.vel.unit().mul(friction*b2.vel.mag()**2));
-    this.acc = this.acc.add(vForce1.mul(1 / this.m));
-    b2.acc = b2.acc.add(vForce2.mul(-1 / b2.m));
+    // var distVec = b2.pos.subtr(this.pos);
+    // var dist = distVec.mag();
+    // var gForce = phy.G * this.m * b2.m / (dist * dist);
+    // var vGForce = distVec.unit().mul(gForce);
+    // var vForce1 = vGForce.add(this.vel.unit().mul(friction*this.vel.mag()**2));
+    // var vForce2 = vGForce.add(b2.vel.unit().mul(friction*b2.vel.mag()**2));
+    // this.acc = this.acc.add(vForce1.mul(1 / this.m));
+    // b2.acc = b2.acc.add(vForce2.mul(-1 / b2.m));
   }
   this.worldBorder = function () {
 
@@ -279,6 +279,99 @@ function ball(x, y, r, color, m = undefined) {
 
 }
 
+
+function drawGame() {
+  var timerGame = Date.now();
+  gameArea.clear();
+
+
+  // vp.follow(bls[0])
+  vp.move();
+
+
+
+
+  // keyControl(bls[0])
+
+  var kinE = 0;
+  var momentumTotalVec = new Vector(0,0);
+
+  for (var i = 0; i < bls.length; i++) {
+    // bls[i].friction();
+
+    for (var j = i+1; j < bls.length; j++) {
+      bls[i].gravity(bls[j]);
+      // bls[i].collision(bls[j]);
+    }
+    // bls[i].worldBorder();
+    bls[i].move();
+
+
+    bls[i].update()
+
+    momentumTotalVec = momentumTotalVec.add(bls[i].vel.mul(bls[i].m));
+
+    kinE += bls[i].vel.mag()**2 * (bls[i].m / 2);
+
+  }
+
+
+  bls[0].info();
+  cvInfo.ctx.fillText("Total Momentum Vec = " + round(momentumTotalVec.mag(), 3), 10, 100);
+  cvInfo.ctx.fillText("Total Kinetic Energy= " + round(kinE, 10), 10, 120);
+  cvInfo.ctx.fillText("Balls: " + bls.length, 10, 140);
+
+  // --- FPS Counter
+  if(!lastCalledTime) {
+     lastCalledTime = Date.now();
+     fps = 0;
+     return;
+  }
+  delta = (Date.now() - lastCalledTime)/1000;
+  lastCalledTime = Date.now();
+  fps = 1/delta;
+  cvInfo.ctx.fillStyle = "red";
+  cvInfo.ctx.fillText("FPS: " + round(fps, 0), 10, 20);
+
+
+  timerGame = Date.now() - timerGame;
+
+  // cvInfoDraw(kinE, 0.1, "red");
+
+  // console.log("GameTime: " + timerGame + " ns");
+
+  // window.requestAnimationFrame(drawGame);
+}
+
+// --- Window Functions
+var offCv;
+window.onload = function () {
+  gameArea = new Canvas("mainCanvas", gameScale);
+  gameArea.canvas.width = window.innerWidth - 2;
+  gameArea.canvas.height = window.innerHeight - 2;
+
+  canvasPaths = new Canvas("canvasPaths", gameScale);
+  canvasPaths.canvas.width = window.innerWidth - 2;
+  canvasPaths.canvas.height = window.innerHeight - 2;
+
+  cvInfo = new Canvas("cvInfo", 1);
+  cvInfo.canvas.width = window.innerWidth - 2;
+  cvInfo.canvas.height = window.innerHeight - 2;
+
+  // offCv = new OffscreenCanvas(1000, 1000)
+
+  startGame();
+
+}
+
+window.onresize = function () {
+
+  gameArea.canvas.width = (window.innerWidth - 2);
+  gameArea.canvas.height = (window.innerHeight - 2);
+  canvasPaths.canvas.width = (window.innerWidth - 2);
+  canvasPaths.canvas.height = (window.innerHeight - 2);
+  vp.scale(vp.s)
+}
 
 function Vector(x, y) {
   this.x = x;
@@ -319,6 +412,58 @@ function Vector(x, y) {
     ctx.lineWidth = 4;
     ctx.stroke();
     ctx.closePath();
+  }
+}
+
+function Canvas(id, sc) {
+  this.canvas = document.getElementById(id);
+  this.sc = sc;
+  this.start = function () {
+    console.log("--- Starting Balls ---");
+    this.ctx = this.canvas.getContext("2d");
+    this.scale(this.sc, this.sc)
+  }
+  this.clear = function () {
+    this.ctx.clearRect(0, 0, this.canvas.width / this.sc, this.canvas.height / this.sc);
+  }
+  this.scale = function (sc) {
+    this.ctx.reset();
+    this.ctx.scale(sc, sc)
+    this.sc = sc;
+  }
+}
+
+var vp = {
+  x: 0,
+  y: 0,
+  s: gameScale, // --- Scale
+  scale: function (s) {
+    this.s = s;
+    gameArea.scale(s);
+    canvasPaths.scale(s);
+  },
+  follow: function (obj) {
+    vp.x = (gameArea.canvas.width / (2 * vp.s) - obj.pos.x);
+    vp.y = (gameArea.canvas.height / (2 * vp.s) - obj.pos.y);
+  },
+  move: function () {
+    if (VpL) {
+      this.x++;
+      canvasPaths.clear()
+    }
+    if (VpU) {
+      this.y++;
+      canvasPaths.clear()
+    }
+    if (VpR) {
+      this.x--;
+      canvasPaths.clear()
+    }
+    if (VpD) {
+      this.y--;
+      canvasPaths.clear()
+    }
+
   }
 }
 
@@ -364,171 +509,33 @@ var download = function(){
 //   link.click();
 }
 
-function drawGame() {
-  var timerGame = Date.now();
-  gameArea.clear();
-
-
-  // vp.follow(bls[0])
-  vp.move();
-
-
-
-
-  // keyControl(bls[0])
-
-  var kinE = 0;
-  var momentumTotalVec = new Vector(0,0);
-
-  for (var i = 0; i < bls.length; i++) {
-    // bls[i].friction();
-
-    for (var j = i+1; j < bls.length; j++) {
-      bls[i].gravity(bls[j]);
-      // bls[i].collision(bls[j]);
-    }
-    // bls[i].worldBorder();
-    bls[i].move();
-
-
-    bls[i].update()
-
-    momentumTotalVec = momentumTotalVec.add(bls[i].vel.mul(bls[i].m));
-
-    kinE += bls[i].vel.mag()**2 * (bls[i].m / 2);
-
-  }
-
-
-  bls[0].info();
-  ctx.fillText("Total Momentum Vec = " + round(momentumTotalVec.mag(), 3), 10, 100);
-  ctx.fillText("Total Kinetic Energy= " + round(kinE, 10), 10, 120);
-  ctx.fillText("Balls: " + bls.length, 10, 140);
-
-  // --- FPS Counter
-  if(!lastCalledTime) {
-     lastCalledTime = Date.now();
-     fps = 0;
-     return;
-  }
-  delta = (Date.now() - lastCalledTime)/1000;
-  lastCalledTime = Date.now();
-  fps = 1/delta;
-  ctx.fillStyle = "red";
-  ctx.fillText("FPS: " + round(fps, 0), 10, 20);
-
-
-  timerGame = Date.now() - timerGame;
-  canvasInfoDraw(timerGame, 100);
-
-  // console.log("GameTime: " + timerGame + " ns");
-
-  // window.requestAnimationFrame(drawGame);
-}
-
-// --- Window Functions
-
-window.onload = function () {
-  gameArea = new Canvas("mainCanvas", 0.5, 0.5);
-  gameArea.canvas.width = window.innerWidth - 2;
-  gameArea.canvas.height = window.innerHeight - 2;
-
-  canvasInfo = new Canvas("canvasInfo", 0.5, 0.5);
-  canvasInfo.canvas.width = window.innerWidth - 2;
-  canvasInfo.canvas.height = window.innerHeight - 2;
-
-
-
-  startGame();
-
-}
-
-window.onresize = function () {
-  gameArea.canvas.width = window.innerWidth - 2;
-  gameArea.canvas.height = window.innerHeight - 2;
-  ctx.scale(gameArea.sc.w, gameArea.sc.h)
-}
-
-function Canvas(id, sc_w, sc_h) {
-  this.canvas = document.getElementById(id);
-  this.sc = {
-    w: sc_w,
-    h: sc_h
-  }
-  this.start = function () {
-    console.log("--- Starting Balls ---");
-    this.ctx = this.canvas.getContext("2d");
-    this.scale(this.sc.w, this.sc.h)
-  }
-  this.clear = function () {
-    this.ctx.clearRect(0, 0, this.canvas.width / this.sc.w, this.canvas.height / this.sc.h)
-  }
-  this.scale = function (w, h) {
-    this.ctx.scale(w, h)
-    this.sc = {
-      w: w,
-      h: h
-    }
-  }
-}
-
-var vp = {
-  x: 0,
-  y: 0,
-  s: 0.5, // --- Scale
-  scale: function (s) {
-    this.s = s;
-    gameArea.ctx.scale(s);
-    // canvasInfo.ctx.scale(s);
-  },
-  follow: function (obj) {
-    vp.x = (gameArea.canvas.width / (2 * vp.s) - obj.pos.x);
-    vp.y = (gameArea.canvas.height / (2 * vp.s) - obj.pos.y);
-  },
-  move: function () {
-    if (VpL) {
-      this.x++;
-      canvasInfo.clear()
-    }
-    if (VpU) {
-      this.y++;
-      canvasInfo.clear()
-    }
-    if (VpR) {
-      this.x--;
-      canvasInfo.clear()
-    }
-    if (VpD) {
-      this.y--;
-      canvasInfo.clear()
-    }
-
-  }
-}
-
-function canvasInfoDraw(v, f) {
+function cvInfoDraw(v, f, color) {
   v = v * f;
 
+  cvInfo.ctx.globalAlpha = 0.5;
+  cvInfo.ctx.fillStyle = color;
+  cvInfo.ctx.fillRect(i_info, cvInfo.canvas.height - v, 1, v);
+  cvInfo.ctx.globalAlpha = 1;
 
-  canvasInfo.ctx.fillStyle = "red";
-  canvasInfo.ctx.fillRect(i_info, canvasInfo.height - v, 1, v);
-  // canvasInfo.ctx.fillRect(100, 100, 100, 100);
-  canvasInfo.ctx.clearRect(i_info + 1, 0, 10, canvasInfo.height);
 
-  // canvasInfo.ctx.fillStyle = "black";
-  // canvasInfo.ctx.fillRect(0, canvasInfo.height - 50, canvasInfo.width, 1)
-  // canvasInfo.ctx.fillRect(0, canvasInfo.height - 100, canvasInfo.width, 1)
-  // canvasInfo.ctx.fillRect(0, canvasInfo.height - 150, canvasInfo.width, 1)
-  // canvasInfo.ctx.fillRect(0, canvasInfo.height - 200, canvasInfo.width, 1)
-  // canvasInfo.ctx.font = "20px Monospace"
-  // canvasInfo.ctx.fillText(50 / f, 5, canvasInfo.height - 50);
-  // canvasInfo.ctx.fillText(100 / f, 5, canvasInfo.height - 100);
-  // canvasInfo.ctx.fillText(150 / f, 5, canvasInfo.height - 150);
-  // canvasInfo.ctx.fillText(200 / f, 5, canvasInfo.height - 200);
+  // console.log(cvInfo.canvas.height);
+  // cvInfo.ctx.fillRect(100, 100, 100, 100);
+  cvInfo.ctx.clearRect(i_info + 1, 200, 10, cvInfo.canvas.height - 200);
+
+  cvInfo.ctx.fillStyle = "black";
+  cvInfo.ctx.fillRect(0, cvInfo.canvas.height - 50, cvInfo.canvas.width, 1)
+  cvInfo.ctx.fillRect(0, cvInfo.canvas.height - 100, cvInfo.canvas.width, 1)
+  cvInfo.ctx.fillRect(0, cvInfo.canvas.height - 150, cvInfo.canvas.width, 1)
+  cvInfo.ctx.fillRect(0, cvInfo.canvas.height - 200, cvInfo.canvas.width, 1)
+  cvInfo.ctx.font = "20px Monospace"
+  cvInfo.ctx.fillText(50 / f, 5, cvInfo.canvas.height - 50);
+  cvInfo.ctx.fillText(100 / f, 5, cvInfo.canvas.height - 100);
+  cvInfo.ctx.fillText(150 / f, 5, cvInfo.canvas.height - 150);
+  cvInfo.ctx.fillText(200 / f, 5, cvInfo.canvas.height - 200);
 
 
   i_info++;
-  if (i_info >= canvasInfo.width) {
+  if (i_info >= cvInfo.canvas.width) {
     i_info = 0;
   }
 }
@@ -613,6 +620,46 @@ window.addEventListener("keyup", function (e) {
   if (e.keyCode == 83) {
     VpD = false;
   }
+})
+
+window.addEventListener("wheel", function (e) {
+  console.log("------------");
+  console.log(e);
+
+  var w1 = gameArea.canvas.width / vp.s;
+  var h1 = gameArea.canvas.width / vp.s;
+
+  if (e.deltaY > 0) {
+    vp.scale(round(vp.s * 0.9, 6));
+  } else if (e.deltaY < 0) {
+    vp.scale(round(vp.s * 1.1, 6));
+  }
+
+  var w2 = gameArea.canvas.width / vp.s;
+  var h2 = gameArea.canvas.width / vp.s;
+
+  vp.x += (w2 - w1) / (gameArea.canvas.width / e.clientX);
+  vp.y += (h2 - h1) / (gameArea.canvas.height / e.clientY);
+  console.log(e.clientX);
+  console.log(gameArea.canvas.width);
+
+
+
+})
+
+window.addEventListener("mousemove", function (e) {
+  e.preventDefault();
+
+  if (e.buttons == 1) {
+    vp.x += e.movementX / vp.s;
+    vp.y += e.movementY / vp.s;
+    canvasPaths.clear()
+  }
+})
+
+window.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+  console.log(e);
 })
 
 // --- Fuctional Functions
