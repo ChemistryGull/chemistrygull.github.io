@@ -1,20 +1,22 @@
-var acceleration = 0.5;
-var friction = 0;
-var elasticity = 1 ;
-var showVelVec = false;
-var phy = {
-  G: 0.000001
+const version = "v1.0.0";
+const releaseDate = "07.11.2023"
+if (!data.versions.includes(version)) {
+  alert("This worldsave may not be compatible with this version of Balls (" + version + ").\n (Recommendet versions: " + data.versions + ")\n\nResuming may cause Errors!")
 }
-var gameSpeed = 2
-var gameScale = 0.5;
 
+
+var friction = data.phys.fric;
+var constG = data.phys.G;
+
+var acceleration = data.config.accPlayer;
+var gameSpeed = data.config.gameSpeed;
+var gameScale = data.config.gameScale;
 var running = false;
 var gameInterval;
-var gameIntTime = 10;
+var gameIntTime = data.config.gameIntTime;
 var lastCalledTime;
 var fps;
 var gameArea;
-var canvasPaths;
 var canvasPaths;
 var i_info = 0;
 
@@ -30,59 +32,23 @@ function startGame() {
   cvInfo.start();
 
 
-  // bls.push(new ball(300 , 600, 10, "red"));
-  // bls.push(new ball(1000 , 600, 100, "yellow"));
 
-  // bls[1].vel.x = -1;
-
-  // bls.push(new ball(900 , 600, 40, "red", 10000000));
-  // bls.push(new ball(1200 , 600, 40, "yellow", 10000000));
-  // bls.push(new ball(800 , 700, 40, "blue", 100000));
-  // bls.push(new ball(500 , 700, 40, "green", 100000));
-
-  //
-  // bls.push(new ball(300 , 600, 10, "red", 40));
-  bls.push(new ball(1000 , 600, 100, "yellow", 1000000000));
-  bls.push(new ball(435, 600, 10, "#ad04bc", 0.001));
-
-  // bls.push(new ball(500 , 600, 15, "blue", 2));
-  // bls.push(new ball(800 , 600, 9, "green", 1));
-
-  // bls.push(new ball(280 , 600, 5, "orange", 1));
-
-
-  bls[1].vel.y = 1;
-  // // bls[0].vel.y = 1;
-  // bls[2].vel.y = 1;
-  // bls[3].vel.y = 2;
-  // bls[4].vel.y = 1.34;
-  // bls[1].vel.y = 1.1825;
-  // bls[2].vel.y = 2;
-  // bls[3].vel.y = -2;
-
-  // bls[1].vel.y = -1;
-
-  // bls[0].acc.x = 1;
-  // bls[1].acc.x = 10;
-
-
-  // bls.push(new ball(200 , 200, 40, "red"));
-  // bls.push(new ball(400 , 400, 40, "yellow"));
-  //
-  // bls[0].vel.x = 1;
-  // bls[0].vel.y = 1;
-
-  for (var i = 0; i < 10; i++) {
-    bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor()));
+  for (var i = 0; i < data.entities.length; i++) {
+    bls.push(new ball(data.entities[i].x, data.entities[i].y, data.entities[i].r, data.entities[i].color, data.entities[i].m, data.entities[i].elast, data.entities[i].vel));
 
   }
 
-  for (var i = 2; i < bls.length; i++) {
-    // bls[i].acc.y = 0.01;
-    // bls[i].acc.x = 0.01;
-    bls[i].vel.y = (ran(0, 40) / 10) - 2;
-    bls[i].vel.x = (ran(0, 40) / 10) - 2;
+  for (var i = 0; i < 0; i++) {
+    bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor(), ran(1, 10), [ran(-3, 3), ran(-3, 3)]));
+
   }
+
+  // for (var i = 2; i < bls.length; i++) {
+  //   // bls[i].acc.y = 0.01;
+  //   // bls[i].acc.x = 0.01;
+  //   bls[i].vel.y = (ran(0, 40) / 10) - 2;
+  //   bls[i].vel.x = (ran(0, 40) / 10) - 2;
+  // }
 
   // bls.push(new ball(0 , 0, 200, "red"));
   // bls.push(new ball(1000 , 1000, 200, "yellow"));
@@ -95,7 +61,7 @@ function startGame() {
 
 
 
-function ball(x, y, r, color, m = undefined) {
+function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
   ctx = gameArea.ctx
   this.color = color;
   this.r = r;
@@ -109,10 +75,11 @@ function ball(x, y, r, color, m = undefined) {
     this.m = m;
     this.m_inv = 1 / m;
   }
+  this.elasticity = elast;
 
 
   this.pos = new Vector(x, y)
-  this.vel = new Vector(0, 0)
+  this.vel = new Vector(vel[0], vel[1])
   this.acc = new Vector(0, 0)
 
   this.update = function () {
@@ -121,12 +88,13 @@ function ball(x, y, r, color, m = undefined) {
     ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
     ctx.fill();
 
-    canvasPaths.ctx.fillStyle = this.color;
-    canvasPaths.ctx.beginPath();
-    canvasPaths.ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, 2, 0, 2 * Math.PI);
-    canvasPaths.ctx.fill();
-
-    if (showVelVec) {
+    if (data.config.doDrawPath) {
+      canvasPaths.ctx.fillStyle = this.color;
+      canvasPaths.ctx.beginPath();
+      canvasPaths.ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, 2, 0, 2 * Math.PI);
+      canvasPaths.ctx.fill();
+    }
+    if (data.config.doVelVec) {
       this.vel.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 20, "green");
       this.acc.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 1, "blue");
     }
@@ -160,13 +128,13 @@ function ball(x, y, r, color, m = undefined) {
   }
 
   this.collision = function (b2) {
-    var distVec = b2.pos.subtr(this.pos);
+    var distVec = b2.pos.sub(this.pos);
     if (distVec.mag() < this.r + b2.r) {
       // ctx.fillStyle = "Red";
       // ctx.fillText("Collision " + this.color + " & " + b2.color, gameArea.canvas.width - 250, 20);
       // var timerColl = Date.now();
 
-      if (true) { // --- Simplistic Method to combine two balls. EDIT IN FUTURE
+      if (data.config.doCombinition) { // --- Simplistic Method to combine two balls. EDIT IN FUTURE
         if (this.m >= b2.m) {
           // this.vel = this.vel.mul(this.m).add(b2.vel.mul(b2.m).mul(1/(this.m + b2.m)))
           this.vel = this.vel.unit().mul((this.vel.mag() * this.m + -b2.vel.mag() * b2.m) / (b2.m + this.m));
@@ -174,14 +142,18 @@ function ball(x, y, r, color, m = undefined) {
           this.m += b2.m;
           this.r = Math.sqrt(b2.r**2 + this.r**2);
           bls.splice(bls.indexOf(b2), 1)
-
+          console.log("bigger");
         }
         if (this.m < b2.m) {
-          b2.vel = b2.vel.unit().mul((b2.vel.mag() * b2.m + -this.vel.mag() * this.m) / (b2.m + this.m));
+
+          // b2.vel = b2.vel.unit().mul((b2.vel.mag() * b2.m + -this.vel.mag() * this.m) / (b2.m + this.m));
+
+          b2.vel = b2.vel.mul(b2.m).add(this.vel.mul(this.m)).mul(1 / (this.m + b2.m))
 
           b2.m += this.m;
           b2.r = Math.sqrt(b2.r**2 + this.r**2);;
           bls.splice(bls.indexOf(this), 1)
+          console.log("smaller");
 
         }
         return;
@@ -196,10 +168,10 @@ function ball(x, y, r, color, m = undefined) {
 
 
       // --- Collision Code - Help from https://www.youtube.com/watch?v=vnfsA2gWWOA&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=9
-      var distVecNorm = b2.pos.subtr(this.pos).unit();
-      var relVel = b2.vel.subtr(this.vel);
+      var distVecNorm = b2.pos.sub(this.pos).unit();
+      var relVel = b2.vel.sub(this.vel);
       var sepVel = relVel.scalar(distVecNorm);
-      let new_sepVel = -sepVel * elasticity;
+      let new_sepVel = -sepVel * Math.min(this.elasticity, b2.elasticity);
       var impulse = (sepVel - new_sepVel) / (this.m_inv + b2.m_inv);
       var impulseVec = distVecNorm.mul(impulse);
 
@@ -216,8 +188,8 @@ function ball(x, y, r, color, m = undefined) {
 
 
 
-      // var b1New = this.vel.subtr((this.pos.subtr(b2.pos).mul(( this.vel.subtr(b2.vel).scalar(this.pos.subtr(b2.pos)) ) / ( this.pos.subtr(b2.pos).mag()**2 ))).mul(b2.m * 2 / (this.m + b2.m)))
-      // var b2New = b2.vel.subtr((b2.pos.subtr(this.pos).mul(( b2.vel.subtr(this.vel).scalar(b2.pos.subtr(this.pos)) ) / ( b2.pos.subtr(this.pos).mag()**2 ))).mul(this.m * 2 / (b2.m + this.m)))
+      // var b1New = this.vel.sub((this.pos.sub(b2.pos).mul(( this.vel.sub(b2.vel).scalar(this.pos.sub(b2.pos)) ) / ( this.pos.sub(b2.pos).mag()**2 ))).mul(b2.m * 2 / (this.m + b2.m)))
+      // var b2New = b2.vel.sub((b2.pos.sub(this.pos).mul(( b2.vel.sub(this.vel).scalar(b2.pos.sub(this.pos)) ) / ( b2.pos.sub(this.pos).mag()**2 ))).mul(this.m * 2 / (b2.m + this.m)))
       //
       //
       // this.vel = b1New;
@@ -232,9 +204,9 @@ function ball(x, y, r, color, m = undefined) {
     }
   }
   this.gravity = function (b2) {
-    var distVec = b2.pos.subtr(this.pos);
+    var distVec = b2.pos.sub(this.pos);
     var dist = distVec.mag();
-    var force = phy.G * this.m * b2.m / (dist * dist);
+    var force = constG * this.m * b2.m / (dist * dist);
     var vForce = distVec.unit().mul(force);
     this.acc = this.acc.add(vForce.mul(1 / this.m));
     b2.acc = b2.acc.add(vForce.mul(-1 / b2.m));
@@ -246,9 +218,9 @@ function ball(x, y, r, color, m = undefined) {
 
     // console.log(force);
 
-    // var distVec = b2.pos.subtr(this.pos);
+    // var distVec = b2.pos.sub(this.pos);
     // var dist = distVec.mag();
-    // var gForce = phy.G * this.m * b2.m / (dist * dist);
+    // var gForce = constG * this.m * b2.m / (dist * dist);
     // var vGForce = distVec.unit().mul(gForce);
     // var vForce1 = vGForce.add(this.vel.unit().mul(friction*this.vel.mag()**2));
     // var vForce2 = vGForce.add(b2.vel.unit().mul(friction*b2.vel.mag()**2));
@@ -284,29 +256,31 @@ function drawGame() {
   var timerGame = Date.now();
   gameArea.clear();
 
-
-  // vp.follow(bls[0])
+  // vp.follow(bls[1])
   vp.move();
 
-
-
-
   // keyControl(bls[0])
-
   var kinE = 0;
   var momentumTotalVec = new Vector(0,0);
 
   for (var i = 0; i < bls.length; i++) {
-    // bls[i].friction();
+    if (data.config.doFriction) {
+      bls[i].friction();
+    }
 
     for (var j = i+1; j < bls.length; j++) {
-      bls[i].gravity(bls[j]);
-      // bls[i].collision(bls[j]);
+      if (data.config.doGravity) {
+        bls[i].gravity(bls[j]);
+      }
+      if (data.config.doCollision) {
+        bls[i].collision(bls[j]);
+      }
     }
-    // bls[i].worldBorder();
+    if (data.config.doWorldBorder) {
+      bls[i].worldBorder();
+    }
+
     bls[i].move();
-
-
     bls[i].update()
 
     momentumTotalVec = momentumTotalVec.add(bls[i].vel.mul(bls[i].m));
@@ -346,6 +320,7 @@ function drawGame() {
 // --- Window Functions
 var offCv;
 window.onload = function () {
+
   gameArea = new Canvas("mainCanvas", gameScale);
   gameArea.canvas.width = window.innerWidth - 2;
   gameArea.canvas.height = window.innerHeight - 2;
@@ -370,7 +345,9 @@ window.onresize = function () {
   gameArea.canvas.height = (window.innerHeight - 2);
   canvasPaths.canvas.width = (window.innerWidth - 2);
   canvasPaths.canvas.height = (window.innerHeight - 2);
+
   vp.scale(vp.s)
+
 }
 
 function Vector(x, y) {
@@ -380,7 +357,7 @@ function Vector(x, y) {
   this.add = function (v) {
     return new Vector(this.x + v.x, this.y + v.y);
   }
-  this.subtr = function (v) {
+  this.sub = function (v) {
     return new Vector(this.x - v.x, this.y - v.y);
   }
   this.mag = function () {
@@ -623,9 +600,6 @@ window.addEventListener("keyup", function (e) {
 })
 
 window.addEventListener("wheel", function (e) {
-  console.log("------------");
-  console.log(e);
-
   var w1 = gameArea.canvas.width / vp.s;
   var h1 = gameArea.canvas.width / vp.s;
 
@@ -638,12 +612,8 @@ window.addEventListener("wheel", function (e) {
   var w2 = gameArea.canvas.width / vp.s;
   var h2 = gameArea.canvas.width / vp.s;
 
-  vp.x += (w2 - w1) / (gameArea.canvas.width / e.clientX);
+  vp.x += (w2 - w1) / (gameArea.canvas.width / e.clientX); // --- Zoom towards Mouse Cursor (not 100% acurate)
   vp.y += (h2 - h1) / (gameArea.canvas.height / e.clientY);
-  console.log(e.clientX);
-  console.log(gameArea.canvas.width);
-
-
 
 })
 
