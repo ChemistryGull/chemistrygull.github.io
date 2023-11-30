@@ -6,57 +6,55 @@ var data = {
     doCollision: true,
     doGravity: false,
     doCombinition: false,
-    doWorldBorder: true,
+    doWorldBorder: false,
 
-    doDrawPath: true,
+    doDrawPath: false,
     doVelVec: false,
 
     gameSpeed: 1,
-    gameIntTime: 10,
+    gameIntTime: 20,
     gameScale: 1,
 
     accPlayer: 0.5, // Player Acceleration
   },
   phys: {
-    fric: 0,
+    fric: 0.05,
     G: 20
   },
   entities: [
     {
-      x: 200,
+      x: 300,
       y: 300,
-      r: 10,
+      r: 40,
       color: "red",
-      m: 10,
+      m: 40,
       elast: 1,
-      vel: [1, 0]
+      vel: [0, 0]
     },
     {
-      x: 400,
-      y: 320,
-      r: 20,
+      x: 480,
+      y: 280,
+      r: 30,
       color: "yellow",
-      m: 20,
+      m: 40,
       elast: 1,
-      vel: [-1, 0]
+      vel: [0, 0]
     },
-    // {
-    //   x: 600,
-    //   y: 450,
-    //   r: 30,
-    //   color: "#ad1498",
-    //   m: 20,
-    //   elast: 1,
-    //   vel: [-2, 0]
-    // },
-    // {
-    //   x: 400,
-    //   y: 10,
-    //   r: 30,
-    //   color: "green",
-    //   m: 20,
-    // elast: 1,
-    //   vel: [-1, 1]
-    // }
+    {
+      x: 0,
+      y: 0,
+      r: 60,
+      color: "grey",
+      m: 40,
+      elast: 1,
+      vel: [0, 0]
+    },
+  ],
+  walls: [
+    {
+      start: [300, 420],
+      end: [600, 200],
+      color: "blue"
+    }
   ]
 }

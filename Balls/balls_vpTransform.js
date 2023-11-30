@@ -24,26 +24,6 @@ var i_info = 0;
 var bls = [];
 var wls = [];
 
-var soundList = [
-  ["woodenPop", "244652__greenvwbeetle__pop-4.flac"],
-  ["mouthPop", "244657__greenvwbeetle__pop-5.flac"],
-  ["cowbellPop", "328117__greenvwbeetle__pop-8.flac"],
-  ["slimePop", "328118__greenvwbeetle__pop-7.flac"],
-  ["knackPop", "399934__waveplaysfx__perc-short-clicksnap-perc.wav"],
-  ["snapPop", "686557__thewilliamsounds__button_click.mp3"],
-  ["waterdrop", "702806__matrixxx__soothing-waterdrop-click.wav"],
-  ["diamondPiep", "703884__matrixxx__diamond-click.wav"],
-  ["scream", "704607__matrixxx__super-cute-scream-lil-cuzs-dont-change-it-scream-03.wav"]
-]
-var sound = [];
-
-for (var i = 0; i < soundList.length; i++) {
-  sound[soundList[i][0]] = new Audio("sounds/" + soundList[i][1])
-  sound[soundList[i][0]].lol = function () {
-    console.log("LOL");
-  }
-}
-
 var Left, Up, Right, Down = false;
 var VpL, VpU, VpR, VpD = false;
 
@@ -111,18 +91,18 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
   this.update = function () {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
+    ctx.arc(this.pos.x, this.pos.y, this.r, 0, 2 * Math.PI);
     ctx.fill();
 
     if (data.config.doDrawPath) {
       canvasPaths.ctx.fillStyle = this.color;
       canvasPaths.ctx.beginPath();
-      canvasPaths.ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, 2, 0, 2 * Math.PI);
+      canvasPaths.ctx.arc(this.pos.x, this.pos.y, 2, 0, 2 * Math.PI);
       canvasPaths.ctx.fill();
     }
     if (data.config.doVelVec) {
-      this.vel.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 20, "green");
-      this.acc.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 1, "blue");
+      this.vel.drawVec(this.pos.x, this.pos.y, 20, "green");
+      this.acc.drawVec(this.pos.x, this.pos.y, 1, "blue");
     }
   }
   this.move = function () {
@@ -264,8 +244,8 @@ function wall(start, end, color) {
 
   this.update = function () {
     ctx.beginPath();
-    ctx.moveTo(this.start.x + vp.x, this.start.y + vp.y)
-    ctx.lineTo(this.end.x + vp.x, this.end.y + vp.y)
+    ctx.moveTo(this.start.x, this.start.y)
+    ctx.lineTo(this.end.x, this.end.y)
     ctx.strokeStyle = this.color;
     ctx.stroke();
   }
@@ -282,8 +262,8 @@ function wall(start, end, color) {
 
     if (cs >= 0) {
       ctx.beginPath();
-      ctx.moveTo(b.pos.x + vp.x, b.pos.y + vp.y)
-      ctx.lineTo(b.pos.x + bs_.x + vp.x, b.pos.y + bs_.y + vp.y)
+      ctx.moveTo(b.pos.x, b.pos.y)
+      ctx.lineTo(b.pos.x + bs_.x, b.pos.y + bs_.y)
       ctx.strokeStyle = "green";
       ctx.stroke();
 
@@ -291,8 +271,8 @@ function wall(start, end, color) {
 
     } else if (ce <= 0) {
       ctx.beginPath();
-      ctx.moveTo(b.pos.x + vp.x, b.pos.y + vp.y)
-      ctx.lineTo(b.pos.x + be_.x + vp.x, b.pos.y + be_.y + vp.y)
+      ctx.moveTo(b.pos.x, b.pos.y)
+      ctx.lineTo(b.pos.x + be_.x, b.pos.y + be_.y)
       ctx.strokeStyle = "green";
       ctx.stroke();
 
@@ -303,8 +283,8 @@ function wall(start, end, color) {
       var cb_ = cs_.sub(bs_); // --- vector from the ball to the interception (= distancevector from ball to wall)
 
       ctx.beginPath();
-      ctx.moveTo(this.start.sub(cs_).x + vp.x, this.start.sub(cs_).y + vp.y)
-      ctx.lineTo(this.start.sub(cs_).x + cb_.x + vp.x, this.start.sub(cs_).y + cb_.y + vp.y)
+      ctx.moveTo(this.start.sub(cs_).x, this.start.sub(cs_).y)
+      ctx.lineTo(this.start.sub(cs_).x + cb_.x, this.start.sub(cs_).y + cb_.y)
       ctx.strokeStyle = "green";
       ctx.stroke();
 
@@ -319,6 +299,7 @@ function wall(start, end, color) {
     var distanceVector = this.getDistanceVector(b);
 
     if (distanceVector.mag() < b.r) {
+
 
       var penDepth = b.r - distanceVector.mag();
       var penRes = distanceVector.unit().mul(penDepth);
@@ -339,6 +320,7 @@ function drawGame() {
 
   // vp.follow(bls[0])
   vp.move();
+  // vp.update();
 
   keyControl(bls[0])
   var kinE = 0;
@@ -411,15 +393,15 @@ function drawGame() {
 
 window.onload = function () {
 
-  gameArea = new Canvas("mainCanvas", gameScale);
+  gameArea = new Canvas("mainCanvas", gameScale, vp.x, vp.y);
   gameArea.canvas.width = window.innerWidth - 2;
   gameArea.canvas.height = window.innerHeight - 2;
 
-  canvasPaths = new Canvas("canvasPaths", gameScale);
+  canvasPaths = new Canvas("canvasPaths", gameScale, vp.x, vp.y);
   canvasPaths.canvas.width = window.innerWidth - 2;
   canvasPaths.canvas.height = window.innerHeight - 2;
 
-  cvInfo = new Canvas("cvInfo", 1);
+  cvInfo = new Canvas("cvInfo", 1, 0, 0);
   cvInfo.canvas.width = window.innerWidth - 2;
   cvInfo.canvas.height = window.innerHeight - 2;
 
@@ -436,7 +418,8 @@ window.onresize = function () {
   canvasPaths.canvas.width = (window.innerWidth - 2);
   canvasPaths.canvas.height = (window.innerHeight - 2);
 
-  vp.scale(vp.s)
+
+  vp.update();
 
 }
 
@@ -482,21 +465,28 @@ function Vector(x, y) {
   }
 }
 
-function Canvas(id, sc) {
+function Canvas(id, sc, x, y) {
   this.canvas = document.getElementById(id);
   this.sc = sc;
+  this.x = x;
+  this.y = y;
   this.start = function () {
     console.log("--- Starting Balls ---");
     this.ctx = this.canvas.getContext("2d");
-    this.scale(this.sc, this.sc)
+    this.update(vp.x, vp.y, this.sc)
   }
   this.clear = function () {
-    this.ctx.clearRect(0, 0, this.canvas.width / this.sc, this.canvas.height / this.sc);
+    this.ctx.clearRect(-this.x / this.sc, -this.y / this.sc, this.canvas.width / this.sc, this.canvas.height / this.sc);
+
   }
-  this.scale = function (sc) {
-    this.ctx.reset();
-    this.ctx.scale(sc, sc)
+  this.update = function (x, y, sc) {
+
     this.sc = sc;
+    this.x = x;
+    this.y = y;
+
+    this.ctx.setTransform(sc, 0, 0, sc, x, y);
+
   }
 }
 
@@ -504,30 +494,34 @@ var vp = {
   x: 0,
   y: 0,
   s: gameScale, // --- Scale
-  scale: function (s) {
-    this.s = s;
-    gameArea.scale(s);
-    canvasPaths.scale(s);
+  update: function () {
+    gameArea.update(this.x, this.y, this.s);
+    canvasPaths.update(this.x, this.y, this.s);
   },
   follow: function (obj) {
-    vp.x = (gameArea.canvas.width / (2 * vp.s) - obj.pos.x);
-    vp.y = (gameArea.canvas.height / (2 * vp.s) - obj.pos.y);
+    this.x = (gameArea.canvas.width / (2 * vp.s) - obj.pos.x);
+    this.y = (gameArea.canvas.height / (2 * vp.s) - obj.pos.y);
+    this.update(this.x, this.y, this.s);
   },
   move: function () {
     if (VpL) {
       this.x++;
+      this.update();
       canvasPaths.clear()
     }
     if (VpU) {
       this.y++;
+      this.update();
       canvasPaths.clear()
     }
     if (VpR) {
       this.x--;
+      this.update();
       canvasPaths.clear()
     }
     if (VpD) {
       this.y--;
+      this.update();
       canvasPaths.clear()
     }
   }
@@ -689,21 +683,48 @@ window.addEventListener("keyup", function (e) {
   }
 })
 
+var ssc = [0, 0]
+
 window.addEventListener("wheel", function (e) {
   var w1 = gameArea.canvas.width / vp.s;
   var h1 = gameArea.canvas.width / vp.s;
 
   if (e.deltaY > 0) {
-    vp.scale(round(vp.s * 0.9, 6));
+    vp.s = round(vp.s * 0.9, 6)
   } else if (e.deltaY < 0) {
-    vp.scale(round(vp.s * 1.1, 6));
+    vp.s = round(vp.s * 1.1, 6)
   }
 
   var w2 = gameArea.canvas.width / vp.s;
   var h2 = gameArea.canvas.width / vp.s;
 
-  vp.x += (w2 - w1) / (gameArea.canvas.width / e.clientX); // --- Zoom towards Mouse Cursor (not 100% acurate)
-  vp.y += (h2 - h1) / (gameArea.canvas.height / e.clientY);
+  console.log("START");
+  // console.log("w1 = " + w1);
+  // console.log("h1 = " + h1);
+  // console.log("w2 = " + w2);
+  // console.log("h2 = " + h2);
+  console.log((w2 - w1) / (gameArea.canvas.width / e.clientX));
+  console.log((h2 - h1) / (gameArea.canvas.height / e.clientY));
+
+  // console.log("###########################l################");
+  // console.log((w2 - w1));
+  // console.log((h2 - h1));
+
+  // console.log(vp.x);
+
+  // vp.x += (w1 - w2) / 2; // --- Zoom towards Mouse Cursor (not 100% acurate)
+  // vp.y += (h1 - h2) / 2;
+  ssc[0] += (w2 - w1) / (gameArea.canvas.width / e.clientX); // --- Zoom towards Mouse Cursor (not 100% acurate)
+  ssc[1] += (h2 - h1) / (gameArea.canvas.height / e.clientY);
+
+  vp.x += ssc[0]; // --- Zoom towards Mouse Cursor (not 100% acurate)
+  vp.y += ssc[1];
+
+
+  console.log(ssc);
+
+  vp.update();
+  console.log("END");
 
 })
 
@@ -711,10 +732,13 @@ window.addEventListener("mousemove", function (e) {
   e.preventDefault();
 
   if (e.buttons == 1) {
-    vp.x += e.movementX / vp.s;
-    vp.y += e.movementY / vp.s;
+    vp.x += e.movementX;
+    vp.y += e.movementY;
     canvasPaths.clear()
+    vp.update()
+
   }
+
 })
 
 window.addEventListener("contextmenu", function (e) {

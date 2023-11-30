@@ -8,7 +8,7 @@ var data = {
     doWorldBorder: false,
     doCombinition: false,
 
-    doDrawPath: false,
+    doDrawPath: true,
     doVelVec: false,
 
     gameSpeed: 2,
@@ -40,5 +40,8 @@ var data = {
       elast: 1,
       vel: [0, 1]
     }
+  ],
+  walls: [
+    
   ]
 }
