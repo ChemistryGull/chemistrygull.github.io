@@ -1,5 +1,5 @@
-const version = "v1.0.0";
-const releaseDate = "07.11.2023"
+const version = "v1.0.2";
+const releaseDate = "03.12.2023"
 if (!data.versions.includes(version)) {
   alert("This worldsave may not be compatible with this version of Balls (" + version + ").\n (Recommendet versions: " + data.versions + ")\n\nResuming may cause Errors!")
 }
@@ -19,6 +19,7 @@ var fps;
 var gameArea;
 var canvasPaths;
 var i_info = 0;
+var mousePos = {x: 0, y: 0}
 
 
 var bls = [];
@@ -60,7 +61,7 @@ function startGame() {
   }
 
   for (var i = 0; i < data.walls.length; i++) {
-    wls.push(new wall(data.walls[i].start, data.walls[i].end, data.walls[i].color));
+    wls.push(new wall(data.walls[i].start, data.walls[i].end, data.walls[i].color, data.walls[i].elast));
 
   }
 
@@ -68,6 +69,13 @@ function startGame() {
     bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor(), ran(1, 10), [ran(-3, 3), ran(-3, 3)]));
 
   }
+
+  // for (var i = 0; i < 100; i++) {
+  //   bls.push(new ball(ran(100, vp.gameSize[0] / vp.s - 100), ran(100, vp.gameSize[1] / vp.s - 100), ran(5, 8), "red", ran(1, 10), 1, [ran(-1, 1), ran(-1, 1)]));
+  //
+  // }
+
+
 
   // for (var i = 2; i < bls.length; i++) {
   //   // bls[i].acc.y = 0.01;
@@ -80,8 +88,8 @@ function startGame() {
   // bls.push(new ball(1000 , 1000, 200, "yellow"));
   // bls.push(new ball(-1000 , -1000, 200, "green"));
 
-  running = true;
-  gameInterval = setInterval(drawGame, gameIntTime);
+  running = false;
+  // gameInterval = setInterval(drawGame, gameIntTime);
 
 }
 
@@ -102,6 +110,8 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
     this.m_inv = 1 / m;
   }
   this.elasticity = elast;
+  this.countCollide = 0;
+  this.countWorldBorder = 0;
 
 
   this.pos = new Vector(x, y)
@@ -113,6 +123,13 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
     ctx.beginPath();
     ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
     ctx.fill();
+
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
+    ctx.stroke()
 
     if (data.config.doDrawPath) {
       canvasPaths.ctx.fillStyle = this.color;
@@ -146,9 +163,9 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
     cvInfo.ctx.clearRect(0, 0, cvInfo.canvas.width, 200)
     cvInfo.ctx.fillStyle = "green";
     cvInfo.ctx.font = "20px Monospace";
-    cvInfo.ctx.fillText("Pos = " + round(this.pos.x, 3) + " | " + round(this.pos.y, 3), 10, 40);
-    cvInfo.ctx.fillText("Vel = " + round(this.vel.x, 1) + " | " + round(this.vel.y, 1) + " ... " + round(this.vel.mag(), 1), 10, 60);
-    cvInfo.ctx.fillText("Acc = " + round(this.acc.x, 1) + " | " + round(this.acc.y, 1) + " ... " + round(this.acc.mag(), 1), 10, 80);
+    cvInfo.ctx.fillText("Pos = " + round(this.pos.x, 3) + " | " + round(this.pos.y, 3), 10, 60);
+    cvInfo.ctx.fillText("Vel = " + round(this.vel.x, 1) + " | " + round(this.vel.y, 1) + " ... " + round(this.vel.mag(), 1), 10, 80);
+    cvInfo.ctx.fillText("Acc = " + round(this.acc.x, 1) + " | " + round(this.acc.y, 1) + " ... " + round(this.acc.mag(), 1), 10, 100);
 
 
   }
@@ -156,6 +173,11 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
   this.collision = function (b2) {
     var distVec = b2.pos.sub(this.pos);
     if (distVec.mag() < this.r + b2.r) {
+
+      data.onCollision(this, b2);
+
+      // sound.woodenPop.cloneNode(true).play();
+      this.countCollide++;
 
       if (data.config.doCombinition) { // --- Simplistic Method to combine two balls. EDIT IN FUTURE
         if (this.m >= b2.m) {
@@ -189,24 +211,24 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
       this.pos = this.pos.add(penRes.mul(-1 * this.m_inv))
       b2.pos = b2.pos.add(penRes.mul(b2.m_inv))
 
+      if (data.config.doCollision) {
+        // --- Collision Code - Help from https://www.youtube.com/watch?v=vnfsA2gWWOA&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=9
+        var distVecNorm = b2.pos.sub(this.pos).unit();
+        var relVel = b2.vel.sub(this.vel);
+        var sepVel = relVel.scalar(distVecNorm);
+        let new_sepVel = -sepVel * Math.min(this.elasticity, b2.elasticity);
+        var impulse = (sepVel - new_sepVel) / (this.m_inv + b2.m_inv);
+        var impulseVec = distVecNorm.mul(impulse);
 
-      // --- Collision Code - Help from https://www.youtube.com/watch?v=vnfsA2gWWOA&list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_&index=9
-      var distVecNorm = b2.pos.sub(this.pos).unit();
-      var relVel = b2.vel.sub(this.vel);
-      var sepVel = relVel.scalar(distVecNorm);
-      let new_sepVel = -sepVel * Math.min(this.elasticity, b2.elasticity);
-      var impulse = (sepVel - new_sepVel) / (this.m_inv + b2.m_inv);
-      var impulseVec = distVecNorm.mul(impulse);
-
-      this.vel = this.vel.add(impulseVec.mul(this.m_inv));
-      b2.vel = b2.vel.add(impulseVec.mul(-1 * b2.m_inv));
+        this.vel = this.vel.add(impulseVec.mul(this.m_inv));
+        b2.vel = b2.vel.add(impulseVec.mul(-1 * b2.m_inv));
 
 
-      // var b1New = this.vel.sub((this.pos.sub(b2.pos).mul(( this.vel.sub(b2.vel).scalar(this.pos.sub(b2.pos)) ) / ( this.pos.sub(b2.pos).mag()**2 ))).mul(b2.m * 2 / (this.m + b2.m)))
-      // var b2New = b2.vel.sub((b2.pos.sub(this.pos).mul(( b2.vel.sub(this.vel).scalar(b2.pos.sub(this.pos)) ) / ( b2.pos.sub(this.pos).mag()**2 ))).mul(this.m * 2 / (b2.m + this.m)))
-      // this.vel = b1New;
-      // b2.vel = b2New;
-
+        // var b1New = this.vel.sub((this.pos.sub(b2.pos).mul(( this.vel.sub(b2.vel).scalar(this.pos.sub(b2.pos)) ) / ( this.pos.sub(b2.pos).mag()**2 ))).mul(b2.m * 2 / (this.m + b2.m)))
+        // var b2New = b2.vel.sub((b2.pos.sub(this.pos).mul(( b2.vel.sub(this.vel).scalar(b2.pos.sub(this.pos)) ) / ( b2.pos.sub(this.pos).mag()**2 ))).mul(this.m * 2 / (b2.m + this.m)))
+        // this.vel = b1New;
+        // b2.vel = b2New;
+      }
     }
   }
   this.gravity = function (b2) {
@@ -235,32 +257,40 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
   }
   this.worldBorder = function () {
 
+
     if (this.pos.x < 0 + this.r) {
       this.pos.x = this.r;
       this.vel.x *= -1;
-    } else if (this.pos.x > gameArea.canvas.width - this.r) {
-      this.pos.x = gameArea.canvas.width - this.r;
+      this.countWorldBorder++;
+      data.onWorldBorder(this);
+    } else if (this.pos.x > gameArea.canvas.width / vp.s - this.r) {
+      this.pos.x = gameArea.canvas.width / vp.s - this.r;
       this.vel.x *= -1;
+      this.countWorldBorder++;
+      data.onWorldBorder(this);
     }
     if (this.pos.y < 0 + this.r) {
       this.pos.y = this.r;
       this.vel.y *= -1;
-    } else if (this.pos.y > gameArea.canvas.height - this.r) {
-      this.pos.y = gameArea.canvas.height - this.r;
+      this.countWorldBorder++;
+      data.onWorldBorder(this);
+    } else if (this.pos.y > gameArea.canvas.height / vp.s - this.r) {
+      this.pos.y = gameArea.canvas.height / vp.s - this.r;
       this.vel.y *= -1;
+      this.countWorldBorder++;
+      data.onWorldBorder(this);
     }
-
-
 
 
   }
 
 }
 
-function wall(start, end, color) {
+function wall(start, end, color, elast) {
   this.start = new Vector(start[0], start[1]);
   this.end = new Vector(end[0], end[1]);
   this.color = color;
+  this.elasticity = elast;
 
   this.update = function () {
     ctx.beginPath();
@@ -325,6 +355,16 @@ function wall(start, end, color) {
 
       b.pos = b.pos.add(penRes)
 
+
+
+      var normal = distanceVector.unit()
+      var sepVel = b.vel.scalar(normal)
+      var new_sepVel = -sepVel * b.elasticity;
+      var vsep_diff = sepVel - new_sepVel;
+      b.vel = b.vel.add(normal.mul(-vsep_diff))
+
+      data.onWallCollision()
+
     }
 
 
@@ -332,7 +372,7 @@ function wall(start, end, color) {
   }
 }
 
-
+var counter = 0;
 function drawGame() {
   var timerGame = Date.now();
   gameArea.clear();
@@ -361,7 +401,7 @@ function drawGame() {
       if (data.config.doGravity) {
         bls[i].gravity(bls[j]);
       }
-      if (data.config.doCollision) {
+      if (data.config.doPenRes) {
         bls[i].collision(bls[j]);
       }
     }
@@ -381,9 +421,9 @@ function drawGame() {
 
 
   bls[0].info();
-  cvInfo.ctx.fillText("Total Momentum Vec = " + round(momentumTotalVec.mag(), 3), 10, 100);
-  cvInfo.ctx.fillText("Total Kinetic Energy= " + round(kinE, 10), 10, 120);
-  cvInfo.ctx.fillText("Balls: " + bls.length, 10, 140);
+  cvInfo.ctx.fillText("Total Momentum Vec = " + round(momentumTotalVec.mag(), 3), 10, 120);
+  cvInfo.ctx.fillText("Total Kinetic Energy= " + round(kinE, 10), 10, 140);
+  cvInfo.ctx.fillText("Balls: " + bls.length, 10, 160);
 
   // --- FPS Counter
   if(!lastCalledTime) {
@@ -396,6 +436,8 @@ function drawGame() {
   fps = 1/delta;
   cvInfo.ctx.fillStyle = "red";
   cvInfo.ctx.fillText("FPS: " + round(fps, 0), 10, 20);
+  cvInfo.ctx.fillStyle = "orange";
+  cvInfo.ctx.fillText("Mouse Pos: [ " + mousePos.x + " | " + mousePos.y + " ]", 10, 40);
 
 
   timerGame = Date.now() - timerGame;
@@ -405,6 +447,11 @@ function drawGame() {
   // console.log("GameTime: " + timerGame + " ns");
 
   // window.requestAnimationFrame(drawGame);
+
+  data.onTick();
+
+
+  counter++;
 }
 
 // --- Window Functions
@@ -412,16 +459,28 @@ function drawGame() {
 window.onload = function () {
 
   gameArea = new Canvas("mainCanvas", gameScale);
-  gameArea.canvas.width = window.innerWidth - 2;
-  gameArea.canvas.height = window.innerHeight - 2;
-
   canvasPaths = new Canvas("canvasPaths", gameScale);
-  canvasPaths.canvas.width = window.innerWidth - 2;
-  canvasPaths.canvas.height = window.innerHeight - 2;
+  cvInfo = new Canvas("cvInfo", 2);
 
-  cvInfo = new Canvas("cvInfo", 1);
-  cvInfo.canvas.width = window.innerWidth - 2;
-  cvInfo.canvas.height = window.innerHeight - 2;
+  if (vp.gameSize[0] == 0) {
+    gameArea.canvas.width = window.innerWidth - 2;
+    gameArea.canvas.height = window.innerHeight - 2;
+    canvasPaths.canvas.width = window.innerWidth - 2;
+    canvasPaths.canvas.height = window.innerHeight - 2;
+    cvInfo.canvas.width = window.innerWidth - 2;
+    cvInfo.canvas.height = window.innerHeight - 2;
+  } else {
+    gameArea.canvas.width = vp.gameSize[0];
+    gameArea.canvas.height = vp.gameSize[1];
+    canvasPaths.canvas.width = vp.gameSize[0];
+    canvasPaths.canvas.height = vp.gameSize[1];
+    // cvInfo.canvas.width = vp.gameSize[0];
+    // cvInfo.canvas.height = vp.gameSize[1];
+
+    cvInfo.canvas.width = window.innerWidth - 2;
+    cvInfo.canvas.height = window.innerHeight - 2;
+  }
+
 
   // offCv = new OffscreenCanvas(1000, 1000)
 
@@ -431,10 +490,28 @@ window.onload = function () {
 
 window.onresize = function () {
 
-  gameArea.canvas.width = (window.innerWidth - 2);
-  gameArea.canvas.height = (window.innerHeight - 2);
-  canvasPaths.canvas.width = (window.innerWidth - 2);
-  canvasPaths.canvas.height = (window.innerHeight - 2);
+  // gameArea.canvas.width = (window.innerWidth - 2);
+  // gameArea.canvas.height = (window.innerHeight - 2);
+  // canvasPaths.canvas.width = (window.innerWidth - 2);
+  // canvasPaths.canvas.height = (window.innerHeight - 2);
+
+  if (vp.gameSize[0] == 0) {
+    gameArea.canvas.width = window.innerWidth - 2;
+    gameArea.canvas.height = window.innerHeight - 2;
+    canvasPaths.canvas.width = window.innerWidth - 2;
+    canvasPaths.canvas.height = window.innerHeight - 2;
+    cvInfo.canvas.width = window.innerWidth - 2;
+    cvInfo.canvas.height = window.innerHeight - 2;
+  } else {
+    gameArea.canvas.width = vp.gameSize[0];
+    gameArea.canvas.height = vp.gameSize[1];
+    canvasPaths.canvas.width = vp.gameSize[0];
+    canvasPaths.canvas.height = vp.gameSize[1];
+    // cvInfo.canvas.width = vp.gameSize[0];
+    // cvInfo.canvas.height = vp.gameSize[1];
+    cvInfo.canvas.width = window.innerWidth - 2;
+    cvInfo.canvas.height = window.innerHeight - 2;
+  }
 
   vp.scale(vp.s)
 
@@ -504,6 +581,7 @@ var vp = {
   x: 0,
   y: 0,
   s: gameScale, // --- Scale
+  gameSize: data.config.gameSize,
   scale: function (s) {
     this.s = s;
     gameArea.scale(s);
@@ -687,6 +765,7 @@ window.addEventListener("keyup", function (e) {
   if (e.keyCode == 83) {
     VpD = false;
   }
+
 })
 
 window.addEventListener("wheel", function (e) {
@@ -711,10 +790,16 @@ window.addEventListener("mousemove", function (e) {
   e.preventDefault();
 
   if (e.buttons == 1) {
-    vp.x += e.movementX / vp.s;
-    vp.y += e.movementY / vp.s;
+    vp.x += e.movementX / vp.s * 2;
+    vp.y += e.movementY / vp.s * 2;
     canvasPaths.clear()
   }
+
+  mousePos.x = e.layerX / vp.s - vp.x
+  mousePos.y = e.layerY / vp.s - vp.y
+
+
+
 })
 
 window.addEventListener("contextmenu", function (e) {

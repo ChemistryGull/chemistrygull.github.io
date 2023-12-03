@@ -5,23 +5,38 @@
     <title>Balls</title>
     <link rel="stylesheet" href="balls.css">
     <style media="screen">
+      body {
+        background-color: gray;
+      }
       canvas {
         position: absolute;
         top: 0;
         left: 0;
-        /* background-color: gray; */
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        border: 3px inset darkgray;
+      }
+      #mainCanvas {
+        background-color: black;
+      }
+      #cvInfo {
+        /* display: none; */
       }
     </style>
   </head>
   <body>
 
+
+
     <canvas id="mainCanvas" width="400" height="400"></canvas>
-    <canvas id="canvasPaths" width="600" height="200"></canvas>
     <canvas id="cvInfo" width="600" height="200"></canvas>
+    <canvas id="canvasPaths" width="600" height="200"></canvas>
 
 
     <!-- <script src="saves/save1.js" charset="utf-8"></script> -->
-    <script src="saves/save2.js" charset="utf-8"></script>
+    <!-- <script src="saves/save2.js" charset="utf-8"></script> -->
+    <script src="saves/save3.js" charset="utf-8"></script>
 
     <!-- <script src="balls_vpTransform.js" charset="utf-8"></script> -->
     <script src="balls.js" charset="utf-8"></script>
