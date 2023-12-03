@@ -1,6 +1,6 @@
 var data = {
   description: "Test for stuff",
-  versions: ["v1.0.2"],
+  versions: ["v1.0.3"],
   config: {
     doFriction: false,
     doPenRes: true,

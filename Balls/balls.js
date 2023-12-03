@@ -1,4 +1,4 @@
-const version = "v1.0.2";
+const version = "v1.0.3";
 const releaseDate = "03.12.2023"
 if (!data.versions.includes(version)) {
   alert("This worldsave may not be compatible with this version of Balls (" + version + ").\n (Recommendet versions: " + data.versions + ")\n\nResuming may cause Errors!")
@@ -112,6 +112,7 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
   this.elasticity = elast;
   this.countCollide = 0;
   this.countWorldBorder = 0;
+  this.exist = true;
 
 
   this.pos = new Vector(x, y)
@@ -141,6 +142,9 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
       this.vel.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 20, "green");
       this.acc.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 1, "blue");
     }
+  }
+  this.delete = function () {
+    bls.splice(bls.indexOf(this, 1))
   }
   this.move = function () {
     this.vel = this.vel.add(this.acc.mul(gameSpeed));
@@ -418,6 +422,15 @@ function drawGame() {
     kinE += bls[i].vel.mag()**2 * (bls[i].m / 2);
 
   }
+
+  for (var i = 0; i < bls.length; i++) {
+    if (!bls[i].exist) {
+      bls.splice(i, 1)
+
+    }
+  }
+
+
 
 
   bls[0].info();
