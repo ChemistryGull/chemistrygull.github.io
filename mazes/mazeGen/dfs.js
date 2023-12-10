@@ -3,8 +3,8 @@ var ctx;
 
 var maze = [];
 var tS = 16; // --- Tile size
-var mW = 21; // --- Map Width and height
-var mH = 21;
+var mW = 61; // --- Map Width and height
+var mH = 61;
 var pos = [1, 1]
 var next;
 var legal;
@@ -16,6 +16,8 @@ window.onload = function () {
 
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
+
+  ctx.scale(0.5, 0.5)
 
   // ctx.fillStyle = "#FF0000";
   // ctx.fillRect(10, 10, 10, 10);

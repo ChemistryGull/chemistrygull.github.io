@@ -16,8 +16,9 @@ $(window).scroll(function () {
 
 
 // --- DropDown
-$(".DDtitle").hover(function () {
-  $(this).siblings(".DDcontent").toggle();
+$(".DDwrap").hover(function (e) {
+  $(this).children(".DDcontent").toggle();
+  console.log(e.type);
 })
 
 function stickyNavbar() {

@@ -37,7 +37,7 @@
       var canvas = document.getElementById("canvas")
       var ctx = canvas.getContext("2d")
 
-      var startPos = [500,500]
+      var startPos = [450,500]
       var cur;
 
       var w = 600;
@@ -106,6 +106,9 @@
         // console.log("n");
         // console.log(n);
         // var n = 1;
+        // ctx.beginPath()
+        // ctx.moveTo(cur[0], cur[1])
+
         var pc = [cur[0] - P[n][0], cur[1] - P[n][1]];
         // console.log("pc");
         // console.log(pc);
@@ -123,8 +126,14 @@
         // console.log(cur);
 
 
+        // ctx.lineTo(P[n][0], P[n][1])
+        // ctx.strokeStyle = "orange"
+        // ctx.stroke();
+
+
         ctx.fillStyle = "lime";
         ctx.fillRect(cur[0],cur[1],size,size)
+        // ctx.fillRect(cur[0],cur[1],Math.random() * 3,Math.random() * 3)
 
       }
 
@@ -154,6 +163,9 @@
           running = true;
           console.log("### play ###");
         }
+
+        // console.log("add Interval");
+        // setInterval(doTri, 20)
       })
 
 
@@ -161,8 +173,8 @@
       window.onload = function () {
         drawTri();
         // doTri();
-        triInterval = setInterval(doTri, freq)
-        running = true;
+        // triInterval = setInterval(doTri, freq)
+        running = false;
       }
 
 

@@ -60,7 +60,7 @@ body {
 
 /* DropDown */
 .DDcontent {
-  /* display: none; */
+  display: none;
 
   position: absolute;
   text-align: left;
