@@ -1,5 +1,5 @@
 var data = {
-  description: "Test for stuff",
+  description: "A game where a cingle ball-cell grows and duplicates, while evolving its color",
   versions: ["v1.0.3"],
   config: {
     doFriction: false,

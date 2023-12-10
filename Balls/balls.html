@@ -18,20 +18,45 @@
         border: 3px inset darkgray;
       }
       #mainCanvas {
-        background-color: black;
+        /* background-color: black; */
       }
       #cvInfo {
         /* display: none; */
+      }
+      #recordCrop {
+        width: 1080px;
+        height: 1920px;
+        width: 540px;
+        height: 960px;
+        /* width: 100%;
+        height: 100%; */
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        /* border: 1px solid red; */
+        z-index: 10;
+      }
+      #download {
+        display: none;
       }
     </style>
   </head>
   <body>
 
+    <div id="recordCrop">
 
+    </div>
 
     <canvas id="mainCanvas" width="400" height="400"></canvas>
     <canvas id="cvInfo" width="600" height="200"></canvas>
     <canvas id="canvasPaths" width="600" height="200"></canvas>
+
+
+
+    <script src="lib/CCapture.all.min.js" charset="utf-8"></script>
 
 
     <!-- <script src="saves/save1.js" charset="utf-8"></script> -->
@@ -41,7 +66,11 @@
     <!-- <script src="balls_vpTransform.js" charset="utf-8"></script> -->
     <script src="balls.js" charset="utf-8"></script>
 
+    <video id="record">
 
+    </video>
+
+    <a id="download" download>DOWNLOAD</a>
 
   </body>
 </html>

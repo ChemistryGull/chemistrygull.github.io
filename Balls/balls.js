@@ -1,5 +1,5 @@
-const version = "v1.0.3";
-const releaseDate = "03.12.2023"
+const version = "v1.0.4";
+const releaseDate = "10.12.2023"
 if (!data.versions.includes(version)) {
   alert("This worldsave may not be compatible with this version of Balls (" + version + ").\n (Recommendet versions: " + data.versions + ")\n\nResuming may cause Errors!")
 }
@@ -34,7 +34,17 @@ var soundList = [
   ["snapPop", "686557__thewilliamsounds__button_click.mp3"],
   ["waterdrop", "702806__matrixxx__soothing-waterdrop-click.wav"],
   ["diamondPiep", "703884__matrixxx__diamond-click.wav"],
-  ["scream", "704607__matrixxx__super-cute-scream-lil-cuzs-dont-change-it-scream-03.wav"]
+  ["scream", "704607__matrixxx__super-cute-scream-lil-cuzs-dont-change-it-scream-03.wav"],
+  ["c4", "piano/4c.mp3"],
+  ["d4", "piano/4d.mp3"],
+  ["e4", "piano/4e.mp3"],
+  ["f4", "piano/4f.mp3"],
+  ["g4", "piano/4g.mp3"],
+  ["a4", "piano/4a.mp3"],
+  ["b4", "piano/4b.mp3"],
+  ["c5", "piano/5c.mp3"],
+
+  // Piano: https://freesound.org/people/digifishmusic/sounds/94812/
 ]
 var sound = [];
 
@@ -45,6 +55,142 @@ for (var i = 0; i < soundList.length; i++) {
   }
 }
 
+
+var screenRecorder = {
+    source: ["https://ralzohairi.medium.com/audio-recording-in-javascript-96eed45b75ee", "https://developer.chrome.com/docs/web-platform/region-capture?hl=de"],
+    /** Stores the recorded audio as Blob objects of audio data as the recording continues*/
+    audioBlobs: [], /*of type Blob[]*/
+    /** Stores the reference of the MediaRecorder instance that handles the MediaStream when recording starts*/
+    mediaRecorder: null, /*of type MediaRecorder*/
+    /** Stores the reference to the stream currently capturing the audio*/
+    streamBeingCaptured: null, /*of type MediaStream*/
+
+    currentlyRecording: false,
+
+    blob: [],
+
+    options: {
+      preferCurrentTab: true,
+      audio: true,
+
+
+
+      // video: {
+      //   width: { ideal: 1920, max: 1920 },
+      //   height: { ideal: 1080, max: 1080 }
+      // }
+    },
+
+    start: function () {
+      // capturer.start();
+
+      //create an audio stream
+      return navigator.mediaDevices.getDisplayMedia(screenRecorder.options)
+      //returns a promise that resolves to the audio stream
+      .then(async function (stream) {
+
+        //define cropTarget (#recordCrop div)
+        const mainContentArea = document.getElementById("recordCrop");
+        const cropTarget = await CropTarget.fromElement(mainContentArea);
+
+        //crop videoTrack
+        const [videoTrack] = stream.getVideoTracks();
+        await videoTrack.cropTo(cropTarget);
+        // console.log(videoTrack.getConstraints());
+
+
+        //save the reference of the stream to be able to stop it when necessary
+        screenRecorder.streamBeingCaptured = stream;
+
+        //create a media recorder instance by passing that stream into the MediaRecorder constructor
+        screenRecorder.mediaRecorder = new MediaRecorder(stream, {videoBitsPerSecond: 2000000}); /*the MediaRecorder interface of the MediaStream Recording
+        API provides functionality to easily record media*/
+
+        //clear previously saved audio Blobs, if any
+        screenRecorder.audioBlobs = [];
+
+        //add a dataavailable event listener in order to store the audio data Blobs when recording
+        screenRecorder.mediaRecorder.addEventListener("dataavailable", event => {
+          //store audio Blob object
+          screenRecorder.audioBlobs.push(event.data);
+          console.log(event.data);
+        });
+
+        //start the recording by calling the start method on the media recorder
+        screenRecorder.mediaRecorder.start();
+        });
+
+      /* errors are not handled in the API because if its handled and the promise is chained, the .then after the catch will be executed*/
+
+    },
+
+    stop: function () {
+      // capturer.stop();
+      // capturer.save( function( blob ) {
+      //   let videoBlob = new Blob(screenRecorder.blob, { type: "video/webm" });
+      //   var videoURL = URL.createObjectURL(videoBlob);
+      //   var a = document.getElementById("download")
+      //   a.setAttribute('href', videoURL);
+      //   a.click();
+      // } );
+
+
+        //return a promise that would return the blob or URL of the recording
+        return new Promise(resolve => {
+            //save audio type to pass to set the Blob type
+            let mimeType = screenRecorder.mediaRecorder.mimeType;
+
+            //listen to the stop event in order to create & return a single Blob object
+            screenRecorder.mediaRecorder.addEventListener("stop", () => {
+                //create a single blob object, as we might have gathered a few Blob objects that needs to be joined as one
+                let audioBlob = new Blob(screenRecorder.audioBlobs, { type: mimeType });
+
+                var videoURL = URL.createObjectURL(audioBlob);
+
+                // document.getElementById("record").src = videoURL;
+
+                var a = document.getElementById("download")
+                a.setAttribute('href', videoURL);
+                a.click();
+
+                //resolve promise with the single audio blob representing the recorded audio
+                resolve(audioBlob);
+            });
+
+        //stop the recording feature
+        screenRecorder.mediaRecorder.stop();
+
+        //stop all the tracks on the active stream in order to stop the stream
+        screenRecorder.stopStream();
+
+        //reset API properties for next recording
+        screenRecorder.resetRecordingProperties();
+        });
+    },
+    /** Stop all the tracks on the active stream in order to stop the stream and remove
+     * the red flashing dot showing in the tab
+     */
+    stopStream: function() {
+        //stopping the capturing request by stopping all the tracks on the active stream
+        screenRecorder.streamBeingCaptured.getTracks() //get all tracks from the stream
+                .forEach(track /*of type MediaStreamTrack*/ => track.stop()); //stop each one
+    },
+    /** Reset all the recording properties including the media recorder and stream being captured*/
+    resetRecordingProperties: function () {
+        screenRecorder.mediaRecorder = null;
+        screenRecorder.streamBeingCaptured = null;
+
+        /*No need to remove event listeners attached to mediaRecorder as
+        If a DOM element which is removed is reference-free (no references pointing to it), the element itself is picked
+        up by the garbage collector as well as any event handlers/listeners associated with it.
+        getEventListeners(screenRecorder.mediaRecorder) will return an empty array of events.*/
+    }
+
+}
+
+// var capturer = new CCapture( { format: 'webm' } );
+
+
 var Left, Up, Right, Down = false;
 var VpL, VpU, VpR, VpD = false;
 
@@ -54,14 +200,13 @@ function startGame() {
   cvInfo.start();
 
 
-
   for (var i = 0; i < data.entities.length; i++) {
-    bls.push(new ball(data.entities[i].x, data.entities[i].y, data.entities[i].r, data.entities[i].color, data.entities[i].m, data.entities[i].elast, data.entities[i].vel));
+    bls.push(new ball(data.entities[i].x, data.entities[i].y, data.entities[i].r, data.entities[i].color, data.entities[i].m, data.entities[i].elast, data.entities[i].vel, data.entities[i].sound));
 
   }
 
   for (var i = 0; i < data.walls.length; i++) {
-    wls.push(new wall(data.walls[i].start, data.walls[i].end, data.walls[i].color, data.walls[i].elast));
+    wls.push(new wall(data.walls[i].start, data.walls[i].end, data.walls[i].color, data.walls[i].thickness, data.walls[i].elast));
 
   }
 
@@ -70,10 +215,10 @@ function startGame() {
 
   }
 
-  // for (var i = 0; i < 100; i++) {
-  //   bls.push(new ball(ran(100, vp.gameSize[0] / vp.s - 100), ran(100, vp.gameSize[1] / vp.s - 100), ran(5, 8), "red", ran(1, 10), 1, [ran(-1, 1), ran(-1, 1)]));
-  //
-  // }
+  for (var i = 0; i < 0; i++) {
+    bls.push(new ball(ran(50, vp.gameSize[0] / vp.s - 50), ran(50, vp.gameSize[1] / vp.s - 50), ran(10, 20), "red", undefined, 1, [ran(-10, 10) / 10, ran(-10, 10) / 10]));
+
+  }
 
 
 
@@ -95,7 +240,7 @@ function startGame() {
 
 
 
-function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
+function ball(x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null) {
   ctx = gameArea.ctx
   this.color = color;
   this.r = r;
@@ -113,6 +258,7 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
   this.countCollide = 0;
   this.countWorldBorder = 0;
   this.exist = true;
+  this.sound = sound;
 
 
   this.pos = new Vector(x, y)
@@ -164,7 +310,7 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
     // }
   }
   this.info = function () {
-    cvInfo.ctx.clearRect(0, 0, cvInfo.canvas.width, 200)
+    cvInfo.ctx.clearRect(0, 0, cvInfo.canvas.width, 310)
     cvInfo.ctx.fillStyle = "green";
     cvInfo.ctx.font = "20px Monospace";
     cvInfo.ctx.fillText("Pos = " + round(this.pos.x, 3) + " | " + round(this.pos.y, 3), 10, 60);
@@ -178,7 +324,7 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
     var distVec = b2.pos.sub(this.pos);
     if (distVec.mag() < this.r + b2.r) {
 
-      data.onCollision(this, b2);
+
 
       // sound.woodenPop.cloneNode(true).play();
       this.countCollide++;
@@ -205,6 +351,9 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
           console.log("smaller");
 
         }
+
+        data.onCollision(this, b2);
+
         return;
 
       }
@@ -233,6 +382,9 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
         // this.vel = b1New;
         // b2.vel = b2New;
       }
+
+      data.onCollision(this, b2);
+
     }
   }
   this.gravity = function (b2) {
@@ -264,36 +416,41 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0]) {
 
     if (this.pos.x < 0 + this.r) {
       this.pos.x = this.r;
-      this.vel.x *= -1;
+      this.vel.x *= -this.elasticity;
       this.countWorldBorder++;
       data.onWorldBorder(this);
     } else if (this.pos.x > gameArea.canvas.width / vp.s - this.r) {
       this.pos.x = gameArea.canvas.width / vp.s - this.r;
-      this.vel.x *= -1;
+      this.vel.x *= -this.elasticity;
       this.countWorldBorder++;
       data.onWorldBorder(this);
     }
     if (this.pos.y < 0 + this.r) {
       this.pos.y = this.r;
-      this.vel.y *= -1;
+      this.vel.y *= -this.elasticity;
       this.countWorldBorder++;
       data.onWorldBorder(this);
     } else if (this.pos.y > gameArea.canvas.height / vp.s - this.r) {
       this.pos.y = gameArea.canvas.height / vp.s - this.r;
-      this.vel.y *= -1;
+      this.vel.y *= -this.elasticity;
       this.countWorldBorder++;
       data.onWorldBorder(this);
     }
 
 
   }
+  this.absGravity = function (b2) {
+    b2.acc.x = data.phys.g[0];
+    b2.acc.y = data.phys.g[1];
+  }
 
 }
 
-function wall(start, end, color, elast) {
+function wall(start, end, color, thickness, elast) {
   this.start = new Vector(start[0], start[1]);
   this.end = new Vector(end[0], end[1]);
   this.color = color;
+  this.thickness = thickness;
   this.elasticity = elast;
 
   this.update = function () {
@@ -301,6 +458,7 @@ function wall(start, end, color, elast) {
     ctx.moveTo(this.start.x + vp.x, this.start.y + vp.y)
     ctx.lineTo(this.end.x + vp.x, this.end.y + vp.y)
     ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.thickness;
     ctx.stroke();
   }
 
@@ -315,20 +473,20 @@ function wall(start, end, color, elast) {
     var ce = be_.scalar(se_u); // --- Length of Wall End till normal interception point of ball pos with the wall
 
     if (cs >= 0) {
-      ctx.beginPath();
-      ctx.moveTo(b.pos.x + vp.x, b.pos.y + vp.y)
-      ctx.lineTo(b.pos.x + bs_.x + vp.x, b.pos.y + bs_.y + vp.y)
-      ctx.strokeStyle = "green";
-      ctx.stroke();
+      // ctx.beginPath();
+      // ctx.moveTo(b.pos.x + vp.x, b.pos.y + vp.y)
+      // ctx.lineTo(b.pos.x + bs_.x + vp.x, b.pos.y + bs_.y + vp.y)
+      // ctx.strokeStyle = "green";
+      // ctx.stroke();
 
       return bs_.mul(-1);
 
     } else if (ce <= 0) {
-      ctx.beginPath();
-      ctx.moveTo(b.pos.x + vp.x, b.pos.y + vp.y)
-      ctx.lineTo(b.pos.x + be_.x + vp.x, b.pos.y + be_.y + vp.y)
-      ctx.strokeStyle = "green";
-      ctx.stroke();
+      // ctx.beginPath();
+      // ctx.moveTo(b.pos.x + vp.x, b.pos.y + vp.y)
+      // ctx.lineTo(b.pos.x + be_.x + vp.x, b.pos.y + be_.y + vp.y)
+      // ctx.strokeStyle = "green";
+      // ctx.stroke();
 
       return be_.mul(-1);
 
@@ -336,11 +494,11 @@ function wall(start, end, color, elast) {
       var cs_ = se_u.mul(cs); // --- the vector of the start to this above interceotion
       var cb_ = cs_.sub(bs_); // --- vector from the ball to the interception (= distancevector from ball to wall)
 
-      ctx.beginPath();
-      ctx.moveTo(this.start.sub(cs_).x + vp.x, this.start.sub(cs_).y + vp.y)
-      ctx.lineTo(this.start.sub(cs_).x + cb_.x + vp.x, this.start.sub(cs_).y + cb_.y + vp.y)
-      ctx.strokeStyle = "green";
-      ctx.stroke();
+      // ctx.beginPath();
+      // ctx.moveTo(this.start.sub(cs_).x + vp.x, this.start.sub(cs_).y + vp.y)
+      // ctx.lineTo(this.start.sub(cs_).x + cb_.x + vp.x, this.start.sub(cs_).y + cb_.y + vp.y)
+      // ctx.strokeStyle = "green";
+      // ctx.stroke();
 
       return cb_;
 
@@ -367,7 +525,7 @@ function wall(start, end, color, elast) {
       var vsep_diff = sepVel - new_sepVel;
       b.vel = b.vel.add(normal.mul(-vsep_diff))
 
-      data.onWallCollision()
+      data.onWallCollision(b, this)
 
     }
 
@@ -379,7 +537,9 @@ function wall(start, end, color, elast) {
 var counter = 0;
 function drawGame() {
   var timerGame = Date.now();
-  gameArea.clear();
+  if (data.config.doClearGameArea) {
+    gameArea.clear();
+  }
 
   // vp.follow(bls[0])
   vp.move();
@@ -399,6 +559,10 @@ function drawGame() {
 
     if (data.config.doFriction) {
       bls[i].friction();
+    }
+
+    if (data.config.doAbsoluteGravity) {
+      bls[i].absGravity(bls[i])
     }
 
     for (var j = i+1; j < bls.length; j++) {
@@ -434,9 +598,15 @@ function drawGame() {
 
 
   bls[0].info();
-  cvInfo.ctx.fillText("Total Momentum Vec = " + round(momentumTotalVec.mag(), 3), 10, 120);
-  cvInfo.ctx.fillText("Total Kinetic Energy= " + round(kinE, 10), 10, 140);
+  // cvInfo.ctx.fillText("Total Momentum Vec = " + round(momentumTotalVec.mag(), 3), 10, 120);
+  // cvInfo.ctx.fillText("Total Kinetic Energy = " + round(kinE, 10), 10, 140);
   cvInfo.ctx.fillText("Balls: " + bls.length, 10, 160);
+
+
+  cvInfo.ctx.fillStyle = "hsl(" + counter + ", 100%, 50%)";
+  cvInfo.ctx.font = "16px Monospace"
+  cvInfo.ctx.fillText("Total Kinetic Energy = " + round(kinE, 0) + " J", cvInfo.canvas.width / 4 - 150, 307);
+  cvInfo.ctx.font = "20px Monospace"
 
   // --- FPS Counter
   if(!lastCalledTime) {
@@ -462,6 +632,13 @@ function drawGame() {
   // window.requestAnimationFrame(drawGame);
 
   data.onTick();
+
+  // capturer.capture(gameArea.canvas);
+
+  // gameArea.ctx.fillStyle = "red";
+  // cvInfo.ctx.font = "28px Monospace"
+  //
+  // gameArea.ctx.fillText(bls.length, 10, 10);
 
 
   counter++;
@@ -495,6 +672,7 @@ window.onload = function () {
   }
 
 
+  // record.setup()
   // offCv = new OffscreenCanvas(1000, 1000)
 
   startGame();
@@ -582,6 +760,10 @@ function Canvas(id, sc) {
   }
   this.clear = function () {
     this.ctx.clearRect(0, 0, this.canvas.width / this.sc, this.canvas.height / this.sc);
+    this.ctx.fillStyle = "Black"
+    this.ctx.fillRect(0, 0, this.canvas.width / this.sc, this.canvas.height / this.sc);
+
+
   }
   this.scale = function (sc) {
     this.ctx.reset();
@@ -746,6 +928,22 @@ window.addEventListener("keydown", function (e) {
       gameInterval = setInterval(drawGame, gameIntTime);
       console.log("### START ###");
       return;
+  }
+  if (e.keyCode == 49) {
+    if (!screenRecorder.currentlyRecording) {
+      document.getElementById("recordCrop").style = "border: none";
+      screenRecorder.currentlyRecording = true;
+      screenRecorder.start();
+    }
+
+  }
+  if (e.keyCode == 50) {
+    if (screenRecorder.currentlyRecording) {
+      document.getElementById("recordCrop").style = "border: 1px solid red";
+      currentlyRecording = false;
+      screenRecorder.stop();
+    }
+
   }
 
 
