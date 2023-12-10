@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  background-color: lightgray;
+  font-family: Arial;
+}
+
+/* Header */
+
+.header {
+  /* height: 200px; */
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 130px auto;
+
+  /* background-color: orange; */
+}
+
+
+.headerTop {
+  display: flex;
+  flex-wrap: nowrap;
+
+  background-color: orange;
+}
+
+.headerTitle {
+  font-size: 50px;
+  color: lightgray;
+  width: 100%;
+  text-align: center;
+  align-self: center;
+}
+
+
+.navbar {
+  display: flex;
+  top: 0;
+  width: 100%;
+  background-color: darkslategray;
+}
+
+.navbarItem {
+  font-size: 20px;
+  color: lightgray;
+  text-align: center;
+  align-self: center;
+  padding: 10px;
+}
+
+.navbarLink {
+  text-decoration: none;
+  font-size: 20px;
+  color: lightgray;
+}
+.navbarLink:hover {
+  background-color: slategray;
+  cursor: pointer;
+}
+
+
+/* DropDown */
+.DDcontent {
+  /* display: none; */
+
+  position: absolute;
+  text-align: left;
+  background-color: darkslategray;
+}
+.DDitem {
+  display: block;
+  padding: 5px 10px;
+}
+
+/* Content */
+
+
+
+/* Footer */
