@@ -1,5 +1,5 @@
-const version = "v1.0.4";
-const releaseDate = "10.12.2023"
+const version = "v1.0.5";
+const releaseDate = "19.12.2023"
 if (!data.versions.includes(version)) {
   alert("This worldsave may not be compatible with this version of Balls (" + version + ").\n (Recommendet versions: " + data.versions + ")\n\nResuming may cause Errors!")
 }
@@ -43,16 +43,36 @@ var soundList = [
   ["a4", "piano/4a.mp3"],
   ["b4", "piano/4b.mp3"],
   ["c5", "piano/5c.mp3"],
+  ["kawazaki", "kawazaki.mp3"],
+  ["cago", "cago.mp3"],
+  ["krico", "krico.mp3"],
+  ["estriper", "estriper.mp3"],
+  ["los_Pinguinos", "Los_Pingüinos_me_la_van_a_Mascar.mp3"]
 
   // Piano: https://freesound.org/people/digifishmusic/sounds/94812/
 ]
+var tonleiter = ["c4", "d4", "e4", "f4", "g4", "a4", "b4", "c5"]
 var sound = [];
-
 for (var i = 0; i < soundList.length; i++) {
   sound[soundList[i][0]] = new Audio("sounds/" + soundList[i][1])
   sound[soundList[i][0]].lol = function () {
     console.log("LOL");
   }
+}
+
+var imageList = [
+  ["kawazaki", "Kawazaki.png"],
+  ["cago", "Cago.png"],
+  ["krico", "Krico.png"],
+  ["estriper", "Estriper.png"]
+
+]
+var images = [];
+for (var i = 0; i < imageList.length; i++) {
+
+  images[imageList[i][0]] = new Image();
+  images[imageList[i][0]].src = "img/" + imageList[i][1];
+
 }
 
 
@@ -201,22 +221,23 @@ function startGame() {
 
 
   for (var i = 0; i < data.entities.length; i++) {
-    bls.push(new ball(data.entities[i].x, data.entities[i].y, data.entities[i].r, data.entities[i].color, data.entities[i].m, data.entities[i].elast, data.entities[i].vel, data.entities[i].sound));
-
+    // bls.push(new ball(data.entities[i].x, data.entities[i].y, data.entities[i].r, data.entities[i].color, data.entities[i].m, data.entities[i].elast, data.entities[i].vel, data.entities[i].sound, data.entities[i].image));
+    // break;
+    bls.push(new ball(data.entities[i]));
   }
 
   for (var i = 0; i < data.walls.length; i++) {
-    wls.push(new wall(data.walls[i].start, data.walls[i].end, data.walls[i].color, data.walls[i].thickness, data.walls[i].elast));
+    wls.push(new wall(data.walls[i]));
 
   }
 
   for (var i = 0; i < 0; i++) {
-    bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor(), ran(1, 10), [ran(-3, 3), ran(-3, 3)]));
+    bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor(), ran(1, 10), [ran(-3, 3), ran(-3, 3)], data.entities[i].image));
 
   }
 
   for (var i = 0; i < 0; i++) {
-    bls.push(new ball(ran(50, vp.gameSize[0] / vp.s - 50), ran(50, vp.gameSize[1] / vp.s - 50), ran(10, 20), "red", undefined, 1, [ran(-10, 10) / 10, ran(-10, 10) / 10]));
+    bls.push(new ball(ran(50, vp.gameSize[0] / vp.s - 50), ran(50, vp.gameSize[1] / vp.s - 50), ran(10, 20), "red", undefined, 1, [ran(-10, 10) / 10, ran(-10, 10) / 10], data.entities[i].image));
 
   }
 
@@ -238,34 +259,48 @@ function startGame() {
 
 }
 
+// x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null, image = null
 
+function ball(inp) {
 
-function ball(x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null) {
   ctx = gameArea.ctx
-  this.color = color;
-  this.r = r;
-  if (m == undefined) {
-    this.m = r;
-    this.m_inv = 1 / r;
-  } else if (m == 0) {
+  this.color = inp.color || "red";
+  this.r = inp.r || 30;
+  if (inp.m == undefined) {
+    this.m = inp.r;
+    this.m_inv = 1 / inp.r;
+  } else if (inp.m == 0) {
     this.m = 0;
     this.m_inv = 0;
   } else {
-    this.m = m;
-    this.m_inv = 1 / m;
+    this.m = inp.m;
+    this.m_inv = 1 / inp.m;
   }
-  this.elasticity = elast;
+
+  this.elasticity = inp.elast || 1;
   this.countCollide = 0;
   this.countWorldBorder = 0;
   this.exist = true;
-  this.sound = sound;
+  this.sound = inp.sound;
+  this.image = inp.image;
+  this.name = inp.name;
 
 
-  this.pos = new Vector(x, y)
-  this.vel = new Vector(vel[0], vel[1])
+  this.pos = new Vector(inp.x || 100, inp.y || 100)
+  if (inp.vel) {
+    this.vel = new Vector(inp.vel[0], inp.vel[1])
+  } else {
+    this.vel = new Vector(0, 0)
+  }
   this.acc = new Vector(0, 0)
 
   this.update = function () {
+
+    if (this.image != undefined) {
+      ctx.drawImage(images[this.image],this.pos.x + vp.x - this.r, this.pos.y + vp.y - this.r, this.r * 2, this.r * 2)
+      return;
+    }
+
     ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
@@ -288,9 +323,16 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null) 
       this.vel.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 20, "green");
       this.acc.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 1, "blue");
     }
+
+
+
+
   }
   this.delete = function () {
     bls.splice(bls.indexOf(this, 1))
+    if (bls.length == 0) {
+      clearInterval(gameInterval);
+    }
   }
   this.move = function () {
     this.vel = this.vel.add(this.acc.mul(gameSpeed));
@@ -320,7 +362,8 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null) 
 
   }
 
-  this.collision = function (b2) {
+  this.collision = function (i, j) {
+    var b2 = bls[j]
     var distVec = b2.pos.sub(this.pos);
     if (distVec.mag() < this.r + b2.r) {
 
@@ -352,7 +395,7 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null) 
 
         }
 
-        data.onCollision(this, b2);
+        data.onCollision(i, j);
 
         return;
 
@@ -383,11 +426,12 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null) 
         // b2.vel = b2New;
       }
 
-      data.onCollision(this, b2);
+      data.onCollision(i, j);
 
     }
   }
-  this.gravity = function (b2) {
+  this.gravity = function (i) {
+    var b2 = bls[i];
     var distVec = b2.pos.sub(this.pos);
     var dist = distVec.mag();
     var force = constG * this.m * b2.m / (dist * dist);
@@ -411,30 +455,30 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null) 
     // this.acc = this.acc.add(vForce1.mul(1 / this.m));
     // b2.acc = b2.acc.add(vForce2.mul(-1 / b2.m));
   }
-  this.worldBorder = function () {
+  this.worldBorder = function (i) {
 
 
     if (this.pos.x < 0 + this.r) {
       this.pos.x = this.r;
       this.vel.x *= -this.elasticity;
       this.countWorldBorder++;
-      data.onWorldBorder(this);
+      data.onWorldBorder(i);
     } else if (this.pos.x > gameArea.canvas.width / vp.s - this.r) {
       this.pos.x = gameArea.canvas.width / vp.s - this.r;
       this.vel.x *= -this.elasticity;
       this.countWorldBorder++;
-      data.onWorldBorder(this);
+      data.onWorldBorder(i);
     }
     if (this.pos.y < 0 + this.r) {
       this.pos.y = this.r;
       this.vel.y *= -this.elasticity;
       this.countWorldBorder++;
-      data.onWorldBorder(this);
+      data.onWorldBorder(i);
     } else if (this.pos.y > gameArea.canvas.height / vp.s - this.r) {
       this.pos.y = gameArea.canvas.height / vp.s - this.r;
       this.vel.y *= -this.elasticity;
       this.countWorldBorder++;
-      data.onWorldBorder(this);
+      data.onWorldBorder(i);
     }
 
 
@@ -446,18 +490,19 @@ function ball(x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null) 
 
 }
 
-function wall(start, end, color, thickness, elast) {
-  this.start = new Vector(start[0], start[1]);
-  this.end = new Vector(end[0], end[1]);
-  this.color = color;
-  this.thickness = thickness;
-  this.elasticity = elast;
+function wall(inp) {
+  this.start = new Vector(inp.start[0], inp.start[1]);
+  this.end = new Vector(inp.end[0], inp.end[1]);
+  this.color = inp.color || "white";
+  this.thickness = inp.thickness || 1;
+  this.elasticity = inp.elast || 1;
 
   this.update = function () {
     ctx.beginPath();
     ctx.moveTo(this.start.x + vp.x, this.start.y + vp.y)
     ctx.lineTo(this.end.x + vp.x, this.end.y + vp.y)
     ctx.strokeStyle = this.color;
+    // ctx.lineCap = 'round';
     ctx.lineWidth = this.thickness;
     ctx.stroke();
   }
@@ -506,14 +551,15 @@ function wall(start, end, color, thickness, elast) {
     }
   }
 
-  this.collision = function (b) {
+  this.collision = function (i, j) {
 
+    var b = bls[j]
     var distanceVector = this.getDistanceVector(b);
 
     if (distanceVector.mag() < b.r) {
 
       var penDepth = b.r - distanceVector.mag();
-      var penRes = distanceVector.unit().mul(penDepth);
+      var penRes = distanceVector.unit().mul(penDepth + 1);
 
       b.pos = b.pos.add(penRes)
 
@@ -525,7 +571,7 @@ function wall(start, end, color, thickness, elast) {
       var vsep_diff = sepVel - new_sepVel;
       b.vel = b.vel.add(normal.mul(-vsep_diff))
 
-      data.onWallCollision(b, this)
+      data.onWallCollision(i, j)
 
     }
 
@@ -541,6 +587,15 @@ function drawGame() {
     gameArea.clear();
   }
 
+  // ctx.globalAlpha = 0.01;
+  // ctx.fillStyle = "Black"
+  // ctx.fillRect(0, 0, gameArea.canvas.width / gameArea.sc, gameArea.canvas.height / gameArea.sc);
+  // ctx.globalAlpha = 1.0;
+
+  //
+  // gameArea.canvas.width -= 0.5;
+  // gameArea.canvas.height -= 0.5;
+
   // vp.follow(bls[0])
   vp.move();
 
@@ -550,7 +605,7 @@ function drawGame() {
 
   for (var i = 0; i < wls.length; i++) {
     for (var j = 0; j < bls.length; j++) {
-      wls[i].collision(bls[j]);
+      wls[i].collision(i, j);
     }
     wls[i].update();
   }
@@ -567,14 +622,14 @@ function drawGame() {
 
     for (var j = i+1; j < bls.length; j++) {
       if (data.config.doGravity) {
-        bls[i].gravity(bls[j]);
+        bls[i].gravity(j);
       }
       if (data.config.doPenRes) {
-        bls[i].collision(bls[j]);
+        bls[i].collision(i, j);
       }
     }
     if (data.config.doWorldBorder) {
-      bls[i].worldBorder();
+      bls[i].worldBorder(i);
     }
 
     bls[i].update()
@@ -603,9 +658,10 @@ function drawGame() {
   cvInfo.ctx.fillText("Balls: " + bls.length, 10, 160);
 
 
-  cvInfo.ctx.fillStyle = "hsl(" + counter + ", 100%, 50%)";
-  cvInfo.ctx.font = "16px Monospace"
-  cvInfo.ctx.fillText("Total Kinetic Energy = " + round(kinE, 0) + " J", cvInfo.canvas.width / 4 - 150, 307);
+  // cvInfo.ctx.fillStyle = "hsl(" + counter + ", 100%, 50%)";
+  // cvInfo.ctx.font = "16px Monospace"
+  cvInfo.ctx.fillText("Total Kinetic Energy = " + round(kinE, 0) + " J", 10, 140);
+  // cvInfo.ctx.fillText("Total Kinetic Energy = " + round(kinE, 0) + " J", cvInfo.canvas.width / 4 - 150, 307);
   cvInfo.ctx.font = "20px Monospace"
 
   // --- FPS Counter
@@ -650,7 +706,7 @@ window.onload = function () {
 
   gameArea = new Canvas("mainCanvas", gameScale);
   canvasPaths = new Canvas("canvasPaths", gameScale);
-  cvInfo = new Canvas("cvInfo", 2);
+  cvInfo = new Canvas("cvInfo", 1);
 
   if (vp.gameSize[0] == 0) {
     gameArea.canvas.width = window.innerWidth - 2;
@@ -1028,4 +1084,9 @@ function ranColor() {
 }
 function round(num, dec) {
   return Math.round(num * (10**dec)) / (10**dec)
+}
+function img(src) {
+  var img = new Image;
+  img.src = strDataURI;
+  return img;
 }
