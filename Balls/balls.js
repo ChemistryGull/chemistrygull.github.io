@@ -1,4 +1,4 @@
-const version = "v1.0.5";
+const version = "v1.0.6";
 const releaseDate = "19.12.2023"
 if (!data.versions.includes(version)) {
   alert("This worldsave may not be compatible with this version of Balls (" + version + ").\n (Recommendet versions: " + data.versions + ")\n\nResuming may cause Errors!")
@@ -23,7 +23,11 @@ var mousePos = {x: 0, y: 0}
 
 
 var bls = [];
+var rings = [];
 var wls = [];
+
+var fireworks = [];
+
 
 var soundList = [
   ["woodenPop", "244652__greenvwbeetle__pop-4.flac"],
@@ -47,18 +51,75 @@ var soundList = [
   ["cago", "cago.mp3"],
   ["krico", "krico.mp3"],
   ["estriper", "estriper.mp3"],
-  ["los_Pinguinos", "Los_Pingüinos_me_la_van_a_Mascar.mp3"]
+  ["los_Pinguinos", "Los_Pingüinos_me_la_van_a_Mascar.mp3"],
+  ["fw1", "fw1.wav"],
+  ["fw2", "fw2.wav"],
+  ["fw3", "fw3.wav"],
+  ["fw4", "fw4.wav"],
+  ["fw5", "fw5.wav"],
+  ["fw6", "fw6.wav"],
+  ["fw7", "fw7.wav"],
 
   // Piano: https://freesound.org/people/digifishmusic/sounds/94812/
 ]
-var tonleiter = ["c4", "d4", "e4", "f4", "g4", "a4", "b4", "c5"]
+// var tonleiter = ["c4", "d4", "e4", "f4", "g4", "a4", "b4", "c5"]
 var sound = [];
 for (var i = 0; i < soundList.length; i++) {
   sound[soundList[i][0]] = new Audio("sounds/" + soundList[i][1])
-  sound[soundList[i][0]].lol = function () {
-    console.log("LOL");
+}
+
+
+// var pianoList = [
+//   ["a1", "448572__tedagame__a1.ogg"],
+//   ["b1", "448572__tedagame__a1.ogg"],
+//   ["c1", "448572__tedagame__a1.ogg"],
+//   ["d1", "448572__tedagame__a1.ogg"],
+//   ["e1", "448572__tedagame__a1.ogg"],
+//   ["f1", "448572__tedagame__a1.ogg"],
+//   ["g1", "448572__tedagame__a1.ogg"],
+//   ["g1", "448572__tedagame__a1.ogg"]
+//   // Piano: https://freesound.org/people/digifishmusic/sounds/94812/
+// ]
+var octaveNames = ["C", "Cs", "D", "Ds", "E", "F", "Fs", "G", "Gs", "A", "As", "B"]
+var tonleiterList = [];
+var piano = [];
+var currPlaying = "";
+var currTonleiter = "1C"
+for (var oct = 1; oct <= 5; oct++) {
+  for (var i = 0; i < octaveNames.length; i++) {
+    piano[oct + octaveNames[i]] = new Audio("sounds/piano-keys/Octave-" + oct + "/" + oct + octaveNames[i] + ".ogg")
+    piano[oct + octaveNames[i]].hit = function () {
+      if (currPlaying != "") {
+        currPlaying.pause();
+        currPlaying.currentTime = 0;
+      }
+      currPlaying = this;
+      // this.cloneNode(true).play();
+      this.play();
+
+    }
+    tonleiterList.push(oct + octaveNames[i])
   }
 }
+function tonleiter(_from = "1C", _to = "5Cs") {
+
+  // console.log(end);
+
+  if (tonleiterList.indexOf(_from) > tonleiterList.indexOf(currTonleiter)) {
+    currTonleiter = _from;
+  }
+  if (tonleiterList.indexOf(_to) < tonleiterList.indexOf(currTonleiter)) {
+    currTonleiter = _from;
+  }
+  console.log(currTonleiter);
+  // piano[currTonleiter].hit();
+  piano[currTonleiter].play();
+
+  currTonleiter = tonleiterList[tonleiterList.indexOf(currTonleiter) + 1]
+
+}
+
+
 
 var imageList = [
   ["kawazaki", "Kawazaki.png"],
@@ -219,11 +280,18 @@ function startGame() {
   canvasPaths.start();
   cvInfo.start();
 
+  canvasPaths.ctx.fillStyle = "black";
+  canvasPaths.ctx.fillRect(0, 0, 1000, 1000);
 
-  for (var i = 0; i < data.entities.length; i++) {
-    // bls.push(new ball(data.entities[i].x, data.entities[i].y, data.entities[i].r, data.entities[i].color, data.entities[i].m, data.entities[i].elast, data.entities[i].vel, data.entities[i].sound, data.entities[i].image));
+  for (var i = 0; i < data.balls.length; i++) {
+    // bls.push(new ball(data.balls[i].x, data.balls[i].y, data.balls[i].r, data.balls[i].color, data.balls[i].m, data.balls[i].elast, data.balls[i].vel, data.balls[i].sound, data.balls[i].image));
     // break;
-    bls.push(new ball(data.entities[i]));
+    bls.push(new ball(data.balls[i]));
+  }
+
+  for (var i = 0; i < data.rings.length; i++) {
+    rings.push(new ring(data.rings[i]));
+
   }
 
   for (var i = 0; i < data.walls.length; i++) {
@@ -232,12 +300,12 @@ function startGame() {
   }
 
   for (var i = 0; i < 0; i++) {
-    bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor(), ran(1, 10), [ran(-3, 3), ran(-3, 3)], data.entities[i].image));
+    bls.push(new ball(ran(50, window.innerWidth / vp.s - 50), ran(50, window.innerHeight / vp.s - 50), ran(5, 40), ranColor(), ran(1, 10), [ran(-3, 3), ran(-3, 3)], data.balls[i].image));
 
   }
 
   for (var i = 0; i < 0; i++) {
-    bls.push(new ball(ran(50, vp.gameSize[0] / vp.s - 50), ran(50, vp.gameSize[1] / vp.s - 50), ran(10, 20), "red", undefined, 1, [ran(-10, 10) / 10, ran(-10, 10) / 10], data.entities[i].image));
+    bls.push(new ball(ran(50, vp.gameSize[0] / vp.s - 50), ran(50, vp.gameSize[1] / vp.s - 50), ran(10, 20), "red", undefined, 1, [ran(-10, 10) / 10, ran(-10, 10) / 10], data.balls[i].image));
 
   }
 
@@ -262,7 +330,6 @@ function startGame() {
 // x, y, r, color, m = undefined, elast, vel = [0, 0], sound = null, image = null
 
 function ball(inp) {
-
   ctx = gameArea.ctx
   this.color = inp.color || "red";
   this.r = inp.r || 30;
@@ -276,11 +343,15 @@ function ball(inp) {
     this.m = inp.m;
     this.m_inv = 1 / inp.m;
   }
+  if (inp.exist == undefined) {
+    this.exist = true;
+  } else {
+    this.exist = inp.exist;
+  }
 
   this.elasticity = inp.elast || 1;
   this.countCollide = 0;
   this.countWorldBorder = 0;
-  this.exist = true;
   this.sound = inp.sound;
   this.image = inp.image;
   this.name = inp.name;
@@ -293,6 +364,7 @@ function ball(inp) {
     this.vel = new Vector(0, 0)
   }
   this.acc = new Vector(0, 0)
+
 
   this.update = function () {
 
@@ -307,17 +379,23 @@ function ball(inp) {
     ctx.fill();
 
 
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 0.5;
-    ctx.beginPath();
-    ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
-    ctx.stroke()
+    // ctx.strokeStyle = this.color;
+    // ctx.lineWidth = 10;
+    // ctx.beginPath();
+    // ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
+    // ctx.stroke()
 
     if (data.config.doDrawPath) {
       canvasPaths.ctx.fillStyle = this.color;
       canvasPaths.ctx.beginPath();
       canvasPaths.ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, 2, 0, 2 * Math.PI);
       canvasPaths.ctx.fill();
+
+      // canvasPaths.ctx.globalCompositeOperation = 'destination-out'
+      // canvasPaths.ctx.beginPath();
+      //
+      // canvasPaths.ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI, true);
+      // canvasPaths.ctx.fill();
     }
     if (data.config.doVelVec) {
       this.vel.drawVec(this.pos.x + vp.x, this.pos.y + vp.y, 20, "green");
@@ -373,6 +451,7 @@ function ball(inp) {
       this.countCollide++;
 
       if (data.config.doCombinition) { // --- Simplistic Method to combine two balls. EDIT IN FUTURE
+
         if (this.m >= b2.m) {
           // this.vel = this.vel.mul(this.m).add(b2.vel.mul(b2.m).mul(1/(this.m + b2.m)))
           this.vel = this.vel.unit().mul((this.vel.mag() * this.m + -b2.vel.mag() * b2.m) / (b2.m + this.m));
@@ -458,24 +537,24 @@ function ball(inp) {
   this.worldBorder = function (i) {
 
 
-    if (this.pos.x < 0 + this.r) {
-      this.pos.x = this.r;
+    if (this.pos.x + vp.x < 0 + this.r) {
+      this.pos.x = this.r - vp.x;
       this.vel.x *= -this.elasticity;
       this.countWorldBorder++;
       data.onWorldBorder(i);
-    } else if (this.pos.x > gameArea.canvas.width / vp.s - this.r) {
-      this.pos.x = gameArea.canvas.width / vp.s - this.r;
+    } else if (this.pos.x + vp.x > gameArea.canvas.width / vp.s - this.r) {
+      this.pos.x = gameArea.canvas.width / vp.s - this.r - vp.x;
       this.vel.x *= -this.elasticity;
       this.countWorldBorder++;
       data.onWorldBorder(i);
     }
-    if (this.pos.y < 0 + this.r) {
-      this.pos.y = this.r;
+    if (this.pos.y + vp.y < 0 + this.r) {
+      this.pos.y = this.r - vp.y;
       this.vel.y *= -this.elasticity;
       this.countWorldBorder++;
       data.onWorldBorder(i);
-    } else if (this.pos.y > gameArea.canvas.height / vp.s - this.r) {
-      this.pos.y = gameArea.canvas.height / vp.s - this.r;
+    } else if (this.pos.y + vp.y > gameArea.canvas.height / vp.s - this.r) {
+      this.pos.y = gameArea.canvas.height / vp.s - this.r - vp.y;
       this.vel.y *= -this.elasticity;
       this.countWorldBorder++;
       data.onWorldBorder(i);
@@ -490,13 +569,104 @@ function ball(inp) {
 
 }
 
+function ring(inp) {
+  ctx = gameArea.ctx
+  this.color = inp.color || "red";
+  this.r = inp.r || 30;
+  this.thickness = inp.thickness || 1;
+  if (inp.m == undefined) {
+    this.m = inp.r;
+    this.m_inv = 1 / inp.r;
+  } else if (inp.m == 0) {
+    this.m = 0;
+    this.m_inv = 0;
+  } else {
+    this.m = inp.m;
+    this.m_inv = 1 / inp.m;
+  }
+  if (inp.exist == undefined) {
+    this.exist = true;
+  } else {
+    this.exist = inp.exist;
+  }
+
+  this.elasticity = inp.elast || 1;
+  this.countCollide = 0;
+  this.countWorldBorder = 0;
+  this.sound = inp.sound;
+  this.name = inp.name;
+
+  this.pos = new Vector(inp.x || 100, inp.y || 100)
+
+
+  this.update = function () {
+
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.thickness;
+    ctx.beginPath();
+    ctx.arc(this.pos.x + vp.x, this.pos.y + vp.y, this.r, 0, 2 * Math.PI);
+    ctx.stroke()
+
+  }
+  this.delete = function () {
+    rings.splice(rings.indexOf(this, 1))
+    if (rings.length == 0) {
+      clearInterval(gameInterval);
+    }
+  }
+  this.collide = function (i, j) {
+    var b2 = bls[j]
+    var distVec = b2.pos.sub(this.pos);
+    if (distVec.mag() + b2.r > this.r) {
+      data.onRingCollision(i, j);
+
+
+      // sound.woodenPop.cloneNode(true).play();
+      this.countCollide++;
+
+      var penDepth = distVec.mag() + b2.r - this.r;
+      var penRes = distVec.unit().mul(-penDepth)
+
+
+      b2.pos = b2.pos.add(penRes)
+
+      if (true) {
+
+        var distVecNorm = b2.pos.sub(this.pos).unit();
+        var relVel = b2.vel;
+        var sepVel = relVel.scalar(distVecNorm);
+        var impulseVec = distVecNorm.mul(-sepVel * 2);
+
+        b2.vel = b2.vel.add(impulseVec);
+
+
+      }
+
+
+
+    }
+  }
+}
+
 function wall(inp) {
   this.start = new Vector(inp.start[0], inp.start[1]);
   this.end = new Vector(inp.end[0], inp.end[1]);
   this.color = inp.color || "white";
   this.thickness = inp.thickness || 1;
   this.elasticity = inp.elast || 1;
+  this.name = inp.name;
 
+  if (inp.exist == undefined) {
+    this.exist = true;
+  } else {
+    this.exist = inp.exist;
+  }
+  this.delete = function () {
+    wls.splice(wls.indexOf(this, 1))
+    if (wls.length == 0) {
+      clearInterval(gameInterval);
+    }
+  }
   this.update = function () {
     ctx.beginPath();
     ctx.moveTo(this.start.x + vp.x, this.start.y + vp.y)
@@ -516,6 +686,18 @@ function wall(inp) {
 
     var cs = bs_.scalar(se_u); // --- Length of Wall Start till normal interception point of ball pos with the wall
     var ce = be_.scalar(se_u); // --- Length of Wall End till normal interception point of ball pos with the wall
+
+    // ctx.beginPath();
+    // ctx.moveTo(b.pos.x + vp.x, b.pos.y + vp.y)
+    // ctx.lineTo(b.pos.x + bs_.x + vp.x, b.pos.y + bs_.y + vp.y)
+    // ctx.strokeStyle = "green";
+    // ctx.stroke();
+    //
+    // ctx.beginPath();
+    // ctx.moveTo(b.pos.x + vp.x, b.pos.y + vp.y)
+    // ctx.lineTo(b.pos.x + be_.x + vp.x, b.pos.y + be_.y + vp.y)
+    // ctx.strokeStyle = "green";
+    // ctx.stroke();
 
     if (cs >= 0) {
       // ctx.beginPath();
@@ -580,6 +762,89 @@ function wall(inp) {
   }
 }
 
+
+function firework(inp) {
+
+  /*// --- HOWTO:
+  if (counter == 0) {
+    fireworks.push(new firework({random: true}))
+  }
+
+  for (var i = 0; i < fireworks.length; i++) {
+    fireworks[i].update(i);
+  }
+  */
+
+  if (inp.random) {
+    this.tplay = "fw" + ran(1, 7);
+    sound[this.tplay].cloneNode(true).play()
+
+    this.tx = inp.x || ran(100, 500)
+    this.ty = inp.y || ran(100, 800)
+    this.tr = ran(1, 4)
+    this.tarc = ran(15, 36)
+    this.tv = ran(20, 40) / 10
+    // this.tc = ran(0, 359)
+    this.tc = [ran(0, 359), ran(0, 359)]
+    this.tspark = ran(0, 1)
+    this.tchc = ran(0, 2)
+    if (ran(0, 4) != 0 || this.tchc == 0) {
+      this.tc[1] = this.tc[0];
+    }
+  }
+  this.particles = [];
+
+  for (var i = 0; i < this.tarc; i++) {
+    this.particles.push(new ball({
+      x: this.tx,
+      y: this.ty,
+      r: this.tr,
+      color: "hsl(" + this.tc[i % 2] + ", 100%, 10%)",
+      // color: "hsl(" + ran(90, 150) + ", " + ran(80, 100) + "%, " + ran(30, 70) + "%)",
+      vel: [Math.sin(2 * Math.PI * i / this.tarc) * (this.tv + ran(-1,1) / 100), Math.cos(2 * Math.PI * i / this.tarc) * (this.tv + ran(-1,1) / 100)],
+      name: {firework: true, h: this.tc, l: 60, spark: this.tspark, chc: this.tchc, ctr: counter}
+
+    }))
+  }
+
+
+  this.update = function (nr) {
+    for (var i = 0; i < this.particles.length; i++) {
+      this.particles[i].color = "hsl(" + this.particles[i].name.h[i % 2] + ", 100%, " + this.particles[i].name.l + "%)"
+      this.particles[i].name.l -= 0.6;
+      // this.particles[i].r /= Math.pow(1.0005, (counter - this.particles[i].name.ctr));
+
+      // if (this.particles[i].r <= 0.1) {
+      //   this.particles[i].exist = false;
+      //   continue;
+      // }
+      if (this.particles[i].name.l <= 0) {
+        this.particles[i].exist = false;
+        this.particles.splice(i, 1)
+
+        continue;
+      }
+
+      if (this.particles[i].name.spark == 0 && ran(0, 4) == 0) {
+        this.particles[i].color = "hsl(0, 0%, " + (this.particles[i].name.l + 30) + "%)"
+      }
+      if (this.particles[i].name.chc == 0) {
+        this.particles[i].name.h[0] += 0.1;
+        this.particles[i].name.h[1] += 0.1;
+      }
+      this.particles[i].absGravity(this.particles[i])
+      this.particles[i].move();
+      this.particles[i].update();
+
+    }
+    if (this.particles.length == 0) {
+      fireworks.splice(nr, 1)
+    }
+  }
+
+}
+
+
 var counter = 0;
 function drawGame() {
   var timerGame = Date.now();
@@ -587,10 +852,15 @@ function drawGame() {
     gameArea.clear();
   }
 
-  // ctx.globalAlpha = 0.01;
-  // ctx.fillStyle = "Black"
-  // ctx.fillRect(0, 0, gameArea.canvas.width / gameArea.sc, gameArea.canvas.height / gameArea.sc);
-  // ctx.globalAlpha = 1.0;
+  if (data.config.doFade) {
+    ctx.globalAlpha = 0.15;
+    ctx.fillStyle = "Black"
+    ctx.fillRect(0, 0, gameArea.canvas.width / gameArea.sc, gameArea.canvas.height / gameArea.sc);
+    ctx.globalAlpha = 1.0;
+  }
+
+
+
 
   //
   // gameArea.canvas.width -= 0.5;
@@ -620,6 +890,8 @@ function drawGame() {
       bls[i].absGravity(bls[i])
     }
 
+
+
     for (var j = i+1; j < bls.length; j++) {
       if (data.config.doGravity) {
         bls[i].gravity(j);
@@ -632,7 +904,7 @@ function drawGame() {
       bls[i].worldBorder(i);
     }
 
-    bls[i].update()
+    // bls[i].update()
     bls[i].move();
 
 
@@ -645,6 +917,31 @@ function drawGame() {
   for (var i = 0; i < bls.length; i++) {
     if (!bls[i].exist) {
       bls.splice(i, 1)
+
+    }
+  }
+
+
+  // rings[rings.length - 1].collide(rings.length - 1, 0)
+  for (var i = 0; i < rings.length; i++) {
+
+    for (var j = 0; j < bls.length; j++) {
+      rings[i].collide(i, j)
+    }
+
+    rings[i].update();
+
+  }
+
+  for (var i = 0; i < rings.length; i++) {
+    if (!rings[i].exist) {
+      rings.splice(i, 1)
+
+    }
+  }
+  for (var i = 0; i < wls.length; i++) {
+    if (!wls[i].exist) {
+      wls.splice(i, 1)
 
     }
   }
@@ -726,6 +1023,9 @@ window.onload = function () {
     cvInfo.canvas.width = window.innerWidth - 2;
     cvInfo.canvas.height = window.innerHeight - 2;
   }
+
+
+
 
 
   // record.setup()
@@ -816,10 +1116,6 @@ function Canvas(id, sc) {
   }
   this.clear = function () {
     this.ctx.clearRect(0, 0, this.canvas.width / this.sc, this.canvas.height / this.sc);
-    this.ctx.fillStyle = "Black"
-    this.ctx.fillRect(0, 0, this.canvas.width / this.sc, this.canvas.height / this.sc);
-
-
   }
   this.scale = function (sc) {
     this.ctx.reset();

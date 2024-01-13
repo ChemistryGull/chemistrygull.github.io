@@ -42,6 +42,17 @@
       #download {
         display: none;
       }
+      .crop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        width: 500px;
+        height: 500px;
+        overflow: hidden;
+      }
     </style>
   </head>
   <body>
@@ -50,9 +61,15 @@
 
     </div>
 
-    <canvas id="mainCanvas" width="400" height="400"></canvas>
+    <!-- <div class="crop">
+      <img class="img" src="img/coffin.webp" alt="" height="500px" style="margin-left: -40px;">
+
+    </div> -->
+
     <canvas id="cvInfo" width="600" height="200"></canvas>
     <canvas id="canvasPaths" width="600" height="200"></canvas>
+    <canvas id="mainCanvas" width="400" height="400"></canvas>
+
 
 
 

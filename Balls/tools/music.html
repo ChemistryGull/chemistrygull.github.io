@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Ball Music Helper</title>
+    <style media="screen">
+      .form {
+        display: grid;
+        grid-template-columns: 120px 100px 100px 100px auto;
+      }
+      .form div {
+        /* display: flex; */
+        padding: 0 20px;
+
+
+
+      }
+      .outcome span {
+        display: inline-block;
+        padding: 3px;
+      }
+      .pitch {
+        height: 100vh;
+        overflow-y: scroll;
+      }
+      body {
+        overflow: none;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <h1>Ball Music Helper</h1> -->
+
+    <div class="form">
+      <div class="pitch">
+        <input type="radio" name="pitch" value="1C">1C<br>
+        <input type="radio" name="pitch" value="1Cs">1Cs<br>
+        <input type="radio" name="pitch" value="1D">1D<br>
+        <input type="radio" name="pitch" value="1Ds">1Ds<br>
+        <input type="radio" name="pitch" value="1E">1E<br>
+        <input type="radio" name="pitch" value="1F">1F<br>
+        <input type="radio" name="pitch" value="1Fs">1Fs<br>
+        <input type="radio" name="pitch" value="1G">1G<br>
+        <input type="radio" name="pitch" value="1Gs">1Gs<br>
+        <input type="radio" name="pitch" value="1A">1A<br>
+        <input type="radio" name="pitch" value="1As">1As<br>
+        <input type="radio" name="pitch" value="1B">1B<br>
+        <br>
+        <input type="radio" name="pitch" value="2C">2C<br>
+        <input type="radio" name="pitch" value="2Cs">2Cs<br>
+        <input type="radio" name="pitch" value="2D">2D<br>
+        <input type="radio" name="pitch" value="2Ds">2Ds<br>
+        <input type="radio" name="pitch" value="2E">2E<br>
+        <input type="radio" name="pitch" value="2F">2F<br>
+        <input type="radio" name="pitch" value="2Fs">2Fs<br>
+        <input type="radio" name="pitch" value="2G">2G<br>
+        <input type="radio" name="pitch" value="2Gs">2Gs<br>
+        <input type="radio" name="pitch" value="2A">2A<br>
+        <input type="radio" name="pitch" value="2As">2As<br>
+        <input type="radio" name="pitch" value="2B">2B<br>
+        <br>
+        <input type="radio" name="pitch" value="3C">3C<br>
+        <input type="radio" name="pitch" value="3Cs">3Cs<br>
+        <input type="radio" name="pitch" value="3D">3D<br>
+        <input type="radio" name="pitch" value="3Ds">3Ds<br>
+        <input type="radio" name="pitch" value="3E">3E<br>
+        <input type="radio" name="pitch" value="3F">3F<br>
+        <input type="radio" name="pitch" value="3Fs">3Fs<br>
+        <input type="radio" name="pitch" value="3G">3G<br>
+        <input type="radio" name="pitch" value="3Gs">3Gs<br>
+        <input type="radio" name="pitch" value="3A">3A<br>
+        <input type="radio" name="pitch" value="3As">3As<br>
+        <input type="radio" name="pitch" value="3B">3B<br>
+        <br>
+        <input type="radio" name="pitch" value="4C">4C<br>
+        <input type="radio" name="pitch" value="4Cs">4Cs<br>
+        <input type="radio" name="pitch" value="4D">4D<br>
+        <input type="radio" name="pitch" value="4Ds">4Ds<br>
+        <input type="radio" name="pitch" value="4E">4E<br>
+        <input type="radio" name="pitch" value="4F">4F<br>
+        <input type="radio" name="pitch" value="4Fs">4Fs<br>
+        <input type="radio" name="pitch" value="4G">4G<br>
+        <input type="radio" name="pitch" value="4Gs">4Gs<br>
+        <input type="radio" name="pitch" value="4A">4A<br>
+        <input type="radio" name="pitch" value="4As">4As<br>
+        <input type="radio" name="pitch" value="4B">4B<br>
+        <br>
+        <input type="radio" name="pitch" value="5C">5C<br>
+        <input type="radio" name="pitch" value="5Cs">5Cs<br>
+        <input type="radio" name="pitch" value="5D">5D<br>
+        <input type="radio" name="pitch" value="5Ds">5Ds<br>
+        <input type="radio" name="pitch" value="5E">5E<br>
+        <input type="radio" name="pitch" value="5F">5F<br>
+        <input type="radio" name="pitch" value="5Fs">5Fs<br>
+        <input type="radio" name="pitch" value="5G">5G<br>
+        <input type="radio" name="pitch" value="5Gs">5Gs<br>
+        <input type="radio" name="pitch" value="5A">5A<br>
+        <input type="radio" name="pitch" value="5As">5As<br>
+        <input type="radio" name="pitch" value="5B">5B<br>
+        <br>
+      </div>
+      <!-- <div class="pitch">
+        <input type="radio" name="pitch" value="c1">c1<br>
+        <input type="radio" name="pitch" value="d1">d1<br>
+        <input type="radio" name="pitch" value="e1">e1<br>
+        <input type="radio" name="pitch" value="f1">f1<br>
+        <input type="radio" name="pitch" value="g1">g1<br>
+        <input type="radio" name="pitch" value="a1">a1<br>
+        <input type="radio" name="pitch" value="b1">b1<br>
+        <input type="radio" name="pitch" value="c2">c2<br>
+      </div>
+      <div class="pitch">
+        <input type="radio" name="pitch" value="c2">c2<br>
+        <input type="radio" name="pitch" value="d2">d2<br>
+        <input type="radio" name="pitch" value="e2">e2<br>
+        <input type="radio" name="pitch" value="f2">f2<br>
+        <input type="radio" name="pitch" value="g2">g2<br>
+        <input type="radio" name="pitch" value="a2">a2<br>
+        <input type="radio" name="pitch" value="b2">b2<br>
+        <input type="radio" name="pitch" value="c3">c3<br>
+      </div>
+      <div class="pitch">
+        <input type="radio" name="pitch" value="c3">c3<br>
+        <input type="radio" name="pitch" value="d3">d3<br>
+        <input type="radio" name="pitch" value="e3">e3<br>
+        <input type="radio" name="pitch" value="f3">f3<br>
+        <input type="radio" name="pitch" value="g3">g3<br>
+        <input type="radio" name="pitch" value="a3">a3<br>
+        <input type="radio" name="pitch" value="b3">b3<br>
+        <input type="radio" name="pitch" value="c4">c4<br>
+      </div>
+      <div class="pitch">
+        <input type="radio" name="pitch" value="c4">c4<br>
+        <input type="radio" name="pitch" value="d4">d4<br>
+        <input type="radio" name="pitch" value="e4">e4<br>
+        <input type="radio" name="pitch" value="f4">f4<br>
+        <input type="radio" name="pitch" value="g4">g4<br>
+        <input type="radio" name="pitch" value="a4">a4<br>
+        <input type="radio" name="pitch" value="b4">b4<br>
+        <input type="radio" name="pitch" value="c5">c5<br>
+      </div>
+      <div class="pitch">
+        <input type="radio" name="pitch" value="c5">c5<br>
+        <input type="radio" name="pitch" value="d5">d5<br>
+        <input type="radio" name="pitch" value="e5">e5<br>
+        <input type="radio" name="pitch" value="f5">f5<br>
+        <input type="radio" name="pitch" value="g5">g5<br>
+        <input type="radio" name="pitch" value="a5">a5<br>
+        <input type="radio" name="pitch" value="b5">b5<br>
+        <input type="radio" name="pitch" value="c5">c5<br>
+      </div> -->
+      <div class="takt">
+        <input type="radio" name="takt" value="1">1/1<br>
+        <input type="radio" name="takt" value="2">1/2<br>
+        <input type="radio" name="takt" value="4">1/4<br>
+        <input type="radio" name="takt" value="8">1/8<br>
+        <input type="radio" name="takt" value="16">1/16<br>
+      </div>
+
+      <button type="button" name="submit" id="submit">~ OK ~</button>
+      <button type="button" name="undo" id="undo">Undo</button>
+      <div class="outcome" id="outcome">
+        <span></span>
+      </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+
+      var song = []
+      var outcome = document.getElementById("outcome");
+
+      document.getElementById("submit").onclick = function () {
+        var pitch = document.querySelector('input[name="pitch"]:checked').value;
+        var takt = document.querySelector('input[name="takt"]:checked').value;
+
+        console.log(pitch);
+        console.log(takt);
+
+        song.push([pitch, takt]);
+
+        const node = document.createElement("span");
+        const br = document.createElement("br");
+        const np = document.createTextNode(pitch);
+        const nt = document.createTextNode("1/" + takt);
+        node.appendChild(np);
+        node.appendChild(br);
+        node.appendChild(nt);
+        // node.appendChild(br);
+
+        outcome.appendChild(node)
+
+      };
+
+      document.getElementById("undo").onclick = function () {
+        outcome.removeChild(outcome.lastChild);
+        song.pop();
+      }
+
+
+
+
+
+
+
+    </script>
+
+  </body>
+</html>
