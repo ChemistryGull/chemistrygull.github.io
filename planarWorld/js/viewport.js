@@ -60,6 +60,7 @@ function Canvas(id, sc) {
     document.getElementById('mainCv').height = document.getElementById('mainCon').offsetHeight;
     this.screen = [document.getElementById('mainCv').width / this.sc, document.getElementById('mainCv').height / this.sc];
     this.scale(this.sc);
+    this.ctx.imageSmoothingEnabled = false;
     // viewport.screen[0] /= scale;
     // viewport.screen[1] /= scale;
   }

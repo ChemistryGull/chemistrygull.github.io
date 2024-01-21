@@ -69,22 +69,61 @@ function GameMap(inp) {
         }
 
 
-
-        // --- From all the above: create Tile Map:
-        // var tempTileMap;
-
+        // --- Set Biome for this Tile
+        var tempBiome = climateGuide[Math.round((tempTileHum + 1) * 4)][Math.round((tempTileTem + 1) * 4)];
 
 
 
 
-        tempChunk.tile.push(tempTileVal)
+        // --- From all the above: create Tile Map:     - This is where the Magic happens -
+        var thisTile = "void";
+
+        if (tempTileVal > -0.15 && tempTileVal < 0.15) {
+          thisTile = "water";
+        } else {
+          if (tempBiome == "desert") {
+            thisTile = "sand";
+          } else if (tempBiome == "savannah") {
+            thisTile = "grass_savannah";
+          } else if (tempBiome == "taiga") {
+            thisTile = "grass_taiga";
+          } else if (tempBiome == "tundra") {
+            thisTile = "grass_tundra";
+          } else if (tempBiome == "rainforest") {
+            thisTile = "grass_rainforest";
+          } else if (tempBiome == "arctic") {
+            thisTile = "snow";
+          } else if (tempBiome == "dry_ice_desert") {
+            thisTile = "icedesert_stone";
+          } else if (tempBiome == "swamp") {
+            thisTile = "dirt_wet";
+          } else {
+            thisTile = "grass";
+
+          }
+        }
+
+
+        thisTile = textures.indexOf(textures.find(e => e[2] == thisTile))
+
+        if (thisTile == -1) {
+          thisTile = 0;
+          console.warn("!!! Rendering Problem: Tile name not found !!!")
+        }
+
+
+
+
+
+
+        tempChunk.tile.push(thisTile)
         tempChunk.c.push(tempTileVal)
         // tempChunk.c.push(Math.abs(tempTileVal))
         tempChunk.tem.push(tempTileTem)
         tempChunk.hum.push(tempTileHum)
 
 
-        tempChunk.biome.push(climateGuide[Math.round((tempTileHum + 1) * 4)][Math.round((tempTileTem + 1) * 4)])
+        tempChunk.biome.push(tempBiome)
 
 
 

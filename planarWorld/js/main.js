@@ -9,7 +9,7 @@ var overWorld;
 
 var player = new Entity({x: 30, y: 30})
 
-const tiles = new TileSet("assets/IMG_tiles.png")
+const tileTEX = new TileSet("assets/IMG_tiles.png")
 
 // --- FPS counter
 var starterFrameCount = 0;
@@ -66,56 +66,59 @@ function main() {
       for (var x = 0; x < S.chunkSize; x++) {
         var chunk = overWorld.chunkMap[overWorld.loadedChunks[c]];
         var cval = chunk.c[y * S.chunkSize + x];
+        var tile = chunk.tile[y * S.chunkSize + x];
+
+        ctx.drawImage(tileTEX.tx, textures[tile][0] * S.texW, textures[tile][1] * S.texH, S.texW, S.texW, x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.texW, S.texH);
 
 
-        if (cval > -0.15 && cval < 0.15) {
-          ctx.fillStyle = "blue";
-        } else {
-          ctx.fillStyle = "green";
-
-          switch (chunk.biome[y * S.chunkSize + x]) {
-
-            case "plains":
-              ctx.fillStyle = "greenyellow"
-            break;
-            case "forest":
-              ctx.fillStyle = "green";
-            break;
-            case "rainforest":
-              ctx.fillStyle = "darkgreen";
-            break;
-            case "desert":
-              ctx.fillStyle = "gold";
-            break;
-            case "savannah":
-              ctx.fillStyle = "sandybrown";
-            break;
-            case "dry_ice_desert":
-              ctx.fillStyle = "gray";
-            break;
-            case "arctic":
-              ctx.fillStyle = "white";
-            break;
-            case "taiga":
-              ctx.fillStyle = "darkseagreen";
-            break;
-            case "tundra":
-              ctx.fillStyle = "darkolivegreen";
-            break;
-            case "swamp":
-              ctx.fillStyle = "aquamarine";
-            break;
-
-            default:
-            ctx.fillStyle = "red";
-
-          }
-        }
-
-
-        if (cval == 0) {
-          ctx.fillStyle = "red"
-        }
+        // if (cval > -0.15 && cval < 0.15) {
+        //   ctx.fillStyle = "blue";
+        // } else {
+        //   ctx.fillStyle = "green";
+        //
+        //   switch (chunk.biome[y * S.chunkSize + x]) {
+        //
+        //     case "plains":
+        //       ctx.fillStyle = "greenyellow"
+        //     break;
+        //     case "forest":
+        //       ctx.fillStyle = "green";
+        //     break;
+        //     case "rainforest":
+        //       ctx.fillStyle = "darkgreen";
+        //     break;
+        //     case "desert":
+        //       ctx.fillStyle = "gold";
+        //     break;
+        //     case "savannah":
+        //       ctx.fillStyle = "sandybrown";
+        //     break;
+        //     case "dry_ice_desert":
+        //       ctx.fillStyle = "gray";
+        //     break;
+        //     case "arctic":
+        //       ctx.fillStyle = "white";
+        //     break;
+        //     case "taiga":
+        //       ctx.fillStyle = "darkseagreen";
+        //     break;
+        //     case "tundra":
+        //       ctx.fillStyle = "darkolivegreen";
+        //     break;
+        //     case "swamp":
+        //       ctx.fillStyle = "aquamarine";
+        //     break;
+        //
+        //     default:
+        //     ctx.fillStyle = "red";
+        //
+        //   }
+        // }
+        //
+        //
+        // if (cval == 0) {
+        //   ctx.fillStyle = "red"
+        // }
 
         if (false) {
           if (cval < -0.8) {
@@ -144,7 +147,7 @@ function main() {
 
         }
 
-        ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
+        // ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
 
       }
     }
@@ -167,7 +170,7 @@ function main() {
 
 
 
-  dbg.info(15, {timerMain: timerMain})
+  dbg.info(20 / S.scale, {timerMain: timerMain})
   dbg.plot(round(window.performance.now() - timerMain, 10), 30, "red");
   // dbg.plot(currentFps, 1, "red");
 
@@ -225,12 +228,13 @@ function animate() {
 
 function TileSet(src) {
   this.tx = new Image();
-  this.src = src;
-  this.onerror = function () {
+  this.tx.src = src;
+  // this.tx.classList.add('tileSet');
+  this.tx.onerror = function () {
     mainCv.ctx = null;
     alert("Failed Loading Tileset");
   }
-  this.onload = function () {
+  this.tx.onload = function () {
     console.log("### TileSet Loaded ###");
   }
 }
