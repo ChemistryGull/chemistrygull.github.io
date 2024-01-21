@@ -5,6 +5,22 @@ var dbg = {
   h: 150,
   w: 300,
 
+
+  info: function (sz, inp) {
+    var size = 0;
+
+    ctx.font = sz + "px Monospace"
+    ctx.fillStyle = "#ff0000";
+    ctx.fillText("FPS: " + currentFps, 10, size += sz);
+    ctx.fillText("Player: " + player.pos.x + " | " + player.pos.y, 10, size += sz);
+    ctx.fillText("onChunk: " + player.onChunk[0] + " | " + player.onChunk[1], 10, size += sz);
+    ctx.fillText("onTileInChunk: " + player.onChunkTile[0] + " | " + player.onChunkTile[1], 10, size += sz);
+    ctx.fillText("Timer Main: " + round(window.performance.now() - inp.timerMain, 4) + " ms", 10, size += sz);
+    ctx.fillText("Temperature: " + overWorld.chunkMap[[player.onChunk[0], player.onChunk[1]].toString()].tem[player.onChunkTile[1] * S.chunkSize + player.onChunkTile[0]], 10, size += sz);
+    ctx.fillText("Humidity: " + overWorld.chunkMap[[player.onChunk[0], player.onChunk[1]].toString()].hum[player.onChunkTile[1] * S.chunkSize + player.onChunkTile[0]], 10, size += sz);
+    ctx.fillText("Biome: " + overWorld.chunkMap[[player.onChunk[0], player.onChunk[1]].toString()].biome[player.onChunkTile[1] * S.chunkSize + player.onChunkTile[0]], 10, size += sz);
+
+  },
   plot: function (v, f, color) {
 
     v = v * f;

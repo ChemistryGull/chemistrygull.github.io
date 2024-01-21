@@ -1,11 +1,9 @@
-function GameMap() {
-  this.chunkMap = [
-    //   "0,0": [1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
-    //   "1,0": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  ]
+function GameMap(inp) {
+  // this.type = inp.type || "overworld";
 
+
+  this.chunkMap = {};
   this.existingChunks = [];
-  // this.loadedChunks = ["0,0", "0,1", "1,0"]
   this.loadedChunks = [];
   this.currMap = [];
 
@@ -14,11 +12,85 @@ function GameMap() {
 
   this.createChunk = function (cx, cy) {
 
-    var tempChunk = {x: cx, y: cy, c: []}
+    var tempChunk = {x: cx, y: cy, tile: [], c: [], tem: [], hum: [], biome: []}
+    // var zoom = 100
+
 
     for (var y = 0; y < S.chunkSize; y++) {
       for (var x = 0; x < S.chunkSize; x++) {
-        tempChunk.c.push(openSimplex.noise2D((x + cx * S.chunkSize) / 10, (y + cy * S.chunkSize) / 10))
+
+        // --- Create Basic Land & River Map:
+
+        var octaves = 5;
+        var amplitude = 1;
+        var frequency = 0.01;
+
+        var tempTileVal = 0;
+        for (var o = 0; o < octaves; o++) {
+          tempTileVal += openSimplex.noise2D((x + cx * S.chunkSize) * frequency, (y + cy * S.chunkSize) * frequency) * amplitude;
+          amplitude *= 0.5;  //1, 0.5, 0.25, 0.0625, ...
+          frequency *= 2;  //1, 2, 4, 8 ...
+        }
+
+
+        // --- Add oceans:
+
+        // var oceanTemp = openSimplex.noise2D((x + cx * S.chunkSize) / 300, (y + cy * S.chunkSize) / 300)
+        var oceanTemp = 0;
+        var octaves = 6;
+        var amplitude = 1;
+        var frequency = 0.003;
+
+        for (var o = 0; o < octaves; o++) {
+          oceanTemp += openSimplex.noise2D((x + cx * S.chunkSize) * frequency, (y + cy * S.chunkSize) * frequency) * amplitude;
+          amplitude *= 0.5;  //1, 0.5, 0.25, 0.0625, ...
+          frequency *= 2;  //1, 2, 4, 8 ...
+        }
+
+        if (oceanTemp > 0.4) {
+          tempTileVal /= (oceanTemp + 0.6) ** 10
+        }
+
+        // --- Set Temperature And Humidity Map:
+
+        // var tempTileTem = openSimplex2.noise2D((x + cx * S.chunkSize + (S.seed << 14)) / 500, (y + cy * S.chunkSize + (S.seed >> 4)) / 500) * 0.6 + openSimplex2.noise2D((x + cx * S.chunkSize) / 200, (y + cy * S.chunkSize) / 200) * 0.39 + openSimplex2.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
+        // var tempTileHum = openSimplex3.noise2D((x + cx * S.chunkSize + (S.seed >> 4)) / 300, (y + cy * S.chunkSize + (S.seed << 14)) / 300) * 0.6 + openSimplex3.noise2D((x + cx * S.chunkSize) / 200, (y + cy * S.chunkSize) / 200) * 0.39 + openSimplex3.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
+        var tempTileTem = openSimplex2.noise2D((x + cx * S.chunkSize + (S.seed << 141)) / 400, (y + cy * S.chunkSize + (S.seed >> 4)) / 400) * 0.9 + openSimplex2.noise2D((x + cx * S.chunkSize) / 50, (y + cy * S.chunkSize) / 50) * 0.09 + openSimplex2.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
+        var tempTileHum = openSimplex3.noise2D((x + cx * S.chunkSize + (S.seed >> 4)) / 400, (y + cy * S.chunkSize + (S.seed << 14)) / 400) * 0.8 + openSimplex3.noise2D((x + cx * S.chunkSize) / 50, (y + cy * S.chunkSize) / 50) * 0.19 + openSimplex3.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
+
+        // console.log(openSimplex.noise2D((x + cx * S.chunkSize) / 500, (y + cy * S.chunkSize) / 500) + 1);
+
+        // TODO: !!! HARSH BIOMES ARE NOT CREATED ENOUGH !!! --- Temporary Fix
+
+
+        // TODO: Potential way to reduce rivers in desserts?: !!! EXPERIMENTAL !!!
+        if (tempTileTem > 0.3 && tempTileHum < -0.3) {
+          tempTileVal *= (1 + tempTileTem)**(1 + Math.abs(tempTileHum))**10
+        }
+
+
+
+        // --- From all the above: create Tile Map:
+        // var tempTileMap;
+
+
+
+
+
+        tempChunk.tile.push(tempTileVal)
+        tempChunk.c.push(tempTileVal)
+        // tempChunk.c.push(Math.abs(tempTileVal))
+        tempChunk.tem.push(tempTileTem)
+        tempChunk.hum.push(tempTileHum)
+
+
+        tempChunk.biome.push(climateGuide[Math.round((tempTileHum + 1) * 4)][Math.round((tempTileTem + 1) * 4)])
+
+
+
+        // tempChunk.c.push(openSimplex.noise2D((x + cx * S.chunkSize) / zoom, (y + cy * S.chunkSize) / zoom))
+
+        // tempChunk.c.push(openSimplex.noise2D((x + cx * S.chunkSize) / (zoom), (y + cy * S.chunkSize) / (zoom)) / 2 + openSimplex.noise2D((x + cx * S.chunkSize) / (zoom / 2), (y + cy * S.chunkSize) / (zoom / 2)) / 4 + openSimplex.noise2D((x + cx * S.chunkSize) / (zoom / 4), (y + cy * S.chunkSize) / (zoom / 4)) / 8)
       }
     }
 
@@ -51,10 +123,6 @@ function GameMap() {
 
 
     }
-
-
-
-
 
   }
 }

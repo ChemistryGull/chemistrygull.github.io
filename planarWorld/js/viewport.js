@@ -52,13 +52,14 @@ function Canvas(id, sc) {
     this.ctx.reset();
     this.ctx.scale(sc, sc)
     this.sc = sc;
+    // this.ctx.setTransform(sc,0,0,sc,0,0);
   }
   this.resize = function () {
     console.log("reziste");
     document.getElementById('mainCv').width = document.getElementById('mainCon').offsetWidth;
     document.getElementById('mainCv').height = document.getElementById('mainCon').offsetHeight;
-    this.screen = [document.getElementById('mainCv').width, document.getElementById('mainCv').height];
-    // ctx.scale(scale, scale);
+    this.screen = [document.getElementById('mainCv').width / this.sc, document.getElementById('mainCv').height / this.sc];
+    this.scale(this.sc);
     // viewport.screen[0] /= scale;
     // viewport.screen[1] /= scale;
   }

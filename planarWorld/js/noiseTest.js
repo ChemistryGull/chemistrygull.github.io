@@ -93,6 +93,94 @@ function doNoise () {
   }
 }
 
+var testNoiseArr = [];
+function testNoiseHisto(cx, cy) {
+
+  console.log("+++ Start test +++");
+  console.log("+++ Computing noise... +++");
+
+
+  for (var y = 0; y < cy; y++) {
+    for (var x = 0; x < cx; x++) {
+
+
+      var tempTile = openSimplex2.noise2D(x / 400, y / 400) * 0.9 + openSimplex2.noise2D(x / 50, y / 50) * 0.09 + openSimplex2.noise2D(x / 2, y / 2) * 0.01;
+      // var tempTile = openSimplex2.noise2D(x, y)
+
+
+      testNoiseArr.push(tempTile);
+
+    }
+  }
+
+  console.log("+++ Sort Result... +++");
+
+
+  // var res = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+  var res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  for (var i = 0; i < testNoiseArr.length; i++) {
+    if (testNoiseArr[i] < -0.9) {
+      res[0] += 1;
+    } else if (testNoiseArr[i] < -0.8) {
+      res[1] += 1;
+    } else if (testNoiseArr[i] < -0.7) {
+      res[2] += 1;
+    } else if (testNoiseArr[i] < -0.6) {
+      res[3] += 1;
+    } else if (testNoiseArr[i] < -0.5) {
+      res[4] += 1;
+    } else if (testNoiseArr[i] < -0.4) {
+      res[5] += 1;
+    } else if (testNoiseArr[i] < -0.3) {
+      res[6] += 1;
+    } else if (testNoiseArr[i] < -0.2) {
+      res[7] += 1;
+    } else if (testNoiseArr[i] < -0.1) {
+      res[8] += 1;
+    } else if (testNoiseArr[i] < -0) {
+      res[9] += 1;
+    } else if (testNoiseArr[i] < 0.1) {
+      res[10] += 1;
+    } else if (testNoiseArr[i] < 0.2) {
+      res[11] += 1;
+    } else if (testNoiseArr[i] < 0.3) {
+      res[12] += 1;
+    } else if (testNoiseArr[i] < 0.4) {
+      res[13] += 1;
+    } else if (testNoiseArr[i] < 0.5) {
+      res[14] += 1;
+    } else if (testNoiseArr[i] < 0.6) {
+      res[15] += 1;
+    } else if (testNoiseArr[i] < 0.7) {
+      res[16] += 1;
+    } else if (testNoiseArr[i] < 0.8) {
+      res[17] += 1;
+    } else if (testNoiseArr[i] < 0.9) {
+      res[18] += 1;
+    } else if (testNoiseArr[i] < 1) {
+      res[19] += 1;
+    }
+  }
+
+  console.log("+++ Finished! +++");
+
+
+  for (var i = 0; i < res.length; i++) {
+    mainCv.ctx.fillStyle = "black";
+    mainCv.ctx.font = "22px Monospace";
+
+    mainCv.ctx.fillText(round(-0.9 + i / 10, 1), 10, 116 + i * 20)
+
+    mainCv.ctx.fillStyle = "red";
+
+    mainCv.ctx.fillRect(70, 100 + i * 20, res[i] / 1000, 19)
+  }
+
+  console.log(res);
+
+
+}
 
 
 const HSLToRGB = (h, s, l) => {

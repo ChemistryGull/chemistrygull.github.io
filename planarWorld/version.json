@@ -1,5 +1,6 @@
 {
-  title: "planarWorld (inDev)"
-  version: "0.0.0",
-  date: "19.01.2024",
+  title: "planarWorld (inDev)",
+  version: "0.0.1",
+  date: "21.01.2024",
+  description: "This is the basic groundwork for any Map-focused 2d tile game"
 }

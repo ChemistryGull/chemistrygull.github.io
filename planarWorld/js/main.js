@@ -3,16 +3,20 @@ var ctx;
 var running = true;
 var tick = 0;
 const openSimplex = openSimplexNoise(S.seed);
+const openSimplex2 = openSimplexNoise(S.seed << 9);
+const openSimplex3 = openSimplexNoise(S.seed >> 4);
 var overWorld;
 
 var player = new Entity({x: 30, y: 30})
+
+const tiles = new TileSet("assets/IMG_tiles.png")
 
 // --- FPS counter
 var starterFrameCount = 0;
 var fps, fpsInterval, startTime, now, then, then2, elapsed, currentFps;
 
 window.onload = function () {
-  mainCv = new Canvas("mainCv", 1);
+  mainCv = new Canvas("mainCv", S.scale);
   ctx = mainCv.ctx;
 
   // fpsInterval = 1000 / fps;
@@ -30,6 +34,7 @@ window.onload = function () {
 
   mainCv.resize()
   startAnimating(S.fps);
+  // main()
 }
 
 window.onresize = function () {
@@ -38,7 +43,7 @@ window.onresize = function () {
 
 
 function main() {
-  var timerMain = Date.now()
+  var timerMain = window.performance.now()
 
 
   mainCv.clear();
@@ -60,11 +65,83 @@ function main() {
     for (var y = 0; y < S.chunkSize; y++) {
       for (var x = 0; x < S.chunkSize; x++) {
         var chunk = overWorld.chunkMap[overWorld.loadedChunks[c]];
+        var cval = chunk.c[y * S.chunkSize + x];
 
-        if (chunk.c[y * S.chunkSize + x] > 0) {
-          ctx.fillStyle = "green"
+
+        if (cval > -0.15 && cval < 0.15) {
+          ctx.fillStyle = "blue";
         } else {
-          ctx.fillStyle = "blue"
+          ctx.fillStyle = "green";
+
+          switch (chunk.biome[y * S.chunkSize + x]) {
+
+            case "plains":
+              ctx.fillStyle = "greenyellow"
+            break;
+            case "forest":
+              ctx.fillStyle = "green";
+            break;
+            case "rainforest":
+              ctx.fillStyle = "darkgreen";
+            break;
+            case "desert":
+              ctx.fillStyle = "gold";
+            break;
+            case "savannah":
+              ctx.fillStyle = "sandybrown";
+            break;
+            case "dry_ice_desert":
+              ctx.fillStyle = "gray";
+            break;
+            case "arctic":
+              ctx.fillStyle = "white";
+            break;
+            case "taiga":
+              ctx.fillStyle = "darkseagreen";
+            break;
+            case "tundra":
+              ctx.fillStyle = "darkolivegreen";
+            break;
+            case "swamp":
+              ctx.fillStyle = "aquamarine";
+            break;
+
+            default:
+            ctx.fillStyle = "red";
+
+          }
+        }
+
+
+        if (cval == 0) {
+          ctx.fillStyle = "red"
+        }
+
+        if (false) {
+          if (cval < -0.8) {
+            ctx.fillStyle = "black"
+          } else if (cval < -0.6) {
+            ctx.fillStyle = "purple"
+          } else if (cval < -0.4) {
+            ctx.fillStyle = "navy"
+          } else if (cval < -0.2) {
+            ctx.fillStyle = "blue"
+          } else if (cval < 0) {
+            ctx.fillStyle = "aqua"
+          } else if (cval < 0.2) {
+            ctx.fillStyle = "lime"
+          } else if (cval < 0.4) {
+            ctx.fillStyle = "yellow"
+          } else if (cval < 0.6) {
+            ctx.fillStyle = "orange"
+          } else if (cval < 0.8) {
+            ctx.fillStyle = "red"
+          } else {
+            ctx.fillStyle = "maroon"
+          }
+
+          // ctx.fillStyle = "hsl(" + (cval * 180) + ", 100%, 50%)"
+
         }
 
         ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
@@ -88,15 +165,11 @@ function main() {
   player.move();
   player.getPos()
 
-  ctx.font = "20px Monospace"
-  ctx.fillStyle = "#ff0000";
-  ctx.fillText("FPS: " + currentFps, 10, 20);
-  ctx.fillText("Player: " + player.pos.x + " | " + player.pos.y, 10, 40);
-  ctx.fillText("onChunk: " + player.onChunk[0] + " | " + player.onChunk[1], 10, 60);
-  // ctx.fillText("onTile: " + player.onChunk[0] + " | " + player.onChunk[1], 10, 80);
-  ctx.fillText("Timer Main: " + (Date.now() - timerMain) + " ms", 10, 100);
 
-  dbg.plot(currentFps, 1, "red")
+
+  dbg.info(15, {timerMain: timerMain})
+  dbg.plot(round(window.performance.now() - timerMain, 10), 30, "red");
+  // dbg.plot(currentFps, 1, "red");
 
   tick++;
 }
@@ -148,4 +221,21 @@ function animate() {
 		// console.log("Elapsed time= " + Math.round(sinceStart / 1000 * 100) / 100 + " secs @ " + currentFps + " fps.");
 		main();
   }
+}
+
+function TileSet(src) {
+  this.tx = new Image();
+  this.src = src;
+  this.onerror = function () {
+    mainCv.ctx = null;
+    alert("Failed Loading Tileset");
+  }
+  this.onload = function () {
+    console.log("### TileSet Loaded ###");
+  }
+}
+
+
+function round(num, dec) {
+  return Math.round(num * (10**dec)) / (10**dec)
 }
