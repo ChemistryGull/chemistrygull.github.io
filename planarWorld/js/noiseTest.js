@@ -94,6 +94,7 @@ function doNoise () {
 }
 
 var testNoiseArr = [];
+var testNoiseArr2 = [];
 function testNoiseHisto(cx, cy) {
 
   console.log("+++ Start test +++");
@@ -104,11 +105,24 @@ function testNoiseHisto(cx, cy) {
     for (var x = 0; x < cx; x++) {
 
 
-      var tempTile = openSimplex2.noise2D(x / 400, y / 400) * 0.9 + openSimplex2.noise2D(x / 50, y / 50) * 0.09 + openSimplex2.noise2D(x / 2, y / 2) * 0.01;
+      var tempTile = openSimplex2.noise2D((x + cx * S.chunkSize + (S.seed << 141)) / 400, (y + cy * S.chunkSize + (S.seed >> 4)) / 400) * 0.9 + openSimplex2.noise2D((x + cx * S.chunkSize) / 50, (y + cy * S.chunkSize) / 50) * 0.09 + openSimplex2.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
       // var tempTile = openSimplex2.noise2D(x, y)
 
 
       testNoiseArr.push(tempTile);
+
+    }
+  }
+
+  for (var y = 0; y < cy; y++) {
+    for (var x = 0; x < cx; x++) {
+
+
+      var tempTile = openSimplex2.noise2D((x + cx * S.chunkSize + (S.seed << 141)) / 400, (y + cy * S.chunkSize + (S.seed >> 4)) / 400) * 0.9 + openSimplex2.noise2D((x + cx * S.chunkSize) / 50, (y + cy * S.chunkSize) / 50) * 0.09 + openSimplex2.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
+      // var tempTile = openSimplex2.noise2D(x, y)
+
+
+      testNoiseArr2.push(tempTile);
 
     }
   }
@@ -163,18 +177,68 @@ function testNoiseHisto(cx, cy) {
     }
   }
 
+  var res2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  for (var i = 0; i < testNoiseArr2.length; i++) {
+    if (testNoiseArr2[i] < -0.9) {
+      res2[0] += 1;
+    } else if (testNoiseArr2[i] < -0.8) {
+      res2[1] += 1;
+    } else if (testNoiseArr2[i] < -0.7) {
+      res2[2] += 1;
+    } else if (testNoiseArr2[i] < -0.6) {
+      res2[3] += 1;
+    } else if (testNoiseArr2[i] < -0.5) {
+      res2[4] += 1;
+    } else if (testNoiseArr2[i] < -0.4) {
+      res2[5] += 1;
+    } else if (testNoiseArr2[i] < -0.3) {
+      res2[6] += 1;
+    } else if (testNoiseArr2[i] < -0.2) {
+      res2[7] += 1;
+    } else if (testNoiseArr2[i] < -0.1) {
+      res2[8] += 1;
+    } else if (testNoiseArr2[i] < -0) {
+      res2[9] += 1;
+    } else if (testNoiseArr2[i] < 0.1) {
+      res2[10] += 1;
+    } else if (testNoiseArr2[i] < 0.2) {
+      res2[11] += 1;
+    } else if (testNoiseArr2[i] < 0.3) {
+      res2[12] += 1;
+    } else if (testNoiseArr2[i] < 0.4) {
+      res2[13] += 1;
+    } else if (testNoiseArr2[i] < 0.5) {
+      res2[14] += 1;
+    } else if (testNoiseArr2[i] < 0.6) {
+      res2[15] += 1;
+    } else if (testNoiseArr2[i] < 0.7) {
+      res2[16] += 1;
+    } else if (testNoiseArr2[i] < 0.8) {
+      res2[17] += 1;
+    } else if (testNoiseArr2[i] < 0.9) {
+      res2[18] += 1;
+    } else if (testNoiseArr2[i] < 1) {
+      res2[19] += 1;
+    }
+  }
+
   console.log("+++ Finished! +++");
 
 
   for (var i = 0; i < res.length; i++) {
-    mainCv.ctx.fillStyle = "black";
-    mainCv.ctx.font = "22px Monospace";
+    mainCv.ctx.fillStyle = "red";
+    mainCv.ctx.font = "15px Monospace";
 
-    mainCv.ctx.fillText(round(-0.9 + i / 10, 1), 10, 116 + i * 20)
+    mainCv.ctx.fillText(round(-0.9 + i / 10, 1), 10, 27 + 14 + i * 13)
 
     mainCv.ctx.fillStyle = "red";
 
-    mainCv.ctx.fillRect(70, 100 + i * 20, res[i] / 1000, 19)
+    mainCv.ctx.fillRect(45, 30 + i * 13, res[i] / 2200, 6)
+
+    mainCv.ctx.fillStyle = "blue";
+
+    mainCv.ctx.fillRect(45, 35 + i * 13, res2[i] / 2200, 6)
   }
 
   console.log(res);

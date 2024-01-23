@@ -7,9 +7,16 @@ const openSimplex2 = openSimplexNoise(S.seed << 9);
 const openSimplex3 = openSimplexNoise(S.seed >> 4);
 var overWorld;
 
-var player = new Entity({x: 30, y: 30})
+var player = new Entity({x: 0, y: 0})
+var objs = []
+// objs.push(new Obj({x: 120, y: 80}))
+// objs.push(new Obj({x: -200, y: -40}))
+// objs.push(new Obj({x: -200, y: 120}))
+
+
 
 const tileTEX = new TileSet("assets/IMG_tiles.png")
+const treeTEX = new TileSet("assets/IMG_trees.png")
 
 // --- FPS counter
 var starterFrameCount = 0;
@@ -25,16 +32,30 @@ window.onload = function () {
 
   overWorld = new GameMap();
 
-  overWorld.createChunk(0,0)
-  overWorld.createChunk(0,1)
-  overWorld.createChunk(1,1)
-  overWorld.createChunk(1,0)
+  // overWorld.createChunk(0,0)
+  // overWorld.createChunk(0,1)
+  // overWorld.createChunk(1,1)
+  // overWorld.createChunk(1,0)
 
 
+
+  if (S.debug.doMapViewpoint) {
+
+    S.tw = 1;
+    S.th = 1;
+    S.scale = 0.5;
+    mainCv.sc = 0.5;
+
+    mainCv.resize()
+
+    main()
+    return;
+  }
 
   mainCv.resize()
   startAnimating(S.fps);
-  // main()
+
+  // managerBiome()
 }
 
 window.onresize = function () {
@@ -43,6 +64,7 @@ window.onresize = function () {
 
 
 function main() {
+
   var timerMain = window.performance.now()
 
 
@@ -61,59 +83,64 @@ function main() {
 
   // --- Draw only loaded Chunks
 
+  ctx.globalAlpha = 1;
+
   for (var c = 0; c < overWorld.loadedChunks.length; c++) {
     for (var y = 0; y < S.chunkSize; y++) {
       for (var x = 0; x < S.chunkSize; x++) {
         var chunk = overWorld.chunkMap[overWorld.loadedChunks[c]];
         var cval = chunk.c[y * S.chunkSize + x];
         var tile = chunk.tile[y * S.chunkSize + x];
+        ctx.drawImage(tileTEX.tx, tileTextures[tile][0] * S.texW, tileTextures[tile][1] * S.texH, S.texW, S.texW, x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.texW, S.texH);
 
-        ctx.drawImage(tileTEX.tx, textures[tile][0] * S.texW, textures[tile][1] * S.texH, S.texW, S.texW, x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.texW, S.texH);
+        if (false) {
+          if (cval > -0.15 && cval < 0.15) {
+            ctx.fillStyle = "blue";
+          } else {
+            ctx.fillStyle = "green";
 
+            switch (chunk.biome[y * S.chunkSize + x]) {
 
-        // if (cval > -0.15 && cval < 0.15) {
-        //   ctx.fillStyle = "blue";
-        // } else {
-        //   ctx.fillStyle = "green";
-        //
-        //   switch (chunk.biome[y * S.chunkSize + x]) {
-        //
-        //     case "plains":
-        //       ctx.fillStyle = "greenyellow"
-        //     break;
-        //     case "forest":
-        //       ctx.fillStyle = "green";
-        //     break;
-        //     case "rainforest":
-        //       ctx.fillStyle = "darkgreen";
-        //     break;
-        //     case "desert":
-        //       ctx.fillStyle = "gold";
-        //     break;
-        //     case "savannah":
-        //       ctx.fillStyle = "sandybrown";
-        //     break;
-        //     case "dry_ice_desert":
-        //       ctx.fillStyle = "gray";
-        //     break;
-        //     case "arctic":
-        //       ctx.fillStyle = "white";
-        //     break;
-        //     case "taiga":
-        //       ctx.fillStyle = "darkseagreen";
-        //     break;
-        //     case "tundra":
-        //       ctx.fillStyle = "darkolivegreen";
-        //     break;
-        //     case "swamp":
-        //       ctx.fillStyle = "aquamarine";
-        //     break;
-        //
-        //     default:
-        //     ctx.fillStyle = "red";
-        //
-        //   }
-        // }
+              case "plains":
+                ctx.fillStyle = "greenyellow"
+              break;
+              case "forest":
+                ctx.fillStyle = "green";
+              break;
+              case "rainforest":
+                ctx.fillStyle = "darkgreen";
+              break;
+              case "desert":
+                ctx.fillStyle = "gold";
+              break;
+              case "savannah":
+                ctx.fillStyle = "sandybrown";
+              break;
+              case "dry_ice_desert":
+                ctx.fillStyle = "red";
+              break;
+              case "arctic":
+                ctx.fillStyle = "white";
+              break;
+              case "taiga":
+                ctx.fillStyle = "darkolivegreen";
+              break;
+              case "tundra":
+                ctx.fillStyle = "darkseagreen";
+              break;
+              case "swamp":
+                ctx.fillStyle = "aquamarine";
+              break;
+
+              default:
+              ctx.fillStyle = "red";
+
+            }
+          }
+          ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
+
+        }
+
         //
         //
         // if (cval == 0) {
@@ -147,12 +174,10 @@ function main() {
 
         }
 
-        // ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
 
       }
     }
   }
-
 
 
 
@@ -164,10 +189,32 @@ function main() {
   if (keys[keyCode.mUp]) {player.vel.y -= player.speed;}
   if (keys[keyCode.mDown]) {player.vel.y += player.speed;}
 
+
+
+
+
+
+
+
+
   player.update();
   player.move();
   player.getPos()
 
+  for (var i = 0; i < objs.length; i++) {
+    objs[i].update();
+  }
+
+  for (var i = 0; i < objs.length; i++) {
+    // console.log(player.collision(objs[i].hitbox));
+
+    if (objs[i].hitbox && player.collision(objs[i].hitbox)) { // --- Check if Player hits Object
+      player.bouceOf(objs[i].hitbox)
+    }
+    if (objs[i].hbfade && player.collision(objs[i].hbfade)) { // --- Check if Player is in HitBoxFade
+      objs[i].fadeOut()
+    }
+  }
 
 
   dbg.info(20 / S.scale, {timerMain: timerMain})

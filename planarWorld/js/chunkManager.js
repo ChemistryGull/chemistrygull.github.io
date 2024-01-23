@@ -67,10 +67,15 @@ function GameMap(inp) {
         if (tempTileTem > 0.3 && tempTileHum < -0.3) {
           tempTileVal *= (1 + tempTileTem)**(1 + Math.abs(tempTileHum))**10
         }
+        // TODO: Potential way to increase water in Swamps?
+        if (tempTileHum > 0.4 && tempTileTem > -0.15 && tempTileTem < 0.5) {
+          // tempTileVal *= Math.abs(openSimplex3.noise2D((x + cx * S.chunkSize) / 20, (y + cy * S.chunkSize) / 20)) * (0.6 + tempTileHum)**10
+
+        }
 
 
         // --- Set Biome for this Tile
-        var tempBiome = climateGuide[Math.round((tempTileHum + 1) * 4)][Math.round((tempTileTem + 1) * 4)];
+        var tempBiome = climateGuide[Math.round((tempTileHum + 1) * 5)][Math.round((tempTileTem + 1) * 5)];
 
 
 
@@ -104,7 +109,7 @@ function GameMap(inp) {
         }
 
 
-        thisTile = textures.indexOf(textures.find(e => e[2] == thisTile))
+        thisTile = tileTextures.indexOf(tileTextures.find(e => e[2] == thisTile))
 
         if (thisTile == -1) {
           thisTile = 0;
