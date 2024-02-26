@@ -9,14 +9,26 @@ var overWorld;
 
 var player = new Entity({x: 0, y: 0})
 var objs = []
-// objs.push(new Obj({x: 120, y: 80}))
+// objs.push(new Obj({x: 0, y: 0, type: "fig_cactus_stage9"}))
+// objs.push(new Obj({x: 32, y: 0}))
+// objs.push(new Obj({x: 0, y: 32}))
+// objs.push(new Obj({x: 32, y: 32}))
 // objs.push(new Obj({x: -200, y: -40}))
 // objs.push(new Obj({x: -200, y: 120}))
 
+// for (var y = -1000; y < 1000; y++) {
+//   for (var x = -1000; x < 1000; x++) {
+//     if (Math.random() > 0.9999) {
+//       objs.push(new Obj({x: x, y: y}))
+//
+//     }
+//   }
+// }
 
 
 const tileTEX = new TileSet("assets/IMG_tiles.png")
 const treeTEX = new TileSet("assets/IMG_trees.png")
+// const itemTEX = new TileSet("assets/IMG_Items.png")
 
 // --- FPS counter
 var starterFrameCount = 0;
@@ -38,12 +50,11 @@ window.onload = function () {
   // overWorld.createChunk(1,0)
 
 
-
   if (S.debug.doMapViewpoint) {
 
-    S.tw = 1;
-    S.th = 1;
-    S.scale = 0.5;
+    S.tw = 2;
+    S.th = 2;
+    S.scale = 1;
     mainCv.sc = 0.5;
 
     mainCv.resize()
@@ -52,10 +63,25 @@ window.onload = function () {
     return;
   }
 
+
+
+  Ui.resize();
+  DnD.invBuildup();
   mainCv.resize()
+
+
+  // main()
+
   startAnimating(S.fps);
 
-  // managerBiome()
+
+  // for (var y = 0; y < 1000; y++) {
+  //   for (var x = 0; x < 1000; x++) {
+  //
+  //   }
+  // }
+
+  // managerBiome();
 }
 
 window.onresize = function () {
@@ -88,9 +114,18 @@ function main() {
   for (var c = 0; c < overWorld.loadedChunks.length; c++) {
     for (var y = 0; y < S.chunkSize; y++) {
       for (var x = 0; x < S.chunkSize; x++) {
+
         var chunk = overWorld.chunkMap[overWorld.loadedChunks[c]];
         var cval = chunk.c[y * S.chunkSize + x];
         var tile = chunk.tile[y * S.chunkSize + x];
+
+        // --- Test for hashMap
+        // console.log(((chunk.obj[y * S.chunkSize + x] + 1) * 50));
+        // ctx.fillStyle = "hsl(0, 0%, " + ((chunk.obj[y * S.chunkSize + x] + 1) * 50) + "%)";
+        // ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
+        // continue;
+
+
         ctx.drawImage(tileTEX.tx, tileTextures[tile][0] * S.texW, tileTextures[tile][1] * S.texH, S.texW, S.texW, x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.texW, S.texH);
 
         if (false) {
@@ -171,6 +206,7 @@ function main() {
           }
 
           // ctx.fillStyle = "hsl(" + (cval * 180) + ", 100%, 50%)"
+          ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
 
         }
 
@@ -201,18 +237,18 @@ function main() {
   player.move();
   player.getPos()
 
-  for (var i = 0; i < objs.length; i++) {
-    objs[i].update();
+  for (var i = 0; i < overWorld.loadedObj.length; i++) {
+    overWorld.loadedObj[i].update();
   }
 
-  for (var i = 0; i < objs.length; i++) {
+  for (var i = 0; i < overWorld.loadedObj.length; i++) {
     // console.log(player.collision(objs[i].hitbox));
 
-    if (objs[i].hitbox && player.collision(objs[i].hitbox)) { // --- Check if Player hits Object
-      player.bouceOf(objs[i].hitbox)
+    if (overWorld.loadedObj[i].hitbox && player.collision(overWorld.loadedObj[i].hitbox)) { // --- Check if Player hits Object
+      player.bouceOf(overWorld.loadedObj[i].hitbox)
     }
-    if (objs[i].hbfade && player.collision(objs[i].hbfade)) { // --- Check if Player is in HitBoxFade
-      objs[i].fadeOut()
+    if (overWorld.loadedObj[i].hbfade && player.collision(overWorld.loadedObj[i].hbfade)) { // --- Check if Player is in HitBoxFade
+      overWorld.loadedObj[i].fadeOut()
     }
   }
 

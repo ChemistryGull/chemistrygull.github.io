@@ -1,5 +1,5 @@
 var S = {
-  seed: 9963, // cool seeds: 178, 99632178, 874133, 8787999 (wierd desert+ocean), 9963 (swamp, watery savannah)
+  seed: 978446, // cool seeds: 178, 99632178, 874133, 8787999 (wierd desert+ocean), 9963 (swamp, watery savannah), 978446 spawn in wood, near ocean and all biomes
   fps: 60,
 
   texW: 32,
@@ -38,14 +38,127 @@ var tileTextures = [
   [12, 0, "dirt_wet"],
 ]
 
+var itemList = {
+  debug: [0, 0, "__Debug__"],
+  red_apple: [1, 0, "Red Apple"],
+  carrot: [2, 0, "Carrot"],
+  cooked_chicken: [3, 0, "Cooked Chicken"],
+  raw_chicken: [4, 0, "Raw Chicken"],
+  fig: [5, 0, "Fig"],
+}
+
 var entityTextures = {
-  "tree1": [0, 0, 96, 128, {hitbox: [32, 32, 64, 0], hbfade: [20, 108, 76, 52]}],
+  // "oak": [0, 0, 3, 4, {posOffset: [1, 3], hitbox: [36, 32, 60, 10], hbfade: [20, 108, 76, 52]}],
+  "oak": [0, 0, 3, 4, {name: "oak", stage: -1, posOffset: [1, 3], hitbox: [36, 96, 60, 118], hbfade: [20, 20, 76, 76]}],
+  "willow1": [3, 0, 4, 4, {name: "oak", stage: -1, posOffset: [1.5, 3], hitbox: [60, 108, 80, 128], hbfade: [20, 10, 108, 90]}],
+  "willow2": [7, 0, 4, 4, {name: "oak", stage: -1, posOffset: [1.5, 3], hitbox: [60, 108, 80, 128], hbfade: [20, 20, 108, 90]}],
+
+  "fig_cactus_stage0": [11, 0, 1, 1, {name: "fig_cactus", stage: 0, posOffset: [0, 0]}],
+  "fig_cactus_stage1": [12, 0, 1, 1, {name: "fig_cactus", stage: 1, posOffset: [0, 0], hitbox: [10, 15, 22, 32]}],
+  "fig_cactus_stage2": [11, 3, 1, 1, {name: "fig_cactus", stage: 2, posOffset: [0, 0], hitbox: [10, 15, 22, 32]}],
+  "fig_cactus_stage3": [11, 1, 2, 2, {name: "fig_cactus", stage: 3, posOffset: [0.5, 1], hitbox: [26, 47, 38, 64]}],
+  "fig_cactus_stage4": [13, 0, 2, 3, {name: "fig_cactus", stage: 4, posOffset: [0.5, 2], hitbox: [26, 79, 38, 96]}],
+  "fig_cactus_stage5": [15, 0, 3, 3, {name: "fig_cactus", stage: 5, posOffset: [1, 2], hitbox: [42, 79, 54, 96]}],
+  "fig_cactus_stage6": [18, 0, 3, 3, {name: "fig_cactus", stage: 5, posOffset: [1, 2], hitbox: [42, 79, 54, 96]}],
+  "fig_cactus_stage7": [21, 0, 3, 3, {name: "fig_cactus", stage: 5, posOffset: [1, 2], hitbox: [42, 79, 54, 96]}],
+  "fig_cactus_stage8": [24, 0, 3, 3, {name: "fig_cactus", stage: 5, posOffset: [1, 2], hitbox: [42, 79, 54, 96]}],
+  "fig_cactus_stage9": [27, 0, 3, 3, {name: "fig_cactus", stage: 5, posOffset: [1, 2], hitbox: [42, 79, 54, 96]}],
+
+
+
+  // "cactusSap": [0, 0, 96, 128, {hitbox: [36, 32, 60, 10], hbfade: [20, 108, 76, 52]}],
+  "cactusSmall": [384, 0, 32, 32, {hitbox: [0, 0, 32, 32]}],
   // "tree1": [0, 0, 96, 128, {hitbox: null, hbfade: null}]
 }
 
-var encyBotany = {
-  oak: {name: "Oak", lat: "Quercus", tem: [-0.5, 0.5], hum: [-0.5, 0.5]}
+var referenceBook = {
+  /*
+  plantName: {
+    name: "Visible Name",
+    lat: "optional Latian name",
+    biome: [Biomes that its exclusively in - All if empty],
+    biomeNot: [Biomes where it does not grow - none if empty],
+    tem: [Type of distribution (eg "_006"), Center of Distribution with the highest chance of growing, Compression defines how large the area is it can grow in -> the higher the number, the smaller the area],
+    hum: [Type of distribution (eg "_006"), Center of Distribution with the highest chance of growing, Compression defines how large the area is it can grow in -> the higher the number, the smaller the area],
+    rarity: Number - definest of how often it spawns - 0-1 (TODO)
+  }
+  */
+
+  oak: {
+    name: "Oak",
+    lat: "Quercus",
+    biome: [],
+    biomeNot: ["desert"],
+    tem: ["_006", 0, 2],
+    hum: ["_006", 0, 1.2],
+    rarity: 1,
+    stages: [{
+      name: "Oak",
+      tex: "oak"
+    }],
+  },
+
+
+  willow: {
+    name: "Willow",
+    lat: "Salix",
+    biome: [],
+    biomeNot: ["desert"],
+    tem: ["_006", 0.2, 2],
+    hum: ["_006", 0.5, 1.2],
+    rarity: 1,
+    stages: [{
+      name: "Willow",
+      tex: ["willow1", "willow2"]
+    }],
+  },
+
+
+  fig_cactus: {
+    name: "Fig Cactus",
+    lat: "Opuntia ficus-indica",
+    biome: [],
+    biomeNot: ["desert"],
+    tem: ["_006", 0.6, 1.7],
+    hum: ["_006", -0.6, 1.2],
+    rarity: 1,
+    stages: [{
+      name: "Fig Cactus Sapling",
+      tex: "fig_cactus_stage0"
+    }, {
+      name: "Tiny Fig Cactus",
+      tex: "fig_cactus_stage1"
+    }, {
+      name: "Small Fig Cactus",
+      tex: "fig_cactus_stage2"
+    }, {
+      name: "Medium Fig Cactus",
+      tex: "fig_cactus_stage3"
+    }, {
+      name: "Fig Cactus",
+      tex: "fig_cactus_stage4"
+    }, {
+      name: "Fig Cactus",
+      tex: "fig_cactus_stage5"
+    }, {
+      name: "Blooming Fig Cactus",
+      tex: "fig_cactus_stage6"
+    }, {
+      name: "Fig Cactus With Unripe Fruit",
+      tex: "fig_cactus_stage7"
+    }, {
+      name: "Fig Cactus With Ripe Yellow Fruit",
+      tex: "fig_cactus_stage8"
+    }, {
+      name: "Fig Cactus With Ripe Red Fruit",
+      tex: "fig_cactus_stage9"
+    }]
+  },
+
+
+
 }
+
 
 var mapTypes = {
   overWorld: {
@@ -81,65 +194,3 @@ var climateGuide = [
   ["arctic", "arctic", "arctic", "taiga", "swamp", "swamp", "swamp", "rainforest", "rainforest", "rainforest"],
   ["arctic", "arctic", "arctic", "taiga", "swamp", "swamp", "swamp", "rainforest", "rainforest", "rainforest"]
 ] // TODO: Add wierdness
-
-
-
-function managerBiome() {
-
-  ctx.fillStyle = "red";
-
-  for (var i = 0; i < 11; i++) {
-    ctx.fillText(round(i / 5 - 1, 1), 150 + 128, 50 + 4 + i * 19.6)
-  }
-  for (var i = 0; i < 11; i++) {
-    ctx.fillText(round(i / 5 - 1, 1), 150 + 140 + i * 21, 270 )
-  }
-
-
-  for (var y = 0; y < climateGuide.length; y++) {
-    for (var x = 0; x < climateGuide[y].length; x++) {
-
-
-        switch (climateGuide[y][x]) {
-
-          case "plains":
-            ctx.fillStyle = "greenyellow"
-          break;
-          case "forest":
-            ctx.fillStyle = "green";
-          break;
-          case "rainforest":
-            ctx.fillStyle = "darkgreen";
-          break;
-          case "desert":
-            ctx.fillStyle = "gold";
-          break;
-          case "savannah":
-            ctx.fillStyle = "sandybrown";
-          break;
-          case "dry_ice_desert":
-            ctx.fillStyle = "gray";
-          break;
-          case "arctic":
-            ctx.fillStyle = "white";
-          break;
-          case "taiga":
-            ctx.fillStyle = "darkolivegreen";
-          break;
-          case "tundra":
-            ctx.fillStyle = "darkseagreen";
-          break;
-          case "swamp":
-            ctx.fillStyle = "aquamarine";
-          break;
-
-          default:
-          ctx.fillStyle = "red";
-
-        }
-        ctx.fillRect(x * 20 + 300, y * 20 + 50, 19, 19)
-
-      }
-    }
-
-}

@@ -1,0 +1,46 @@
+.invWrapper {
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  column-gap: 2px;
+  row-gap: 2px;
+  margin: 16px;
+}
+.invItemWrapper {
+  /* border: 2px inset darkgray; */
+
+}
+.invItem {
+  background-color: white;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  image-rendering: pixelated;
+}
+.invItem > div {
+
+
+  font-family: monospace;
+  font-weight: bold;
+  text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
+}
+
+.hotbarWrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hotbar {
+  background-color: gray;
+  display: inline-grid;
+  grid-template-columns: repeat(9, auto);
+  border: 2px outset darkgray;
+  column-gap: 4px;
+  row-gap: 2px;
+  margin: 16px;
+  padding: 8px;
+}
+
+.inv {
+  cursor: cell;
+
+}

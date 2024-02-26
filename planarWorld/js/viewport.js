@@ -61,6 +61,7 @@ function Canvas(id, sc) {
     this.screen = [document.getElementById('mainCv').width / this.sc, document.getElementById('mainCv').height / this.sc];
     this.scale(this.sc);
     this.ctx.imageSmoothingEnabled = false;
+    Ui.resize();
     // viewport.screen[0] /= scale;
     // viewport.screen[1] /= scale;
   }

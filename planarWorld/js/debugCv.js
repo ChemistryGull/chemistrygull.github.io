@@ -16,6 +16,7 @@ var dbg = {
     ctx.fillText("onChunk: " + player.onChunk[0] + " | " + player.onChunk[1], 10, size += sz);
     ctx.fillText("onTileInChunk: " + player.onChunkTile[0] + " | " + player.onChunkTile[1], 10, size += sz);
     ctx.fillText("Timer Main: " + round(window.performance.now() - inp.timerMain, 4) + " ms", 10, size += sz);
+    ctx.fillText("Loaded Objects: " + overWorld.loadedObj.length, 10, size += sz);
     ctx.fillText("Temperature: " + overWorld.chunkMap[[player.onChunk[0], player.onChunk[1]].toString()].tem[player.onChunkTile[1] * S.chunkSize + player.onChunkTile[0]], 10, size += sz);
     ctx.fillText("Humidity: " + overWorld.chunkMap[[player.onChunk[0], player.onChunk[1]].toString()].hum[player.onChunkTile[1] * S.chunkSize + player.onChunkTile[0]], 10, size += sz);
     ctx.fillText("Biome: " + overWorld.chunkMap[[player.onChunk[0], player.onChunk[1]].toString()].biome[player.onChunkTile[1] * S.chunkSize + player.onChunkTile[0]], 10, size += sz);

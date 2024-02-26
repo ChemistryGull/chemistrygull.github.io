@@ -4,32 +4,9 @@
     <meta charset="utf-8">
     <title></title>
 
-    <style media="screen">
-      body {
-        margin: 0;
-        overflow: hidden;
-        background-color: black
-      }
-      #mainCv {
-        /* image-rendering: pixelated; */
-
-      }
-      #mainCon {
-        width: 100vw;
-        height: 100vh;
-        position: absolute;
-        left: 0;
-      }
-      #debugCon {
-        /* width: 100vw;
-        height: 100vh; */
-        /* width: 300px; */
-        position: absolute;
-        right: 0;
-        top: 0;
-      }
-
-    </style>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/ui.css">
+    <link rel="stylesheet" href="css/uiInv.css">
 
   </head>
   <body>
@@ -42,10 +19,80 @@
       <canvas id="debugCv" width="300" height="150"></canvas>
     </div>
 
+
+    <div class="gameUi">
+      <div class="gameUiGrid">
+        <div class="gridTop">
+          <div class="statBar">
+            <div class="statItem statLvl">
+
+            </div>
+            <div class="statItem statVital">
+              <div class="stHealth">
+
+              </div>
+              <div class="stHunger">
+
+              </div>
+              <div class="stThirst">
+
+              </div>
+              <div class="stHeat">
+
+              </div>
+              <div class="stHeat">
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="gridSideRight"></div>
+        <div class="gridCenter">
+          <div class="inv1">
+            <div id="TemplateInv">
+              <div class="invWrapper inv1inv inv" id="pInv">
+
+
+              </div>
+            </div>
+          </div>
+          <div class="inv2 inv2inv inv">
+
+          </div>
+        </div>
+        <div class="gridSideLeft"></div>
+        <div class="gridBottom">
+          <div class="">
+
+          </div>
+          <div class="hotbarWrapper">
+            <div class="hotbar inv" id="pHB">
+
+            </div>
+          </div>
+          <div class="">
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+
+
+
+    <script src="lib/jquery-3.7.1.min.js" charset="utf-8"></script>
+
+    <script src="js/ui.js" charset="utf-8"></script>
+
     <script src="js/debugCv.js" charset="utf-8"></script>
+    <script src="js/debugScript.js" charset="utf-8"></script>
 
     <script src="js/keyManager.js" charset="utf-8"></script>
     <script src="js/vector.js" charset="utf-8"></script>
+    <script src="js/distributionFunctions.js" charset="utf-8"></script>
     <script src="js/settings.js" charset="utf-8"></script>
     <script src="js/prng.js" charset="utf-8"></script>
     <script src="js/openSimplexNoise.js" charset="utf-8"></script>

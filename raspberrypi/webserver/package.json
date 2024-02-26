@@ -1,0 +1,14 @@
+{
+  "name": "piserver",
+  "version": "1.0.0",
+  "description": "Server to run on this Raspberry Pi to connect to devices in network via websockets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ChemistryGull",
+  "license": "MIT",
+  "dependencies": {
+    "socket.io": "^4.7.4"
+  }
+}

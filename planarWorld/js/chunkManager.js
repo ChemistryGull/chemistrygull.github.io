@@ -5,6 +5,7 @@ function GameMap(inp) {
   this.chunkMap = {};
   this.existingChunks = [];
   this.loadedChunks = [];
+  this.loadedObj = [];
   this.currMap = [];
 
   this.startChunkTemp = [0, 0],
@@ -12,9 +13,8 @@ function GameMap(inp) {
 
   this.createChunk = function (cx, cy) {
 
-    var tempChunk = {x: cx, y: cy, tile: [], c: [], tem: [], hum: [], biome: []}
+    var tempChunk = {x: cx, y: cy, tile: [], ranNoise: [], obj: [], c: [], tem: [], hum: [], biome: []}
     // var zoom = 100
-
 
     for (var y = 0; y < S.chunkSize; y++) {
       for (var x = 0; x < S.chunkSize; x++) {
@@ -37,7 +37,7 @@ function GameMap(inp) {
 
         // var oceanTemp = openSimplex.noise2D((x + cx * S.chunkSize) / 300, (y + cy * S.chunkSize) / 300)
         var oceanTemp = 0;
-        var octaves = 6;
+        var octaves = 2;
         var amplitude = 1;
         var frequency = 0.003;
 
@@ -102,9 +102,16 @@ function GameMap(inp) {
             thisTile = "icedesert_stone";
           } else if (tempBiome == "swamp") {
             thisTile = "dirt_wet";
-          } else {
+          } else if (tempBiome == "forest") {
             thisTile = "grass";
 
+            if (objPlacement3x3((x + cx * S.chunkSize), (y + cy * S.chunkSize))) {
+              // tempChunk.obj.push(new Obj({x: (x + cx * S.chunkSize) * S.tw + Math.floor(Math.random() * S.tw), y: (y + cy * S.chunkSize) * S.th + Math.floor(Math.random() * S.tw)}))
+              tempChunk.obj.push(new Obj({x: (x + cx * S.chunkSize) * S.tw, y: (y + cy * S.chunkSize) * S.th}))
+            }
+
+          } else if (tempBiome == "plains") {
+            thisTile = "grass";
           }
         }
 
@@ -131,6 +138,22 @@ function GameMap(inp) {
         tempChunk.biome.push(tempBiome)
 
 
+        // var randomNoiseTile = randomMap(S.seed, (x + cx * S.chunkSize), (y + cy * S.chunkSize))
+        // var randomNoiseTile = randomMap(S.seed, x, y)
+        // var randomNoiseTile = hash(S.seed + "lol" + (x + cx * S.chunkSize) + (y + cy * S.chunkSize))
+        var randomNoiseTile = hashMap(S.seed, (x + cx * S.chunkSize), (y + cy * S.chunkSize))
+
+
+
+
+
+
+
+
+        tempChunk.ranNoise.push(randomNoiseTile)
+
+
+
 
         // tempChunk.c.push(openSimplex.noise2D((x + cx * S.chunkSize) / zoom, (y + cy * S.chunkSize) / zoom))
 
@@ -152,6 +175,7 @@ function GameMap(inp) {
       console.log("Load Chunks...");
 
       this.loadedChunks = [];
+      this.loadedObj = [];
       for (var y = mainCv.startChunk[1]; y < mainCv.endChunk[1]; y++) {
         for (var x = mainCv.startChunk[0]; x < mainCv.endChunk[0]; x++) {
           var thisChunk = x + "," + y
@@ -160,10 +184,29 @@ function GameMap(inp) {
             this.createChunk(x,y)
             // console.log("Created new chunk: " + x + " | " + y);
           }
+          // for (var o = 0; o < overWorld.chunkMap[thisChunk].obj.length; o++) {
+          //   this.loadedObj.push(overWorld.chunkMap[thisChunk].obj[o]);
+          // }
+          this.loadedObj = this.loadedObj.concat(overWorld.chunkMap[thisChunk].obj)
+          // console.log();
+
         }
       }
       this.startChunkTemp = [...mainCv.startChunk];
       this.endChunkTemp = [...mainCv.endChunk];
+
+      this.loadedObj.sort(function (a, b) {
+        // --- Sorts the loadedObj array so that the upper Objects are drawn first to avoid overlapping
+        if ( a.pos.y < b.pos.y ){
+          return -1;
+        }
+        if ( a.pos.y > b.pos.y ){
+          return 1;
+        }
+        return 0;
+      });
+
+
 
 
     }

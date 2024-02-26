@@ -9,6 +9,12 @@ function Entity(inp) {
   this.onTile = [0, 0]
   this.onChunk = [0, 0]
 
+  // this.inventory = [["brown", 1], ["white", 4], ["black", 1], ["white", 1], ["brown", 1], ["white", 5], ["black", 1], ["white", 1], ["brown", 1], ["white", 25], ["black", 1], ["white", 1], ["brown", 1], ["white", 1], ["black", 1], ["white", 1], ["brown", 1], ["white", 1], ["black", 1], ["white", 1]];
+  // this.hotbar = [["red", 8], ["orange", 54], ["yellow", 1], ["lime", 1], ["green", 1], ["cyan", 7], ["lightblue", 2], ["blue", 64], ["purple", 1]];
+
+  this.inventory = [["red_apple", 62], ["red_apple", 4], ["red_apple", 1], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0]];
+  this.hotbar = [["debug", 8], ["red_apple", 54], ["carrot", 1], ["raw_chicken", 1], ["cooked_chicken", 1], ["fig", 7], ["fig", 2], ["_", 0], ["_", 0]];
+
   this.update = function () {
     ctx.fillStyle = this.color;
     ctx.fillRect(mainCv.x + this.pos.x, mainCv.y + this.pos.y, this.w, this.h)
@@ -61,25 +67,27 @@ function Entity(inp) {
 
 function Obj(inp) {
   this.pos = new Vector(inp.x, inp.y);
-  this.type = inp.type || "tree1"
+  this.type = inp.type || "oak"
   this.opac = 1;
+  this.posOffset = entityTextures[this.type][4].posOffset || [0, 0];
 
-  this.w = entityTextures[this.type][2] - 1;
-  this.h = entityTextures[this.type][3];
+  this.w = entityTextures[this.type][2] * S.tw - 1;
+  this.h = entityTextures[this.type][3] * S.th;
 
   this.hitbox = null;
   this.hbfade = null;
   if (entityTextures[this.type][4].hitbox) {
-    this.hitbox = entityTextures[this.type][4].hitbox.map((n, i) => i % 2 ? this.pos.y - n : n + this.pos.x);
+    this.hitbox = entityTextures[this.type][4].hitbox.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.tw);
   }
   if (entityTextures[this.type][4].hbfade) {
-    this.hbfade = entityTextures[this.type][4].hbfade.map((n, i) => i % 2 ? this.pos.y - n : n + this.pos.x);
+    this.hbfade = entityTextures[this.type][4].hbfade.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.th);
   }
 
 
   this.update = function () {
     ctx.globalAlpha = this.opac;
-    ctx.drawImage(treeTEX.tx, entityTextures[this.type][0], entityTextures[this.type][1], entityTextures[this.type][2], entityTextures[this.type][3], mainCv.x + this.pos.x, mainCv.y + this.pos.y - this.h, this.w, this.h);
+    // ctx.drawImage(treeTEX.tx, entityTextures[this.type][0] * S.tw, entityTextures[this.type][1] * S.tw, entityTextures[this.type][2] * S.tw, entityTextures[this.type][3] * S.tw, mainCv.x + this.pos.x, mainCv.y + this.pos.y - this.h, this.w, this.h);
+    ctx.drawImage(treeTEX.tx, entityTextures[this.type][0] * S.tw, entityTextures[this.type][1] * S.th, entityTextures[this.type][2] * S.tw, entityTextures[this.type][3] * S.th, mainCv.x + this.pos.x - this.posOffset[0] * S.tw, mainCv.y + this.pos.y - this.posOffset[1] * S.th, this.w, this.h);
     if (this.opac < 1) {
       this.opac += S.fadeOutOpac[0] / 2;
     }
@@ -106,8 +114,10 @@ function Obj(inp) {
         ctx.lineTo(this.hbfade[0] + mainCv.x, this.hbfade[1] + mainCv.y);
         ctx.stroke();
       }
+      ctx.strokeStyle = "orangered";
+      ctx.strokeRect(mainCv.x + this.pos.x, mainCv.y + this.pos.y, 32, 32)
     }
-    
+
   };
   this.fadeOut = function () {
     if (this.opac > S.fadeOutOpac[1]) {
