@@ -25,9 +25,12 @@ var objs = []
 //   }
 // }
 
-
-const tileTEX = new TileSet("assets/IMG_tiles.png")
-const treeTEX = new TileSet("assets/IMG_trees.png")
+const tileSets = {
+  tileTEX: new TileSet("assets/IMG_tiles.png"),
+  treeTEX: new TileSet("assets/IMG_trees.png")
+}
+// const tileTEX = new TileSet("assets/IMG_tiles.png")
+// const treeTEX = new TileSet("assets/IMG_trees.png")
 // const itemTEX = new TileSet("assets/IMG_Items.png")
 
 // --- FPS counter
@@ -71,6 +74,60 @@ window.onload = function () {
 
 
   // main()
+  // var tnw = window.performance.now()
+  // for (var j = 0; j < 1000; j++) {
+  //   for (var i = 0; i < 1000; i++) {
+  //     // ctx.fillStyle = "hsl(0, 0%, " + (xxHash(i, j) * 100) + "%)";
+  //     ctx.fillStyle = "hsl(0, 0%, " + ((hashMap(S.seed, i, j) + 1) * 50) + "%)";
+  //     // ctx.fillRect(i, j, 1, 1)
+  //   }
+  // }
+  // console.log("Time hashMap = " + (window.performance.now() - tnw));
+  //
+  // var tnw = window.performance.now()
+  // for (var j = 0; j < 1000; j++) {
+  //   for (var i = 0; i < 500; i++) {
+  //     ctx.fillStyle = "hsl(0, 0%, " + (xxHash(i, j) * 100) + "%)";
+  //     // ctx.fillStyle = "hsl(0, 0%, " + ((hashMap(S.seed, i, j) + 1) * 50) + "%)";
+  //     // ctx.fillRect(i, j, 1, 1)
+  //   }
+  // }
+  // console.log("Time xxHash = " + (window.performance.now() - tnw));
+  //
+  // var tnw = window.performance.now()
+  // for (var j = 0; j < 1000; j++) {
+  //   for (var i = 0; i < 1000; i++) {
+  //     // ctx.fillStyle = "hsl(0, 0%, " + (xxHash(i, j) * 100) + "%)";
+  //     ctx.fillStyle = "hsl(0, 0%, " + ((hashMap(S.seed, i, j) + 1) * 50) + "%)";
+  //     // ctx.fillRect(i, j, 1, 1)
+  //   }
+  // }
+  // console.log("Time hashMap = " + (window.performance.now() - tnw));
+  //
+  // var tnw = window.performance.now()
+  // for (var j = 0; j < 1000; j++) {
+  //   for (var i = 0; i < 500; i++) {
+  //     ctx.fillStyle = "hsl(0, 0%, " + (xxHash(i, j) * 100) + "%)";
+  //     // ctx.fillStyle = "hsl(0, 0%, " + ((hashMap(S.seed, i, j) + 1) * 50) + "%)";
+  //     // ctx.fillRect(i, j, 1, 1)
+  //   }
+  // }
+  // console.log("Time xxHash = " + (window.performance.now() - tnw));
+  // return;
+
+
+  // for (var a = 0; a < 10; a++) {
+  //   for (var b = 0; b < 10; b++) {
+  //     for (var c = 0; c < 10; c++) {
+  //       for (var d = 0; d < 10; d++) {
+  //         ctx.fillStyle = "hsl(0, 0%, " + (xxHash(a, b, c, d) * 100) + "%)";
+  //         ctx.fillRect(a * b * c * d, 100, 1, 100)
+  //       }
+  //     }
+  //   }
+  // }
+  //
+  // return;
 
   startAnimating(S.fps);
 
@@ -81,15 +138,40 @@ window.onload = function () {
   //   }
   // }
 
-  // managerBiome();
+  // managerBiome("oak");
 }
 
 window.onresize = function () {
   mainCv.resize();
 }
 
-
+var ses = -4;
+var sas = 0;
 function main() {
+  var plant = "oak"
+  var hum = referenceBook[plant].hum;
+  var tem = referenceBook[plant].tem;
+  for (var y = -1; y < 1; y += 0.01) {
+    for (var x = -1; x < 1; x += 0.01) {
+      // var distTemp = distribution.get(tem[0], tem[1], tem[2], x);
+      // var distHum = distribution.get(hum[0], hum[1], hum[2], y);
+      // var gridOccurence = Math.max(1-Math.sqrt(((x+0.4)*3)**2+(y+0*4)**2),0);
+      var gridOccurence = bumpDist2D(x, y, tem[0], hum[0], tem[1], hum[1], 50000, 1, sas)
+      // var gridOccurence = (bumpDist(x, tem[0], tem[1], tem[2], tem[3]) * bumpDist(y, hum[0], hum[1], hum[2], hum[3]));
+      // var gridOccurence = distTemp + distHum - 2 * distTemp * distHum;
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = "hsl(" + (1 - gridOccurence) * 240 + ", 100%, 50%)";
+      ctx.fillRect(120 + 100 * x, 150 + 100 * y, 1, 1);
+
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  ses += 0.05;
+  sas = Math.sin(ses);
+
+  return;
 
   var timerMain = window.performance.now()
 
@@ -121,12 +203,13 @@ function main() {
 
         // --- Test for hashMap
         // console.log(((chunk.obj[y * S.chunkSize + x] + 1) * 50));
-        // ctx.fillStyle = "hsl(0, 0%, " + ((chunk.obj[y * S.chunkSize + x] + 1) * 50) + "%)";
+        // ctx.fillStyle = "hsl(0, 0%, " + (chunk.ranNoise[y * S.chunkSize + x] * 100) + "%)";
         // ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
         // continue;
 
 
-        ctx.drawImage(tileTEX.tx, tileTextures[tile][0] * S.texW, tileTextures[tile][1] * S.texH, S.texW, S.texW, x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.texW, S.texH);
+
+        ctx.drawImage(tileSets[tileTextures[tile][2]].tx, tileTextures[tile][0] * S.texW, tileTextures[tile][1] * S.texH, S.texW, S.texW, x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.texW, S.texH);
 
         if (false) {
           if (cval > -0.15 && cval < 0.15) {
@@ -237,20 +320,23 @@ function main() {
   player.move();
   player.getPos()
 
-  for (var i = 0; i < overWorld.loadedObj.length; i++) {
-    overWorld.loadedObj[i].update();
+  if (!S.debug.doMapViewpoint) {
+    for (var i = 0; i < overWorld.loadedObj.length; i++) {
+      overWorld.loadedObj[i].update();
+    }
+
+    for (var i = 0; i < overWorld.loadedObj.length; i++) {
+      // console.log(player.collision(objs[i].hitbox));
+
+      if (overWorld.loadedObj[i].hitbox && player.collision(overWorld.loadedObj[i].hitbox)) { // --- Check if Player hits Object
+        player.bouceOf(overWorld.loadedObj[i].hitbox)
+      }
+      if (overWorld.loadedObj[i].hbfade && player.collision(overWorld.loadedObj[i].hbfade)) { // --- Check if Player is in HitBoxFade
+        overWorld.loadedObj[i].fadeOut()
+      }
+    }
   }
 
-  for (var i = 0; i < overWorld.loadedObj.length; i++) {
-    // console.log(player.collision(objs[i].hitbox));
-
-    if (overWorld.loadedObj[i].hitbox && player.collision(overWorld.loadedObj[i].hitbox)) { // --- Check if Player hits Object
-      player.bouceOf(overWorld.loadedObj[i].hitbox)
-    }
-    if (overWorld.loadedObj[i].hbfade && player.collision(overWorld.loadedObj[i].hbfade)) { // --- Check if Player is in HitBoxFade
-      overWorld.loadedObj[i].fadeOut()
-    }
-  }
 
 
   dbg.info(20 / S.scale, {timerMain: timerMain})

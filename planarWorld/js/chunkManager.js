@@ -105,10 +105,7 @@ function GameMap(inp) {
           } else if (tempBiome == "forest") {
             thisTile = "grass";
 
-            if (objPlacement3x3((x + cx * S.chunkSize), (y + cy * S.chunkSize))) {
-              // tempChunk.obj.push(new Obj({x: (x + cx * S.chunkSize) * S.tw + Math.floor(Math.random() * S.tw), y: (y + cy * S.chunkSize) * S.th + Math.floor(Math.random() * S.tw)}))
-              tempChunk.obj.push(new Obj({x: (x + cx * S.chunkSize) * S.tw, y: (y + cy * S.chunkSize) * S.th}))
-            }
+
 
           } else if (tempBiome == "plains") {
             thisTile = "grass";
@@ -116,13 +113,63 @@ function GameMap(inp) {
         }
 
 
-        thisTile = tileTextures.indexOf(tileTextures.find(e => e[2] == thisTile))
+        thisTile = tileTextures.indexOf(tileTextures.find(e => e[3] == thisTile))
 
         if (thisTile == -1) {
           thisTile = 0;
           console.warn("!!! Rendering Problem: Tile name not found !!!")
         }
 
+
+        // ### OBJECT PLACEMENT ###
+        // --- LARGE OBJECTS
+        if (objPlacement3x3((x + cx * S.chunkSize), (y + cy * S.chunkSize)) > 0.9) { // <--- put here bigger than Large obj. Occurance
+          // tempChunk.obj.push(new Obj({x: (x + cx * S.chunkSize) * S.tw + Math.floor(Math.random() * S.tw), y: (y + cy * S.chunkSize) * S.th + Math.floor(Math.random() * S.tw)}))
+
+          var currentHighestChance = ["", 0]
+          for (var i = 0; i < objTypes.large.length; i++) {
+            // --- Finds Distribution value for each Object and Multiplies it with its own rarity value. Picks the one with the highest.
+            var thisChance = distribution.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * (0.2 + xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed) / 1.25);
+            // var thisChance = distribution.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
+            if (thisChance > currentHighestChance[1]) {
+              currentHighestChance = [objTypes.large[i], thisChance];
+            }
+            // console.log(distribution.get("_006", 0, 1, tempTileTem));
+            // console.log(distribution.find(objTypes.large[i], tempTileTem, tempTileHum));
+            // console.log([objTypes.large[i], thisChance]);
+          }
+
+          // --- Check if at least one of the Large Objects does not have a 0 chance of spawning
+          if (currentHighestChance[0] != "") {
+
+            if (typeof referenceBook[currentHighestChance[0]].stages[0].tex != "string") {
+              var thisTexture = referenceBook[currentHighestChance[0]].stages[0].tex[0]
+            } else {
+              var thisTexture = referenceBook[currentHighestChance[0]].stages[0].tex
+
+            }
+
+            tempChunk.obj.push(new Obj({type: currentHighestChance[0], tex: thisTexture, x: (x + cx * S.chunkSize) * S.tw, y: (y + cy * S.chunkSize) * S.th}))
+
+          } else {
+            // console.log("currentHighestChance[0]");
+            // console.log(currentHighestChance);
+            // for (var i = 0; i < objTypes.large.length; i++) {
+            //   // --- Finds Distribution value for each Object and Multiplies it with its own rarity value. Picks the one with the highest.
+            //   var thisChance = distribution.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed);
+            //   // var thisChance = distribution.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
+            //   console.log([objTypes.large[i], thisChance]);
+            //   console.log(xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed));
+            //   console.log([i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed]);
+            //   // console.log(distribution.get("_006", 0, 1, tempTileTem));
+            //   // console.log(distribution.find(objTypes.large[i], tempTileTem, tempTileHum));
+            //   // console.log([objTypes.large[i], thisChance]);
+            // }
+          }
+
+
+
+        }
 
 
 
@@ -141,7 +188,7 @@ function GameMap(inp) {
         // var randomNoiseTile = randomMap(S.seed, (x + cx * S.chunkSize), (y + cy * S.chunkSize))
         // var randomNoiseTile = randomMap(S.seed, x, y)
         // var randomNoiseTile = hash(S.seed + "lol" + (x + cx * S.chunkSize) + (y + cy * S.chunkSize))
-        var randomNoiseTile = hashMap(S.seed, (x + cx * S.chunkSize), (y + cy * S.chunkSize))
+        var randomNoiseTile = xxHash(S.seed, (x + cx * S.chunkSize), (y + cy * S.chunkSize))
 
 
 

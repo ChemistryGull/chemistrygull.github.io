@@ -96,7 +96,48 @@ function hashMap(seed, x, y) {
 
   // console.log(hash / 2147483647);
   return hash / 2147483647;
+
+  // return xxHash(seed, x, y);
 }
+
+function xxHash(a, b, c, d) {
+  // --- Returns Value between 0 and 1
+  /* mix around the bits in a: */
+  a = a * 3266489917 + 374761393;
+  a = (a << 17) | (a >> 15);
+
+  /* mix around the bits in b and mix those into a: */
+  if (b) {
+    a += b * 3266489917;
+  }
+  if (c) {
+    a = a * 3266489917 + 374761393;
+    a = (a << 17) | (a >> 15);
+
+    /* mix around the bits in c and mix those into a: */
+    a += c * 3266489917;
+  }
+  if (d) {
+    a = a * 3266489917 + 374761393;
+    a = (a << 17) | (a >> 15);
+
+    /* mix around the bits in d and mix those into a: */
+    a += d * 3266489917;
+  }
+
+  /* Give a a good stir: */
+  a *= 668265263;
+  a ^= a >> 15;
+  a *= 2246822519;
+  a ^= a >> 13;
+  a *= 3266489917;
+  a ^= a >> 16;
+
+  /* trim the result and scale it to a float in [0,1): */
+  return (a & 0x00ffffff) * (1.0 / 0x1000000);
+}
+
+
 
 function objPlacement3x3(inp_x, inp_y) {
   /*
@@ -106,12 +147,12 @@ function objPlacement3x3(inp_x, inp_y) {
   O O O
   */
 
-  var centerChunkValue = hashMap(S.seed, inp_x, inp_y);
+  var centerChunkValue = xxHash(S.seed, inp_x, inp_y);
 
 
   for (var y = inp_y - 1; y <= inp_y + 1; y++) {
     for (var x = inp_x - 1; x <= inp_x + 1; x++) {
-      if (hashMap(S.seed, x, y) > centerChunkValue) {
+      if (xxHash(S.seed, x, y) > centerChunkValue) {
         return false;
       }
     }

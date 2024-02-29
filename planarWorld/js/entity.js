@@ -67,27 +67,29 @@ function Entity(inp) {
 
 function Obj(inp) {
   this.pos = new Vector(inp.x, inp.y);
-  this.type = inp.type || "oak"
+  this.type = inp.type || "oak";
+  this.tex = inp.tex || "oak";
+  this.tileSet = entityTextures[this.tex][4].tileSet;
   this.opac = 1;
-  this.posOffset = entityTextures[this.type][4].posOffset || [0, 0];
+  this.posOffset = entityTextures[this.tex][4].posOffset || [0, 0];
 
-  this.w = entityTextures[this.type][2] * S.tw - 1;
-  this.h = entityTextures[this.type][3] * S.th;
+  this.w = entityTextures[this.tex][2] * S.tw - 1;
+  this.h = entityTextures[this.tex][3] * S.th;
 
   this.hitbox = null;
   this.hbfade = null;
-  if (entityTextures[this.type][4].hitbox) {
-    this.hitbox = entityTextures[this.type][4].hitbox.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.tw);
+  if (entityTextures[this.tex][4].hitbox) {
+    this.hitbox = entityTextures[this.tex][4].hitbox.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.tw);
   }
-  if (entityTextures[this.type][4].hbfade) {
-    this.hbfade = entityTextures[this.type][4].hbfade.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.th);
+  if (entityTextures[this.tex][4].hbfade) {
+    this.hbfade = entityTextures[this.tex][4].hbfade.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.th);
   }
 
 
   this.update = function () {
     ctx.globalAlpha = this.opac;
-    // ctx.drawImage(treeTEX.tx, entityTextures[this.type][0] * S.tw, entityTextures[this.type][1] * S.tw, entityTextures[this.type][2] * S.tw, entityTextures[this.type][3] * S.tw, mainCv.x + this.pos.x, mainCv.y + this.pos.y - this.h, this.w, this.h);
-    ctx.drawImage(treeTEX.tx, entityTextures[this.type][0] * S.tw, entityTextures[this.type][1] * S.th, entityTextures[this.type][2] * S.tw, entityTextures[this.type][3] * S.th, mainCv.x + this.pos.x - this.posOffset[0] * S.tw, mainCv.y + this.pos.y - this.posOffset[1] * S.th, this.w, this.h);
+    // ctx.drawImage(treeTEX.tx, entityTextures[this.tex][0] * S.tw, entityTextures[this.tex][1] * S.tw, entityTextures[this.tex][2] * S.tw, entityTextures[this.tex][3] * S.tw, mainCv.x + this.pos.x, mainCv.y + this.pos.y - this.h, this.w, this.h);
+    ctx.drawImage(tileSets[this.tileSet].tx, entityTextures[this.tex][0] * S.tw, entityTextures[this.tex][1] * S.th, entityTextures[this.tex][2] * S.tw, entityTextures[this.tex][3] * S.th, mainCv.x + this.pos.x - this.posOffset[0] * S.tw, mainCv.y + this.pos.y - this.posOffset[1] * S.th, this.w, this.h);
     if (this.opac < 1) {
       this.opac += S.fadeOutOpac[0] / 2;
     }

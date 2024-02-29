@@ -1,6 +1,6 @@
 
 
-function managerBiome() {
+function managerBiome(lookForObj) {
 
   ctx.fillStyle = "red";
 
@@ -62,7 +62,8 @@ function managerBiome() {
 
     claculatePosInBiomeMap(0.4, 1)
 
-    drawPlantDistribution("fig_cactus")
+    // drawPlantDistribution(lookForObj || "oak")
+    drawPlantBumpDist(lookForObj)
 
 }
 
@@ -105,6 +106,44 @@ function drawPlantDistribution(plant) {
         ctx.fillRect(120 + 100 * x, 150 + 100 * y, 1, 1);
 
       }
+      ctx.globalAlpha = 1;
+    }
+  }
+}
+
+
+function drawPlantBumpDist(plant) {
+  var hum = referenceBook[plant].hum;
+  var tem = referenceBook[plant].tem;
+
+  // --- Temperature Line
+  for (var i = -1; i < 1; i += 0.01) {
+    ctx.fillStyle = "gray"
+    ctx.fillStyle = "hsl(" + (1 - bumpDist(i, tem[0], tem[1], tem[2], tem[3])) * 240 + ", 100%, 50%)";
+    ctx.fillRect(120 + 100 * i, 38, 1, 10)
+    // ctx.fillRect(120 + 100 * i, 100, 1, distribution.get("_004", 0.4, 2, i) * 100)
+    // console.log(distribution.get("_006", 0.0, 4, i));
+  }
+  // --- Humidity Line
+  for (var i = -1; i < 1; i += 0.01) {
+    ctx.fillStyle = "gray"
+    ctx.fillStyle = "hsl(" + (1 - bumpDist(i, hum[0], hum[1], hum[2], hum[3])) * 240 + ", 100%, 50%)";
+    ctx.fillRect(222, 150 + 100 * i, 10, 1)
+  }
+  // --- 2d Grid
+  for (var y = -1; y < 1; y += 0.01) {
+    for (var x = -1; x < 1; x += 0.01) {
+      // var distTemp = distribution.get(tem[0], tem[1], tem[2], x);
+      // var distHum = distribution.get(hum[0], hum[1], hum[2], y);
+      // var gridOccurence = Math.max(1-Math.sqrt(((x+0.4)*3)**2+(y+0*4)**2),0);
+      // var gridOccurence = bumpDist2D(x, y, tem[0], hum[0], tem[1], hum[1], 5, 1, 0)
+      // var gridOccurence = (bumpDist(x, tem[0], tem[1], tem[2], tem[3]) * bumpDist(y, hum[0], hum[1], hum[2], hum[3]));
+      // var gridOccurence = distTemp + distHum - 2 * distTemp * distHum;
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = "hsl(" + (1 - gridOccurence) * 240 + ", 100%, 50%)";
+      ctx.fillRect(120 + 100 * x, 150 + 100 * y, 1, 1);
+
       ctx.globalAlpha = 1;
     }
   }
