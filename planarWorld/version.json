@@ -1,13 +1,13 @@
 {
-  title: "planarWorld (inDev)",
-  version: "0.0.4",
-  date: "23.01.2024",
-  description: "This is the basic little advanced groundwork for any Map-focused 2d tile game + IMG TILES",
-  changeLog: [
+  "title": "planarWorld (inDev)",
+  "version": "0.0.4",
+  "date": "23.01.2024",
+  "description": "This is the basic little advanced groundwork for any Map-focused 2d tile game + IMG TILES",
+  "changeLog": [
     "I love the Atom Editor... :,("
-  ]
-  bugs: {
-    jagged_coastline: "Currently, when the Desert meets an oacen, the coastline can look wierd. This happens because the Desert forces the land (c) higer (freature, to reduce water), but when it conmes in contact with an ocean, it does not succeed (oceans are too deep, feature). Because the Climate gradients hve jagged edges, so gets the shorline the same shape. SOLUTION: Rework Water Management? Make Biome Edges less Jagged in general?",
-    eval_in_inventory: "DnD.invBuildup uses eval() to figure out what inventories are currently open. YOU SHOULD NOT USE eval()!!! CHANGE THAT!!",
+  ],
+  "bugs": {
+    "jagged_coastline": "Currently, when the Desert meets an oacen, the coastline can look wierd. This happens because the Desert forces the land (c) higer (freature, to reduce water), but when it conmes in contact with an ocean, it does not succeed (oceans are too deep, feature). Because the Climate gradients hve jagged edges, so gets the shorline the same shape. SOLUTION: Rework Water Management? Make Biome Edges less Jagged in general?",
+    "eval_in_inventory": "DnD.invBuildup uses eval() to figure out what inventories are currently open. YOU SHOULD NOT USE eval()!!! CHANGE THAT!!"
   }
 }
