@@ -13,7 +13,7 @@ var keyCode = {
 }
 
 document.addEventListener("keypress", function (e) {
-  e.preventDefault()
+  // e.preventDefault()
   if (e.keyCode == 32) {
     if (running) {
       console.log("### STOP GAME ###");

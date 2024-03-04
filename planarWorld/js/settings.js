@@ -18,6 +18,7 @@ var S = {
   debug: {
     doMapViewpoint: false,
     doShowHitboxes: false,
+    doManagerBiome: false
   }
 }
 
@@ -90,12 +91,14 @@ var referenceBook = {
     lat: "Quercus",
     biome: [],
     biomeNot: ["desert"],
-    // tem: [-0.2, 0.7, 2, 1.1],
-    // hum: [0.3, 0.7, 2, 1.1],
+    // tem: [0, 1, 5, 1.2],
+    // hum: [0, 1, 5, 1.2],
     // tem: [0, 100, 30, 1.1],
     // hum: [0, 100, 30, 1.1],
-    tem: ["_004", 0, 2],
-    hum: ["_004", 0, 1.5],
+    // tem: ["_004", 0, 2],
+    // hum: ["_004", 0, 1.5],
+    tem: [0,0.78,11.68,1.2],
+    hum: [0,1.68,9.03,1.5],
     rarity: 1,
     stages: [{
       name: "Oak",
@@ -110,8 +113,10 @@ var referenceBook = {
     biomeNot: ["desert"],
     // tem: ["_006", 0, 2],
     // hum: ["_006", 0.1, 1.2],
-    tem: ["_006", 0.2, 2],
-    hum: ["_006", 0.5, 1.2],
+    tem:[0.19,0.4,0.4,1],
+    hum:[0.62,0.73,7.16,1.4],
+    // tem: ["_006", 0.2, 2],
+    // hum: ["_006", 0.5, 1.2],
     rarity: 1,
     stages: [{
       name: "Willow",
@@ -125,8 +130,8 @@ var referenceBook = {
     lat: "Opuntia ficus-indica",
     biome: [],
     biomeNot: ["desert"],
-    tem: ["_006", 0.6, 1.7],
-    hum: ["_006", -0.6, 1.2],
+    tem:[0.67,0.45,0.2,1],
+    hum:[-0.62,0.61,1,1],
     rarity: 1,
     stages: [{
       name: "Fig Cactus Sapling",

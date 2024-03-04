@@ -1,13 +1,17 @@
 {
   "title": "planarWorld (inDev)",
-  "version": "0.0.4",
-  "date": "23.01.2024",
+  "version": "0.0.5",
+  "date": "04.03.2024",
   "description": "This is the basic little advanced groundwork for any Map-focused 2d tile game + IMG TILES",
   "changeLog": [
-    "I love the Atom Editor... :,("
+    "I love the Atom Editor... :,(",
+    "REMOVED .preventDefault() in keyManager.js because it prevents typing text",
+    "CHANGED at distributionFunctions.js: lookup-Tabel distribtion functions to Bump-Function based Distribution (bumpDist.get(), bumpDist.find()), those are used in chunkManager.js now!",
+    "ADDED to settings.js: doManagerBiome Debug Mode",
+    "ADDED to debugScript.js: GUI for defining Plant distribution with fanc graphics and range inputs. Also supports looking up existing plants"
   ],
   "bugs": {
-    "jagged_coastline": "Currently, when the Desert meets an oacen, the coastline can look wierd. This happens because the Desert forces the land (c) higer (freature, to reduce water), but when it conmes in contact with an ocean, it does not succeed (oceans are too deep, feature). Because the Climate gradients hve jagged edges, so gets the shorline the same shape. SOLUTION: Rework Water Management? Make Biome Edges less Jagged in general?",
+    "jagged_coastline": "Currently, when the Desert meets an ocean, the coastline can look wierd. This happens because the Desert forces the land (c) higer (freature, to reduce water), but when it conmes in contact with an ocean, it does not succeed (oceans are too deep, feature). Because the Climate gradients hve jagged edges, so gets the shorline the same shape. SOLUTION: Rework Water Management? Make Biome Edges less Jagged in general?",
     "eval_in_inventory": "DnD.invBuildup uses eval() to figure out what inventories are currently open. YOU SHOULD NOT USE eval()!!! CHANGE THAT!!"
   }
 }

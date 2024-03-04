@@ -25,8 +25,6 @@ var objs = []
 //   }
 // }
 
-console.log("MAIN START");
-
 const tileSets = {
   tileTEX: new TileSet("assets/IMG_tiles.png"),
   treeTEX: new TileSet("assets/IMG_trees.png")
@@ -42,6 +40,7 @@ var fps, fpsInterval, startTime, now, then, then2, elapsed, currentFps;
 window.onload = function () {
   mainCv = new Canvas("mainCv", S.scale);
   ctx = mainCv.ctx;
+
 
   // fpsInterval = 1000 / fps;
   // then = Date.now();
@@ -65,6 +64,11 @@ window.onload = function () {
     mainCv.resize()
 
     main()
+    return;
+  }
+  if (S.debug.doManagerBiome) {
+    // managerBiome("oak");
+    managerBiome({"tem":[0,1,1,1],"hum":[0,1,1,1]});
     return;
   }
 
@@ -131,6 +135,9 @@ window.onload = function () {
   //
   // return;
 
+  
+
+
   startAnimating(S.fps);
 
 
@@ -140,7 +147,6 @@ window.onload = function () {
   //   }
   // }
 
-  // managerBiome("oak");
 }
 
 window.onresize = function () {

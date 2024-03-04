@@ -129,13 +129,13 @@ function GameMap(inp) {
           var currentHighestChance = ["", 0]
           for (var i = 0; i < objTypes.large.length; i++) {
             // --- Finds Distribution value for each Object and Multiplies it with its own rarity value. Picks the one with the highest.
-            var thisChance = distribution.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * (0.2 + xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed) / 1.25);
-            // var thisChance = distribution.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
+            var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * (0.2 + xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed) / 1.25);
+            // var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
             if (thisChance > currentHighestChance[1]) {
               currentHighestChance = [objTypes.large[i], thisChance];
             }
-            // console.log(distribution.get("_006", 0, 1, tempTileTem));
-            // console.log(distribution.find(objTypes.large[i], tempTileTem, tempTileHum));
+            // console.log(bumpDist.get("_006", 0, 1, tempTileTem));
+            // console.log(bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum));
             // console.log([objTypes.large[i], thisChance]);
           }
 
@@ -156,13 +156,13 @@ function GameMap(inp) {
             // console.log(currentHighestChance);
             // for (var i = 0; i < objTypes.large.length; i++) {
             //   // --- Finds Distribution value for each Object and Multiplies it with its own rarity value. Picks the one with the highest.
-            //   var thisChance = distribution.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed);
-            //   // var thisChance = distribution.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
+            //   var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed);
+            //   // var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
             //   console.log([objTypes.large[i], thisChance]);
             //   console.log(xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed));
             //   console.log([i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed]);
-            //   // console.log(distribution.get("_006", 0, 1, tempTileTem));
-            //   // console.log(distribution.find(objTypes.large[i], tempTileTem, tempTileHum));
+            //   // console.log(bumpDist.get("_006", 0, 1, tempTileTem));
+            //   // console.log(bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum));
             //   // console.log([objTypes.large[i], thisChance]);
             // }
           }

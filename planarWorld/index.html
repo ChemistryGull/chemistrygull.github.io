@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/ui.css">
     <link rel="stylesheet" href="css/uiInv.css">
+    <link rel="stylesheet" href="css/debug.css">
 
   </head>
   <body>
@@ -17,6 +18,67 @@
 
     <div id="debugCon">
       <canvas id="debugCv" width="300" height="150"></canvas>
+    </div>
+
+    <div id="debugManagerBiome" class="debugManagerBiome">
+      Obj: <input type="text" id="plantName"><br>
+      <input type="range" id="setSteps" min="1" max="5" value="1"><input type="text" id="setSteps" class="outputSpan" value="1"><br>
+      <input type="range" id="setOpac" min="0" max="1" value="0.9" step="0.02"><input type="text" id="setOpac" class="outputSpan" value="0.9"><br>
+
+      <div>
+        <p>Temperature</p>
+        <table>
+          <tr>
+            <td><span>Pos:</span></td>
+            <td><input id="tem_pos" type="range" min="-1" max="1" step="0.01" value="0"></td>
+            <td><input type="text" id="tem_pos" class="outputSpan" value="0"></td>
+          </tr>
+          <tr>
+            <td><span>Radius:</span></td>
+            <td><input id="tem_rad" type="range" min="0" max="2" step="0.01" value="1"></td>
+            <td><input type="text" id="tem_rad" class="outputSpan" value="1"></td>
+          </tr>
+          <tr>
+            <td><span>Steepness:</span></td>
+            <td><input id="tem_ste" type="range" min="0" max="20" step="0.01" value="1"></td>
+            <td><input type="text" id="tem_ste" class="outputSpan" value="1"></td>
+          </tr>
+          <tr>
+            <td><span>Capping:</span></td>
+            <td><input id="tem_cap" type="range" min="1" max="20" step="0.01" value="1"></td>
+            <td><input type="text" id="tem_cap" class="outputSpan" value="1"></td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <p>Humidity</p>
+        <table>
+          <tr>
+            <td><span>Pos:</span></td>
+            <td><input id="hum_pos" type="range" min="-1" max="1" step="0.01" value="0"></td>
+            <td><input type="text" id="hum_pos" class="outputSpan" value="0"></td>
+          </tr>
+          <tr>
+            <td><span>Radius:</span></td>
+            <td><input id="hum_rad" type="range" min="0" max="2" step="0.01" value="1"></td>
+            <td><input type="text" id="hum_rad" class="outputSpan" value="1"></td>
+          </tr>
+          <tr>
+            <td><span>Steepness:</span></td>
+            <td><input id="hum_ste" type="range" min="0" max="20" step="0.01" value="1"></td>
+            <td><input type="text" id="hum_ste" class="outputSpan" value="1"></td>
+          </tr>
+          <tr>
+            <td><span>Capping:</span></td>
+            <td><input id="hum_cap" type="range" min="1" max="20" step="0.01" value="1"></td>
+            <td><input type="text" id="hum_cap" class="outputSpan" value="1"></td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <br>
+        <textarea id="formattedCodeOut" cols="35" rows="3"></textarea>
+      </div>
     </div>
 
 
