@@ -52,6 +52,7 @@ function Canvas(id, sc) {
     this.ctx.reset();
     this.ctx.scale(sc, sc)
     this.sc = sc;
+    console.log("SCALE = " + sc);
     // this.ctx.setTransform(sc,0,0,sc,0,0);
   }
   this.resize = function () {

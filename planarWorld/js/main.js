@@ -70,7 +70,7 @@ window.onload = function () {
 
   Ui.resize();
   DnD.invBuildup();
-  mainCv.resize()
+  mainCv.resize();
 
 
   // main()
@@ -145,33 +145,33 @@ window.onresize = function () {
   mainCv.resize();
 }
 
-var ses = -4;
-var sas = 0;
+// var ses = -4;
+// var sas = 0;
 function main() {
-  var plant = "oak"
-  var hum = referenceBook[plant].hum;
-  var tem = referenceBook[plant].tem;
-  for (var y = -1; y < 1; y += 0.01) {
-    for (var x = -1; x < 1; x += 0.01) {
-      // var distTemp = distribution.get(tem[0], tem[1], tem[2], x);
-      // var distHum = distribution.get(hum[0], hum[1], hum[2], y);
-      // var gridOccurence = Math.max(1-Math.sqrt(((x+0.4)*3)**2+(y+0*4)**2),0);
-      var gridOccurence = bumpDist2D(x, y, tem[0], hum[0], tem[1], hum[1], 50000, 1, sas)
-      // var gridOccurence = (bumpDist(x, tem[0], tem[1], tem[2], tem[3]) * bumpDist(y, hum[0], hum[1], hum[2], hum[3]));
-      // var gridOccurence = distTemp + distHum - 2 * distTemp * distHum;
-      ctx.globalAlpha = 1;
+  // var plant = "oak"
+  // var hum = referenceBook[plant].hum;
+  // var tem = referenceBook[plant].tem;
+  // for (var y = -1; y < 1; y += 0.01) {
+  //   for (var x = -1; x < 1; x += 0.01) {
+  //     // var distTemp = distribution.get(tem[0], tem[1], tem[2], x);
+  //     // var distHum = distribution.get(hum[0], hum[1], hum[2], y);
+  //     // var gridOccurence = Math.max(1-Math.sqrt(((x+0.4)*3)**2+(y+0*4)**2),0);
+  //     var gridOccurence = bumpDist2D(x, y, tem[0], hum[0], tem[1], hum[1], 50000, 1, sas)
+  //     // var gridOccurence = (bumpDist(x, tem[0], tem[1], tem[2], tem[3]) * bumpDist(y, hum[0], hum[1], hum[2], hum[3]));
+  //     // var gridOccurence = distTemp + distHum - 2 * distTemp * distHum;
+  //     ctx.globalAlpha = 1;
 
-      ctx.fillStyle = "hsl(" + (1 - gridOccurence) * 240 + ", 100%, 50%)";
-      ctx.fillRect(120 + 100 * x, 150 + 100 * y, 1, 1);
+  //     ctx.fillStyle = "hsl(" + (1 - gridOccurence) * 240 + ", 100%, 50%)";
+  //     ctx.fillRect(120 + 100 * x, 150 + 100 * y, 1, 1);
 
-      ctx.globalAlpha = 1;
-    }
-  }
+  //     ctx.globalAlpha = 1;
+  //   }
+  // }
 
-  ses += 0.05;
-  sas = Math.sin(ses);
+  // ses += 0.05;
+  // sas = Math.sin(ses);
 
-  return;
+  // return;
 
   var timerMain = window.performance.now()
 

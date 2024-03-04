@@ -27,16 +27,16 @@ var distribution = {
 }
 
 
-function bumpDist(x, c, r, w, z) {
-  var g = Math.exp(w*(1-1/(1-((x-c)/r)**2)))*z;
-  if(g > z) return 0;
-  return g;
-}
+// function bumpDist(x, c, r, w, z) {
+//   var g = Math.exp(w*(1-1/(1-((x-c)/r)**2)))*z;
+//   if(g > z) return 0;
+//   return g;
+// }
 
-function bumpDist2D(x1, x2, c1, c2, r1, r2, w, z, s) {
-  if(Math.abs(x1-c1) > r1  || Math.abs(x2-c2) > r2) return 0;
+// function bumpDist2D(x1, x2, c1, c2, r1, r2, w, z, s) {
+//   if(Math.abs(x1-c1) > r1  || Math.abs(x2-c2) > r2) return 0;
 
 
-  var g = z*Math.exp(w*((1-1/(1-((x1-c1)/r1)**2))+(1-1/(1-((x2-c2)/r2)**2))-(1-1/(1-(s*(((x1-c1)/r1)*((x2-c2)/r2)))))));
-  return g;
-}
+//   var g = z*Math.exp(w*((1-1/(1-((x1-c1)/r1)**2))+(1-1/(1-((x2-c2)/r2)**2))-(1-1/(1-(s*(((x1-c1)/r1)*((x2-c2)/r2)))))));
+//   return g;
+// }
