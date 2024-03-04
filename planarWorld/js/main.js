@@ -25,6 +25,8 @@ var objs = []
 //   }
 // }
 
+console.log("MAIN START");
+
 const tileSets = {
   tileTEX: new TileSet("assets/IMG_tiles.png"),
   treeTEX: new TileSet("assets/IMG_trees.png")
