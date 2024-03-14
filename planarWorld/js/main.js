@@ -6,6 +6,8 @@ const openSimplex2 = openSimplexNoise(S.seed << 9);
 const openSimplex3 = openSimplexNoise(S.seed >> 4);
 var overWorld;
 
+var cursorPos = [0, 0];
+
 var Time = { // --- IN GAME TIME
   tick: 0,
   ms: 0,
@@ -83,67 +85,14 @@ window.onload = function () {
   }
 
 
-
   Ui.resize();
-  DnD.invBuildup();
+  // DnD.invBuildup();
+  InvEngine.build();
   mainCv.resize();
 
 
   // main()
-  // var tnw = window.performance.now()
-  // for (var j = 0; j < 1000; j++) {
-  //   for (var i = 0; i < 1000; i++) {
-  //     // ctx.fillStyle = "hsl(0, 0%, " + (xxHash(i, j) * 100) + "%)";
-  //     ctx.fillStyle = "hsl(0, 0%, " + ((hashMap(S.seed, i, j) + 1) * 50) + "%)";
-  //     // ctx.fillRect(i, j, 1, 1)
-  //   }
-  // }
-  // console.log("Time hashMap = " + (window.performance.now() - tnw));
-  //
-  // var tnw = window.performance.now()
-  // for (var j = 0; j < 1000; j++) {
-  //   for (var i = 0; i < 500; i++) {
-  //     ctx.fillStyle = "hsl(0, 0%, " + (xxHash(i, j) * 100) + "%)";
-  //     // ctx.fillStyle = "hsl(0, 0%, " + ((hashMap(S.seed, i, j) + 1) * 50) + "%)";
-  //     // ctx.fillRect(i, j, 1, 1)
-  //   }
-  // }
-  // console.log("Time xxHash = " + (window.performance.now() - tnw));
-  //
-  // var tnw = window.performance.now()
-  // for (var j = 0; j < 1000; j++) {
-  //   for (var i = 0; i < 1000; i++) {
-  //     // ctx.fillStyle = "hsl(0, 0%, " + (xxHash(i, j) * 100) + "%)";
-  //     ctx.fillStyle = "hsl(0, 0%, " + ((hashMap(S.seed, i, j) + 1) * 50) + "%)";
-  //     // ctx.fillRect(i, j, 1, 1)
-  //   }
-  // }
-  // console.log("Time hashMap = " + (window.performance.now() - tnw));
-  //
-  // var tnw = window.performance.now()
-  // for (var j = 0; j < 1000; j++) {
-  //   for (var i = 0; i < 500; i++) {
-  //     ctx.fillStyle = "hsl(0, 0%, " + (xxHash(i, j) * 100) + "%)";
-  //     // ctx.fillStyle = "hsl(0, 0%, " + ((hashMap(S.seed, i, j) + 1) * 50) + "%)";
-  //     // ctx.fillRect(i, j, 1, 1)
-  //   }
-  // }
-  // console.log("Time xxHash = " + (window.performance.now() - tnw));
-  // return;
 
-
-  // for (var a = 0; a < 10; a++) {
-  //   for (var b = 0; b < 10; b++) {
-  //     for (var c = 0; c < 10; c++) {
-  //       for (var d = 0; d < 10; d++) {
-  //         ctx.fillStyle = "hsl(0, 0%, " + (xxHash(a, b, c, d) * 100) + "%)";
-  //         ctx.fillRect(a * b * c * d, 100, 1, 100)
-  //       }
-  //     }
-  //   }
-  // }
-  //
-  // return;
 
   
 

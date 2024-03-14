@@ -14,6 +14,8 @@ var S = {
 
   playerSpeed: 4,
 
+  itemMaxStackSize: 64,
+
   fadeOutOpac: [0.05, 0.5],
 
   plantGrowthCheckTime: 60, // --- Check every __th tick/gameFrame

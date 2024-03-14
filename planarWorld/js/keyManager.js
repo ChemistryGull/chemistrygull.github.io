@@ -7,10 +7,19 @@ var keyCode = {
 
   mSpeed: 16, //Shift
   interact: 32, //Space
-  openInv: 69, //E
+  openInv: 101, //E
   f12: 123,
   f5: 116
 }
+
+document.addEventListener("mousemove", function(ev){
+  cursorPos = [ev.clientX, ev.clientY];
+  if (InvEngine.holding != null) {
+    document.getElementById('itemAtPointer').style.transform = 'translateY(' + (ev.clientY - Ui.invItemH / 3) + 'px)';
+    document.getElementById('itemAtPointer').style.transform += 'translateX(' + (ev.clientX - Ui.invItemH / 3) + 'px)';     
+  }
+       
+});
 
 document.addEventListener("keypress", function (e) {
   // e.preventDefault()
@@ -25,6 +34,10 @@ document.addEventListener("keypress", function (e) {
       startAnimating(S.fps)
 
     }
+  }
+  if (e.keyCode == keyCode.openInv) {
+    console.log("Toggle inv");
+    $(".gameUi").toggle();
   }
 
 

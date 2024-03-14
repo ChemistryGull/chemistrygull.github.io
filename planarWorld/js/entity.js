@@ -13,7 +13,7 @@ function Entity(inp) {
   // this.hotbar = [["red", 8], ["orange", 54], ["yellow", 1], ["lime", 1], ["green", 1], ["cyan", 7], ["lightblue", 2], ["blue", 64], ["purple", 1]];
 
   this.inventory = [["red_apple", 62], ["red_apple", 4], ["red_apple", 1], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0]];
-  this.hotbar = [["debug", 8], ["red_apple", 54], ["carrot", 1], ["raw_chicken", 1], ["cooked_chicken", 1], ["fig", 7], ["fig", 2], ["_", 0], ["_", 0]];
+  this.hotbar = [["debug", 8], ["red_apple", 54], ["carrot", 1, {durability: 147}], ["raw_chicken", 1], ["cooked_chicken", 1], ["fig", 7], ["fig", 2], ["_", 0], ["_", 0]];
 
   this.update = function () {
     ctx.fillStyle = this.color;

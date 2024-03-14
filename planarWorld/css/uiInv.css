@@ -5,20 +5,18 @@
   row-gap: 2px;
   margin: 16px;
 }
-.invItemWrapper {
-  /* border: 2px inset darkgray; */
-
-}
 .invItem {
   background-color: white;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
   image-rendering: pixelated;
+  border: 2px inset darkgray;
+
 }
 .invItem > div {
 
-
+  user-select: none;
   font-family: monospace;
   font-weight: bold;
   text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
@@ -43,4 +41,10 @@
 .inv {
   cursor: cell;
 
+}
+#itemAtPointer {
+  /* display: none; */
+  position: fixed; /* Floating above */
+  pointer-events: none; /* Allow clicking trough the div */
+  border: none;
 }
