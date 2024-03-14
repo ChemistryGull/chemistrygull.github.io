@@ -130,6 +130,9 @@ function drawPlantBumpDist(plant, steps = 0.01, opac = 0.9) {
   for (var i = -1; i < 1; i += 0.01) {
     ctx.fillStyle = "gray"
     ctx.fillStyle = "hsl(" + (1 - bumpDist.get(i, tem[0], tem[1], tem[2], tem[3])) * 240 + ", 100%, 50%)";
+    if (bumpDist.get(i, tem[0], tem[1], tem[2], tem[3]) == 0) {
+      ctx.fillStyle = "gray"
+    }
     ctx.fillRect(120 + 100 * i, 38, 1, 10)
     // ctx.fillRect(120 + 100 * i, 100, 1, distribution.get("_004", 0.4, 2, i) * 100)
     // console.log(distribution.get("_006", 0.0, 4, i));
@@ -138,6 +141,9 @@ function drawPlantBumpDist(plant, steps = 0.01, opac = 0.9) {
   for (var i = -1; i < 1; i += 0.01) {
     ctx.fillStyle = "gray"
     ctx.fillStyle = "hsl(" + (1 - bumpDist.get(i, hum[0], hum[1], hum[2], hum[3])) * 240 + ", 100%, 50%)";
+    if (bumpDist.get(i, hum[0], hum[1], hum[2], hum[3]) == 0) {
+      ctx.fillStyle = "gray"
+    }
     ctx.fillRect(222, 150 + 100 * i, 10, 1)
   }
   // --- 2d Grid
@@ -156,6 +162,9 @@ function drawPlantBumpDist(plant, steps = 0.01, opac = 0.9) {
       }
 
       ctx.fillStyle = "hsl(" + (1 - gridOccurence) * 240 + ", 100%, 50%)";
+      if (gridOccurence == 0) {
+        ctx.fillStyle = "gray";
+      }
       ctx.fillRect(120 + 100 * x, 150 + 100 * y, steps * 100, steps * 100);
 
       ctx.globalAlpha = 1;

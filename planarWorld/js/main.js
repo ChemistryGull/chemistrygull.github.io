@@ -1,11 +1,20 @@
 var mainCv;
 var ctx;
 var running = true;
-var tick = 0;
 const openSimplex = openSimplexNoise(S.seed);
 const openSimplex2 = openSimplexNoise(S.seed << 9);
 const openSimplex3 = openSimplexNoise(S.seed >> 4);
 var overWorld;
+
+var Time = { // --- IN GAME TIME
+  tick: 0,
+  ms: 0,
+  lastTime: Date.now(),
+  update: function () {
+    this.ms += Date.now() - this.lastTime;
+    this.lastTime = Date.now();
+  }
+}
 
 var player = new Entity({x: 0, y: 0})
 var objs = []
@@ -46,9 +55,9 @@ window.onload = function () {
   // then = Date.now();
   // startTime = then;
 
-  overWorld = new GameMap();
+  overWorld = new GameMap("overWorld");
 
-  // overWorld.createChunk(0,0)
+  overWorld.createChunk(0,0)
   // overWorld.createChunk(0,1)
   // overWorld.createChunk(1,1)
   // overWorld.createChunk(1,0)
@@ -68,6 +77,7 @@ window.onload = function () {
   }
   if (S.debug.doManagerBiome) {
     // managerBiome("oak");
+    $("#debugManagerBiome").show();
     managerBiome({"tem":[0,1,1,1],"hum":[0,1,1,1]});
     return;
   }
@@ -146,6 +156,7 @@ window.onload = function () {
   //
   //   }
   // }
+  overWorld.chunkMap["0,0"].obj.push(new Obj({ type: "fig_cactus", x: 32, y: 0, stage: 0, texNr: 6}))
 
 }
 
@@ -183,6 +194,8 @@ function main() {
 
   var timerMain = window.performance.now()
 
+  Time.tick++;
+  Time.update();
 
   mainCv.clear();
   mainCv.update(player.pos.x, player.pos.y);
@@ -308,18 +321,12 @@ function main() {
 
 
 
-
   player.vel = new Vector(0, 0);
 
   if (keys[keyCode.mLeft]) {player.vel.x -= player.speed;}
   if (keys[keyCode.mRight]) {player.vel.x += player.speed;}
   if (keys[keyCode.mUp]) {player.vel.y -= player.speed;}
   if (keys[keyCode.mDown]) {player.vel.y += player.speed;}
-
-
-
-
-
 
 
 
@@ -345,13 +352,22 @@ function main() {
     }
   }
 
+  
+  // --- Game Mechanics
 
+  if (Time.tick % S.plantGrowthCheckTime == 0) {
+    for (var i = 0; i < overWorld.loadedObj.length; i++) {
+      overWorld.loadedObj[i].grow();
+    }
+  }
+
+
+  // --- Bottom Debug
 
   dbg.info(20 / S.scale, {timerMain: timerMain})
   dbg.plot(round(window.performance.now() - timerMain, 10), 30, "red");
   // dbg.plot(currentFps, 1, "red");
 
-  tick++;
 }
 
 

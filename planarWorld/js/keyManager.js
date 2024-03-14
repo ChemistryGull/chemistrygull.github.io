@@ -21,6 +21,7 @@ document.addEventListener("keypress", function (e) {
     } else {
       console.log("### START GAME ###");
       running = true;
+      Time.lastTime = Date.now();
       startAnimating(S.fps)
 
     }

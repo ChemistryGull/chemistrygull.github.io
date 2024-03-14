@@ -46,6 +46,7 @@ var bumpDist = {
     var occurence = bumpDist.get(tem, refTem[0], refTem[1], refTem[2], refTem[3]) * bumpDist.get(hum, refHum[0], refHum[1], refHum[2], refHum[3]);
   
     if (occurence > 1) return 1;
+    if (occurence < 0.0001) return 0;
 
     return occurence;
   }

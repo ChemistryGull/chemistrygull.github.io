@@ -68,24 +68,38 @@ function Entity(inp) {
 function Obj(inp) {
   this.pos = new Vector(inp.x, inp.y);
   this.type = inp.type || "oak";
-  this.tex = inp.tex || "oak";
-  this.tileSet = entityTextures[this.tex][4].tileSet;
-  this.opac = 1;
-  this.posOffset = entityTextures[this.tex][4].posOffset || [0, 0];
+  this.texNr = inp.texNr || 0;
+  this.stage = inp.stage || 0;
+  this.stageMax = referenceBook[this.type].stages.length - 1;
+  this.timeOfBirth = Time.ms;
+  this.timeOfLastGrow = Time.ms;
 
-  this.w = entityTextures[this.tex][2] * S.tw - 1;
-  this.h = entityTextures[this.tex][3] * S.th;
 
-  this.hitbox = null;
-  this.hbfade = null;
-  if (entityTextures[this.tex][4].hitbox) {
-    this.hitbox = entityTextures[this.tex][4].hitbox.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.tw);
+
+
+  this.setup = function (params) {
+    if (typeof referenceBook[this.type].stages[this.stage].tex == "string") {
+      this.tex = referenceBook[this.type].stages[this.stage].tex;
+    } else {
+      this.tex = referenceBook[this.type].stages[this.stage].tex[this.texNr];
+    }
+    this.tileSet = entityTextures[this.tex][4].tileSet;
+    this.opac = 1;
+    this.posOffset = entityTextures[this.tex][4].posOffset || [0, 0];
+  
+    this.w = entityTextures[this.tex][2] * S.tw - 1;
+    this.h = entityTextures[this.tex][3] * S.th;
+  
+    this.hitbox = null;
+    this.hbfade = null;
+    if (entityTextures[this.tex][4].hitbox) {
+      this.hitbox = entityTextures[this.tex][4].hitbox.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.tw);
+    }
+    if (entityTextures[this.tex][4].hbfade) {
+      this.hbfade = entityTextures[this.tex][4].hbfade.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.th);
+    }
   }
-  if (entityTextures[this.tex][4].hbfade) {
-    this.hbfade = entityTextures[this.tex][4].hbfade.map((n, i) => i % 2 ? this.pos.y + n - this.posOffset[1] * S.th : n + this.pos.x - this.posOffset[0] * S.th);
-  }
-
-
+  this.setup();
   this.update = function () {
     ctx.globalAlpha = this.opac;
     // ctx.drawImage(treeTEX.tx, entityTextures[this.tex][0] * S.tw, entityTextures[this.tex][1] * S.tw, entityTextures[this.tex][2] * S.tw, entityTextures[this.tex][3] * S.tw, mainCv.x + this.pos.x, mainCv.y + this.pos.y - this.h, this.w, this.h);
@@ -121,6 +135,14 @@ function Obj(inp) {
     }
 
   };
+  this.grow = function () {
+    if (this.stage < this.stageMax && Time.ms - this.timeOfLastGrow > referenceBook[this.type].stages[this.stage].time && xxHash(Date.now(), this.pos.x, this.pos.y) < S.plantGrowthSuccessChance) {
+      this.timeOfLastGrow = Time.ms;
+      this.stage++;
+      this.setup();
+      this.grow();
+    }
+  }
   this.fadeOut = function () {
     if (this.opac > S.fadeOutOpac[1]) {
       this.opac -= S.fadeOutOpac[0];

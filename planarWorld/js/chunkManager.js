@@ -1,5 +1,5 @@
 function GameMap(inp) {
-  // this.type = inp.type || "overworld";
+  this.type = inp.type || "overworld";
 
 
   this.chunkMap = {};
@@ -18,6 +18,8 @@ function GameMap(inp) {
 
     for (var y = 0; y < S.chunkSize; y++) {
       for (var x = 0; x < S.chunkSize; x++) {
+        var _x = x + cx * S.chunkSize;
+        var _y = y + cy * S.chunkSize;
 
         // --- Create Basic Land & River Map:
 
@@ -27,7 +29,7 @@ function GameMap(inp) {
 
         var tempTileVal = 0;
         for (var o = 0; o < octaves; o++) {
-          tempTileVal += openSimplex.noise2D((x + cx * S.chunkSize) * frequency, (y + cy * S.chunkSize) * frequency) * amplitude;
+          tempTileVal += openSimplex.noise2D(_x * frequency, _y * frequency) * amplitude;
           amplitude *= 0.5;  //1, 0.5, 0.25, 0.0625, ...
           frequency *= 2;  //1, 2, 4, 8 ...
         }
@@ -35,14 +37,14 @@ function GameMap(inp) {
 
         // --- Add oceans:
 
-        // var oceanTemp = openSimplex.noise2D((x + cx * S.chunkSize) / 300, (y + cy * S.chunkSize) / 300)
+        // var oceanTemp = openSimplex.noise2D(_x / 300, _y / 300)
         var oceanTemp = 0;
         var octaves = 2;
         var amplitude = 1;
         var frequency = 0.003;
 
         for (var o = 0; o < octaves; o++) {
-          oceanTemp += openSimplex.noise2D((x + cx * S.chunkSize) * frequency, (y + cy * S.chunkSize) * frequency) * amplitude;
+          oceanTemp += openSimplex.noise2D(_x * frequency, _y * frequency) * amplitude;
           amplitude *= 0.5;  //1, 0.5, 0.25, 0.0625, ...
           frequency *= 2;  //1, 2, 4, 8 ...
         }
@@ -53,12 +55,12 @@ function GameMap(inp) {
 
         // --- Set Temperature And Humidity Map:
 
-        // var tempTileTem = openSimplex2.noise2D((x + cx * S.chunkSize + (S.seed << 14)) / 500, (y + cy * S.chunkSize + (S.seed >> 4)) / 500) * 0.6 + openSimplex2.noise2D((x + cx * S.chunkSize) / 200, (y + cy * S.chunkSize) / 200) * 0.39 + openSimplex2.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
-        // var tempTileHum = openSimplex3.noise2D((x + cx * S.chunkSize + (S.seed >> 4)) / 300, (y + cy * S.chunkSize + (S.seed << 14)) / 300) * 0.6 + openSimplex3.noise2D((x + cx * S.chunkSize) / 200, (y + cy * S.chunkSize) / 200) * 0.39 + openSimplex3.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
-        var tempTileTem = openSimplex2.noise2D((x + cx * S.chunkSize + (S.seed << 141)) / 400, (y + cy * S.chunkSize + (S.seed >> 4)) / 400) * 0.9 + openSimplex2.noise2D((x + cx * S.chunkSize) / 50, (y + cy * S.chunkSize) / 50) * 0.09 + openSimplex2.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
-        var tempTileHum = openSimplex3.noise2D((x + cx * S.chunkSize + (S.seed >> 4)) / 400, (y + cy * S.chunkSize + (S.seed << 14)) / 400) * 0.8 + openSimplex3.noise2D((x + cx * S.chunkSize) / 50, (y + cy * S.chunkSize) / 50) * 0.19 + openSimplex3.noise2D((x + cx * S.chunkSize) / 2, (y + cy * S.chunkSize) / 2) * 0.01;
+        // var tempTileTem = openSimplex2.noise2D((_x + (S.seed << 14)) / 500, (_y + (S.seed >> 4)) / 500) * 0.6 + openSimplex2.noise2D(_x / 200, _y / 200) * 0.39 + openSimplex2.noise2D(_x / 2, _y / 2) * 0.01;
+        // var tempTileHum = openSimplex3.noise2D((_x + (S.seed >> 4)) / 300, (_y + (S.seed << 14)) / 300) * 0.6 + openSimplex3.noise2D(_x / 200, _y / 200) * 0.39 + openSimplex3.noise2D(_x / 2, _y / 2) * 0.01;
+        var tempTileTem = openSimplex2.noise2D((_x + (S.seed << 141)) / 400, (_y + (S.seed >> 4)) / 400) * 0.9 + openSimplex2.noise2D(_x / 50, _y / 50) * 0.09 + openSimplex2.noise2D(_x / 2, _y / 2) * 0.01;
+        var tempTileHum = openSimplex3.noise2D((_x + (S.seed >> 4)) / 400, (_y + (S.seed << 14)) / 400) * 0.8 + openSimplex3.noise2D(_x / 50, _y / 50) * 0.19 + openSimplex3.noise2D(_x / 2, _y / 2) * 0.01;
 
-        // console.log(openSimplex.noise2D((x + cx * S.chunkSize) / 500, (y + cy * S.chunkSize) / 500) + 1);
+        // console.log(openSimplex.noise2D(_x / 500, _y / 500) + 1);
 
         // TODO: !!! HARSH BIOMES ARE NOT CREATED ENOUGH !!! --- Temporary Fix
 
@@ -69,7 +71,7 @@ function GameMap(inp) {
         }
         // TODO: Potential way to increase water in Swamps?
         if (tempTileHum > 0.4 && tempTileTem > -0.15 && tempTileTem < 0.5) {
-          // tempTileVal *= Math.abs(openSimplex3.noise2D((x + cx * S.chunkSize) / 20, (y + cy * S.chunkSize) / 20)) * (0.6 + tempTileHum)**10
+          // tempTileVal *= Math.abs(openSimplex3.noise2D(_x / 20, _y / 20)) * (0.6 + tempTileHum)**10
 
         }
 
@@ -121,55 +123,65 @@ function GameMap(inp) {
         }
 
 
+
+
         // ### OBJECT PLACEMENT ###
-        // --- LARGE OBJECTS
-        if (objPlacement3x3((x + cx * S.chunkSize), (y + cy * S.chunkSize)) > 0.9) { // <--- put here bigger than Large obj. Occurance
-          // tempChunk.obj.push(new Obj({x: (x + cx * S.chunkSize) * S.tw + Math.floor(Math.random() * S.tw), y: (y + cy * S.chunkSize) * S.th + Math.floor(Math.random() * S.tw)}))
 
-          var currentHighestChance = ["", 0]
-          for (var i = 0; i < objTypes.large.length; i++) {
-            // --- Finds Distribution value for each Object and Multiplies it with its own rarity value. Picks the one with the highest.
-            var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * (0.2 + xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed) / 1.25);
-            // var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
-            if (thisChance > currentHighestChance[1]) {
-              currentHighestChance = [objTypes.large[i], thisChance];
+        if (tileTextures[thisTile][4].type == "soil") {
+
+          // --- LARGE OBJECTS
+
+          if (objPlacement3x3(_x, _y) > 1 - biomeList[tempBiome].densityTrees(tempTileTem, tempTileHum)) { // <--- put here bigger than Large obj. Occurance
+            // tempChunk.obj.push(new Obj({x: _x * S.tw + Math.floor(Math.random() * S.tw), y: _y * S.th + Math.floor(Math.random() * S.tw)}))
+
+            var currentHighestChance = ["", 0]
+            for (var i = 0; i < objTypes.large.length; i++) {
+              // --- Finds Distribution value for each Object and Multiplies it with its own rarity value. Picks the one with the highest.
+              var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * (0.2 + xxHash(i, _x, _y, S.seed) / 1.25);
+              // var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
+              if (thisChance > currentHighestChance[1]) {
+                currentHighestChance = [objTypes.large[i], thisChance];
+              }
+
             }
-            // console.log(bumpDist.get("_006", 0, 1, tempTileTem));
-            // console.log(bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum));
-            // console.log([objTypes.large[i], thisChance]);
-          }
 
-          // --- Check if at least one of the Large Objects does not have a 0 chance of spawning
-          if (currentHighestChance[0] != "") {
+            // --- Check if at least one of the Large Objects does not have a 0 chance of spawning
+            if (currentHighestChance[0] != "") {
 
-            if (typeof referenceBook[currentHighestChance[0]].stages[0].tex != "string") {
-              var thisTexture = referenceBook[currentHighestChance[0]].stages[0].tex[0]
+              if (typeof referenceBook[currentHighestChance[0]].stages[0].tex != "string") {
+                var thisTexture = referenceBook[currentHighestChance[0]].stages[0].tex[0]
+              } else {
+                var thisTexture = referenceBook[currentHighestChance[0]].stages[0].tex
+
+              }
+
+              tempChunk.obj.push(new Obj({ type: currentHighestChance[0], tex: thisTexture, x: _x * S.tw, y: _y * S.th }))
+
             } else {
-              var thisTexture = referenceBook[currentHighestChance[0]].stages[0].tex
-
+              // console.log("currentHighestChance[0]");
+              // console.log(currentHighestChance);
+              // for (var i = 0; i < objTypes.large.length; i++) {
+              //   // --- Finds Distribution value for each Object and Multiplies it with its own rarity value. Picks the one with the highest.
+              //   var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * xxHash(i, _x, _y, S.seed);
+              //   // var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
+              //   console.log([objTypes.large[i], thisChance]);
+              //   console.log(xxHash(i, _x, _y, S.seed));
+              //   console.log([i, _x, _y, S.seed]);
+              //   // console.log(bumpDist.get("_006", 0, 1, tempTileTem));
+              //   // console.log(bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum));
+              //   // console.log([objTypes.large[i], thisChance]);
+              // }
             }
 
-            tempChunk.obj.push(new Obj({type: currentHighestChance[0], tex: thisTexture, x: (x + cx * S.chunkSize) * S.tw, y: (y + cy * S.chunkSize) * S.th}))
 
-          } else {
-            // console.log("currentHighestChance[0]");
-            // console.log(currentHighestChance);
-            // for (var i = 0; i < objTypes.large.length; i++) {
-            //   // --- Finds Distribution value for each Object and Multiplies it with its own rarity value. Picks the one with the highest.
-            //   var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity * xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed);
-            //   // var thisChance = bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum) * referenceBook[objTypes.large[i]].rarity;
-            //   console.log([objTypes.large[i], thisChance]);
-            //   console.log(xxHash(i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed));
-            //   console.log([i, (x + cx * S.chunkSize), (y + cy * S.chunkSize), S.seed]);
-            //   // console.log(bumpDist.get("_006", 0, 1, tempTileTem));
-            //   // console.log(bumpDist.find(objTypes.large[i], tempTileTem, tempTileHum));
-            //   // console.log([objTypes.large[i], thisChance]);
-            // }
+
           }
+
 
 
 
         }
+        
 
 
 
@@ -185,10 +197,10 @@ function GameMap(inp) {
         tempChunk.biome.push(tempBiome)
 
 
-        // var randomNoiseTile = randomMap(S.seed, (x + cx * S.chunkSize), (y + cy * S.chunkSize))
+        // var randomNoiseTile = randomMap(S.seed, _x, _y)
         // var randomNoiseTile = randomMap(S.seed, x, y)
-        // var randomNoiseTile = hash(S.seed + "lol" + (x + cx * S.chunkSize) + (y + cy * S.chunkSize))
-        var randomNoiseTile = xxHash(S.seed, (x + cx * S.chunkSize), (y + cy * S.chunkSize))
+        // var randomNoiseTile = hash(S.seed + "lol" + _x + _y)
+        var randomNoiseTile = xxHash(S.seed, _x, _y)
 
 
 
@@ -202,9 +214,9 @@ function GameMap(inp) {
 
 
 
-        // tempChunk.c.push(openSimplex.noise2D((x + cx * S.chunkSize) / zoom, (y + cy * S.chunkSize) / zoom))
+        // tempChunk.c.push(openSimplex.noise2D(_x / zoom, _y / zoom))
 
-        // tempChunk.c.push(openSimplex.noise2D((x + cx * S.chunkSize) / (zoom), (y + cy * S.chunkSize) / (zoom)) / 2 + openSimplex.noise2D((x + cx * S.chunkSize) / (zoom / 2), (y + cy * S.chunkSize) / (zoom / 2)) / 4 + openSimplex.noise2D((x + cx * S.chunkSize) / (zoom / 4), (y + cy * S.chunkSize) / (zoom / 4)) / 8)
+        // tempChunk.c.push(openSimplex.noise2D(_x / (zoom), _y / (zoom)) / 2 + openSimplex.noise2D(_x / (zoom / 2), _y / (zoom / 2)) / 4 + openSimplex.noise2D(_x / (zoom / 4), _y / (zoom / 4)) / 8)
       }
     }
 
