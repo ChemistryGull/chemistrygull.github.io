@@ -246,7 +246,7 @@ function GameMap(inp) {
           // for (var o = 0; o < overWorld.chunkMap[thisChunk].obj.length; o++) {
           //   this.loadedObj.push(overWorld.chunkMap[thisChunk].obj[o]);
           // }
-          this.loadedObj = this.loadedObj.concat(overWorld.chunkMap[thisChunk].obj)
+          this.loadedObj = this.loadedObj.concat(this.chunkMap[thisChunk].obj)
           // console.log();
 
         }

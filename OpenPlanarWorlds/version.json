@@ -1,0 +1,18 @@
+{
+  "title": "planarWorld (inDev)",
+  "version": "0.0.7",
+  "date": "15.03.2024",
+  "description": "This is the basic little advanced groundwork for any Map-focused 2d tile game + IMG TILES",
+  "changeLog": [
+    "REMOVED in ui.js: DnD -> replaced with InvEngine",
+    "ADDED in ui.js: InvEngine - Pick up items instead of Dragging them, right click split",
+    "ADDED in keyManager.js: Toggle whole HTML .gameUi with E. In the future this should only toggle the inventory"
+  ],
+  "bugs": {
+    "jagged_coastline": "Currently, when the Desert meets an ocean, the coastline can look wierd. This happens because the Desert forces the land (c) higer (freature, to reduce water), but when it conmes in contact with an ocean, it does not succeed (oceans are too deep, feature). Because the Climate gradients hve jagged edges, so gets the shorline the same shape. SOLUTION: Rework Water Management? Make Biome Edges less Jagged in general?",
+    "eval_in_inventory": "in ui.js: InvEngine uses eval() to figure out what inventories are currently open. YOU SHOULD NOT USE eval()!!! CHANGE THAT!!",
+    "biomeList_Update": "take some time to update BiomeList .denityTrees(). maybe make a visualisation for it?",
+    "plants_growing_outOfRenderDistance": "Plants that are out of render distance dont grow past one stage (the Obj.timeOfLastGrow is reset with every growing cycle)",
+    "shift_click_inv": "in ui.js: Put item automatically in other inventory when shiftclicking on it"
+  }
+}

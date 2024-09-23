@@ -22,8 +22,8 @@ var S = {
   plantGrowthSuccessChance: 0.5, // --- [0;1]
 
   debug: {
-    doMapViewpoint: false,
-    displayTiles: 1, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient;
+    doMapViewpoint: true,
+    displayTiles: 2, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient;
     doShowHitboxes: false,
     doManagerBiome: false
   }
@@ -174,86 +174,4 @@ var objTypes = {
   small: [], // --- Grass, stones, Sticks, Stumps
 
 
-}
-
-var biomeList = {
-  dry_ice_desert: {
-    densityTrees: function (tem, hum) {
-      return 0; // --- The lower the number, the lower the amount of trees.
-    }
-  },
-  arctic: {
-    densityTrees: function (tem, hum) {
-      return -0.08 * tem + 0.06;
-    }
-  },
-  tundra: {
-    densityTrees: function (tem, hum) {
-      return 0.01;
-    }
-  },
-  taiga: {
-    densityTrees: function (tem, hum) {
-      return 1;
-    }
-  },
-  forest: {
-    densityTrees: function (tem, hum) {
-      return 1;
-    }
-  },
-  plains: {
-    densityTrees: function (tem, hum) {
-      return 0.001; 
-      // return -0.05 * hum;
-    }
-  },
-  swamp: {
-    densityTrees: function (tem, hum) {
-      return 0.05;
-      // return -0.08 * hum * tem + 0.06;
-    }
-  },
-  desert: {
-    densityTrees: function (tem, hum) {
-      return 0.08 * hum * tem + 0.06;
-    }
-  },
-  savannah: {
-    densityTrees: function (tem, hum) {
-      return 0.08 * hum * tem + 0.06;
-    }
-  },
-  rainforest: {
-    densityTrees: function (tem, hum) {
-      return hum * tem;
-    }
-  },
-
-}
-
-var mapTypes = {
-  overWorld: {
-
-  }
-}
-
-
-var climateGuide = [
-  ["arctic", "dry_ice_desert", "tundra", "plains", "plains", "plains", "desert", "desert", "desert", "desert"],
-  ["arctic", "dry_ice_desert", "tundra", "plains", "plains", "plains", "desert", "desert", "desert", "desert"],
-  ["arctic", "dry_ice_desert", "tundra", "plains", "plains", "plains", "desert", "desert", "desert", "desert"],
-  ["arctic", "arctic", "tundra", "plains", "plains", "plains", "savannah", "desert", "desert", "desert"],
-  ["arctic", "arctic", "tundra", "taiga", "forest", "forest", "savannah", "savannah", "savannah", "savannah"],
-  ["arctic", "arctic", "tundra", "taiga", "forest", "forest", "savannah", "savannah", "savannah", "savannah"],
-  ["arctic", "arctic", "arctic", "taiga", "forest", "forest", "forest", "rainforest", "rainforest", "rainforest"],
-  ["arctic", "arctic", "arctic", "taiga", "swamp", "swamp", "swamp", "rainforest", "rainforest", "rainforest"],
-  ["arctic", "arctic", "arctic", "taiga", "swamp", "swamp", "swamp", "rainforest", "rainforest", "rainforest"],
-  ["arctic", "arctic", "arctic", "taiga", "swamp", "swamp", "swamp", "rainforest", "rainforest", "rainforest"]
-] // TODO: Add wierdness
-
-
-
-var worldTypeEarth = {
-  
 }

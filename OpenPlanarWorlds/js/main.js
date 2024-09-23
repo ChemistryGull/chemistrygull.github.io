@@ -1,7 +1,7 @@
 var mainCv;
 var ctx;
 var running = true;
-const openSimplex = openSimplexNoise(S.seed);
+const openSimplex1 = openSimplexNoise(S.seed);
 const openSimplex2 = openSimplexNoise(S.seed << 9);
 const openSimplex3 = openSimplexNoise(S.seed >> 4);
 var World;
@@ -57,7 +57,8 @@ window.onload = function () {
   // then = Date.now();
   // startTime = then;
 
-  World = new GameMap("overworld");
+  // World = new GameMap(worldTypeEarth);
+  World = new GameMap(worldTypeCaves);
 
   World.createChunk(0,0)
   // World.createChunk(0,1)
