@@ -1,0 +1,83 @@
+/* CSS for Header and Navbar for MOBILE (<600px) only */
+
+.DEBUG-isMobile {
+    display: block;
+}
+
+/* --- header --- */
+
+
+.header-container {
+    background-color: lightcyan;
+    box-sizing: border-box;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 0; 
+    max-width: var(--page-max-width);
+
+
+    font-size: 20px;
+}
+
+.header-mainlogo {
+    height: 3em;
+    padding-left: 1em;
+}
+
+.menu-dropdown {
+    padding: 2em;
+}
+
+nav.menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    margin: 0;
+    padding: 1em;
+    width: 100vw;
+    box-sizing: border-box;
+
+    background-color: gray;
+}
+
+ul.menu-list,ul.sub-menu-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+li.menu-item>a {
+    text-align: center;
+    display: block;
+    padding: 0.5em 1em;
+    box-sizing: border-box;
+
+    text-decoration: none;
+    color: black;
+    border-top: 1px solid black;
+
+}
+
+li.sub-menu-item>a {
+    text-align: center;
+    display: block;
+    padding: 0 1em 0.3em 1.2em;
+    box-sizing: border-box;
+
+    text-decoration: none;
+    color: black;
+    border-top: 1px dotted black;
+
+}
+
+.sub-menu-mobile-icon {
+    margin-right: 0.4em;
+    display: none;
+}

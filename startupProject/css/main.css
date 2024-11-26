@@ -12,3 +12,6 @@ body {
 .DEBUG-isDesktop {
    display: none;
 }
+.DEBUG-isMobile {
+   display: none;
+}
