@@ -28,27 +28,38 @@ var worldTypeCaves = {
       currTile.c = openSimplex1.fractNoise2D(_x, _y, 5, 1, 0.01);
       var secNTile = openSimplex2.fractNoise2D(_x, _y, 5, 1, 0.01);
       var third = openSimplex3.fractNoise2D(_x, _y, 5, 1, 0.007);
+      var riverCaves = openSimplex4.fractNoise2D(_x, _y, 5, 1, 0.003);
 
  
   
   
       // --- From all the above: create Tile Map:     - This is where the Magic happens -
-      currTile.tile = "void";
+      currTile.tile = "#090909";
   
       if (((currTile.c > -0.1 && currTile.c < 0.1) || (secNTile > -0.05 && secNTile < 0.05)) && third < 0.5) {
-        currTile.tile = "sand";
-      } else {
-        currTile.tile = "dirt_wet";
-        currTile.c = -2;
+        currTile.tile = "lightgray";
+      } else if (third > 0.5) {
+        currTile.tile = "#090909";
+      }
+
+
+      if (riverCaves > -0.05 && riverCaves < 0.05) {
+        if (riverCaves > -0.01 && riverCaves < 0.02) {
+          currTile.tile = "blue";
+        } else {
+          currTile.tile = "lightgray";
+
+        }
+
       }
   
   
-      currTile.tile = tileTextures.indexOf(tileTextures.find(e => e[3] == currTile.tile))
+      // currTile.tile = tileTextures.indexOf(tileTextures.find(e => e[3] == currTile.tile))
   
-      if (currTile.tile == -1) {
-        currTile.tile = 0;
-        console.warn("!!! Rendering Problem: Tile name not found !!!")
-      }
+      // if (currTile.tile == -1) {
+      //   currTile.tile = 0;
+      //   console.warn("!!! Rendering Problem: Tile name not found !!!")
+      // }
   
   
       // ### OBJECT PLACEMENT ###

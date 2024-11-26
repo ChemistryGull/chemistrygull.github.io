@@ -2,8 +2,9 @@ var mainCv;
 var ctx;
 var running = true;
 const openSimplex1 = openSimplexNoise(S.seed);
-const openSimplex2 = openSimplexNoise(S.seed << 9);
+const openSimplex2 = openSimplexNoise(S.seed << 9 + 11);
 const openSimplex3 = openSimplexNoise(S.seed >> 4);
+const openSimplex4 = openSimplexNoise(S.seed << 7 + 323);
 var World;
 
 var cursorPos = [0, 0];
@@ -165,6 +166,8 @@ function main() {
         var chunk = World.chunkMap[World.loadedChunks[c]];
         var cval = chunk.c[y * S.chunkSize + x];
         var tile = chunk.tile[y * S.chunkSize + x];
+        
+       
 
         // --- Test for hashMap
         // console.log(((chunk.obj[y * S.chunkSize + x] + 1) * 50));
@@ -260,6 +263,16 @@ function main() {
             }
           
             break;
+          
+          case 3:
+
+            ctx.fillStyle = tile;
+
+            ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
+
+        
+            break;
+
         
           default:
             alert("Config S.debug.displayTiles is unvalid. Check settings.js")

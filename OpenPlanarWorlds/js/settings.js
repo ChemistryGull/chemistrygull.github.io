@@ -1,6 +1,6 @@
 var S = {
-  seed: 8787999, // cool seeds: 178, 99632178, 874133, 8787999 (wierd desert+ocean), 9963 (swamp, watery savannah), 978446 spawn in wood, near ocean and all biomes
-  // swamp seeds: 336 366 36987 savannah next to wood 7979 plains next to forest 
+  seed: 603, //Math.floor(Math.random() * 1000), // cool seeds: 178, 99632178, 874133, 8787999 (wierd desert+ocean), 9963 (swamp, watery savannah), 978446 spawn in wood, near ocean and all biomes
+  // swamp seeds: 336 366 36987 savannah next to wood 7979 plains next to forest  8787999
   fps: 60,
 
   texW: 32,
@@ -23,7 +23,7 @@ var S = {
 
   debug: {
     doMapViewpoint: true,
-    displayTiles: 2, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient;
+    displayTiles: 3, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient; 3 = Display tile as color instead of tileset
     doShowHitboxes: false,
     doManagerBiome: false
   }
