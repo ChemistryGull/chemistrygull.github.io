@@ -1,12 +1,20 @@
-/* CSS for Header and Navbar */
+/* CSS for Header and Navbar for desktop only */
 
-/* header */
+.DEBUG-isDesktop {
+    display: block !important;
+}
 
+
+/* --- header --- */
+
+header {
+    position: sticky;
+    top: 0;
+}
 
 .header-container {
     background-color: lightcyan;
     box-sizing: border-box;
-
 }
 
 .header-row {
@@ -14,31 +22,25 @@
     justify-content: space-between;
     align-items: center;
     margin-left: auto;
-    margin-right: auto;    
+    margin-right: auto;
 
-    height: 120px;
-    max-width: 1000px;
+    padding: 0 1em; 
+    max-width: var(--page-max-width);
 
 
-    background-color: aquamarine;
+    font-size: 20px;
 }
 
 .header-item {
 
 
 
-    background-color:darksalmon;
 }
 
 
 
 .header-mainlogo {
-    height: 60px;
-}
-
-.header-menu {
-    /* align-self: flex-end; */
-    height: 100%;
+    height: 3em;
 }
 
 .header-item-spacer {
@@ -47,7 +49,7 @@
 
 
 
-/* Menu */
+/* --- Menu --- */
 
 
 ul.menu-list {
@@ -61,25 +63,33 @@ ul.menu-list {
 
 }
 
-li.menu-item:hover ul.sub-menu-list {
-    display: block;
-}
 
 li.menu-item>a {
 
     display: block;
-    padding: 20px 10px;
+    padding: 1.5em 1em 1.35em 1em;
     box-sizing: border-box;
 
+    text-decoration: none;
+    color: black;
 
 }
-li.menu-item:hover {
 
-    background-color: salmon;
+.menu-item-underline {
+    margin: 0 auto; /* --- Centers underline, making it grow from the center*/
+    width: 0%;
+    height: 0.15em;
+    background-color: black;
+}
+
+li.menu-item:hover .menu-item-underline {
+
+    width: 100%;
+    transition: 0.2s;
 }
 
 
-
+/* --- Dorpdown/submenu --- */
 
 ul.sub-menu-list {
     position: absolute;
@@ -98,12 +108,16 @@ ul.sub-menu-list {
 
 }
 
-/* Quick Menu */
+li.menu-item:hover ul.sub-menu-list {
+    display: block;
+}
+
 
 li.sub-menu-item>a {
     display: block;
     padding: 10px;
-
 }
+
+
 
 
