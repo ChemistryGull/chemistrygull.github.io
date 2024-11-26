@@ -5,7 +5,7 @@
 
 .header-container {
     background-color: lightcyan;
-    /* box-sizing: border-box; */
+    box-sizing: border-box;
 
 }
 
@@ -16,8 +16,8 @@
     margin-left: auto;
     margin-right: auto;    
 
-    height: 100px;
-    max-width: 1280px;
+    height: 120px;
+    max-width: 1000px;
 
 
     background-color: aquamarine;
@@ -37,8 +37,8 @@
 }
 
 .header-menu {
-    align-self: flex-end;
-
+    /* align-self: flex-end; */
+    height: 100%;
 }
 
 .header-item-spacer {
@@ -107,8 +107,3 @@ li.sub-menu-item>a {
 }
 
 
-/* Mega Menu */
-
-.mega-menu {
-    display: none;
-}
