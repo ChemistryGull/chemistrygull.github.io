@@ -1,0 +1,114 @@
+/* CSS for Header and Navbar */
+
+/* header */
+
+
+.header-container {
+    background-color: lightcyan;
+    /* box-sizing: border-box; */
+
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;    
+
+    height: 100px;
+    max-width: 1280px;
+
+
+    background-color: aquamarine;
+}
+
+.header-item {
+
+
+
+    background-color:darksalmon;
+}
+
+
+
+.header-mainlogo {
+    height: 60px;
+}
+
+.header-menu {
+    align-self: flex-end;
+
+}
+
+.header-item-spacer {
+    flex-grow: 0;
+}
+
+
+
+/* Menu */
+
+
+ul.menu-list {
+    display: flex;
+    /* justify-content: space-around; */
+    align-items: center;
+    margin: 0;
+    padding: 0;
+
+    list-style-type: none;
+
+}
+
+li.menu-item:hover ul.sub-menu-list {
+    display: block;
+}
+
+li.menu-item>a {
+
+    display: block;
+    padding: 20px 10px;
+    box-sizing: border-box;
+
+
+}
+li.menu-item:hover {
+
+    background-color: salmon;
+}
+
+
+
+
+ul.sub-menu-list {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    background-color: gray;
+    /* opacity: 0.5; */
+
+
+
+    display: none;
+    /* display: inline-block; */
+
+
+    list-style-type: none;
+
+}
+
+/* Quick Menu */
+
+li.sub-menu-item>a {
+    display: block;
+    padding: 10px;
+
+}
+
+
+/* Mega Menu */
+
+.mega-menu {
+    display: none;
+}
