@@ -13,7 +13,7 @@ header {
 }
 
 .header-container {
-    background-color: lightcyan;
+    background-color: var(--color-header);
     box-sizing: border-box;
 }
 
@@ -116,79 +116,3 @@ li.sub-menu-item>a {
 }
 
 
-
-/* --- Menu Overflow --- */
-/*
-@media only screen and (max-width: 925px) {
-    
-    i.menu-overflow {
-        
-        display: block;
-        padding: 1.5em 1em 1.5em 1em;
-        box-sizing: border-box;
-    
-        text-decoration: none;
-        color: black;
-    
-    }
-    
-    nav.menu {
-        display: block;
-        position: absolute;
-        right: 0;
-        margin: 0;
-        padding: 1em;
-        width: 100vw;
-        box-sizing: border-box;
-    
-        background-color: gray;
-    }
-    
-    ul.menu-list,ul.sub-menu-list {
-        display: block;
-        position: relative;
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-    }
-    
-    li.menu-item>a {
-        text-align: center;
-        display: block;
-        padding: 0.5em 1em;
-        box-sizing: border-box;
-    
-        text-decoration: none;
-        color: black;
-        border-top: 1px solid black;
-    
-    }
-    
-    li.sub-menu-item>a {
-        text-align: center;
-        display: block;
-        padding: 0 1em 0.3em 1.2em;
-        box-sizing: border-box;
-    
-        text-decoration: none;
-        color: black;
-        border-top: 1px dotted black;
-    
-    }
-    
-    .sub-menu-mobile-icon {
-        margin-right: 0.4em;
-        display: none;
-    }
-    
-    
-    
-    i.menu-dropdown {
-        display: none;
-    }
-
-
-}
-
-
-*/

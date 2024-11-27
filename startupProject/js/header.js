@@ -5,6 +5,6 @@ $("#menu_dropdown").on("click", function () {
     $("#menu").toggle();
 })
 
-$("#menu_overflow,.menu").hover(function () {
+$("#menu_dropdown,.menu").hover(function () {
     $("#menu").toggle();
 })
