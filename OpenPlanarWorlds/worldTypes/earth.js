@@ -104,7 +104,19 @@ var worldTypeEarth = {
         console.warn("!!! Rendering Problem: Tile name not found !!!")
       }
   
+
+      // ### STRUCTURE PLACEMENT ### //
+
+      if (valueIsBetween(currTile.ranNoise, ranNoiseMapAddressList.village[0], ranNoiseMapAddressList.village[1])) { // --- Checks if random noise map is between two values. Type Village does only attempt to spawn on this tile if this tile has a random Noise (ranNoise) value in a specific range defined in ranNoiseMapAddressList
+        
+        // --- Check if there is another village root in specific radius.
+        
+        console.log(currTile.ranNoise);
+        
+      }
   
+
+
       // ### OBJECT PLACEMENT ###
   
       if (tileTextures[currTile.tile][4].type == "soil") {
@@ -162,7 +174,7 @@ var worldTypeEarth = {
   
       }
   
-  
+      
   
   
       return currTile;
@@ -239,7 +251,8 @@ var worldTypeEarth = {
         ["arctic", "arctic", "arctic", "taiga", "swamp", "swamp", "swamp", "rainforest", "rainforest", "rainforest"],
         ["arctic", "arctic", "arctic", "taiga", "swamp", "swamp", "swamp", "rainforest", "rainforest", "rainforest"],
         ["arctic", "arctic", "arctic", "taiga", "swamp", "swamp", "swamp", "rainforest", "rainforest", "rainforest"]
-    ]
+    ],
   
-  
+
+
 }

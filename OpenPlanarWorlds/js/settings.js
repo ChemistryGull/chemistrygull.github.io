@@ -10,7 +10,7 @@ var S = {
   th: 32,
   chunkSize: 8,
   // scale: 0.01,
-  scale: 2,
+  scale: 1,
 
   playerSpeed: 2,
 
@@ -23,15 +23,16 @@ var S = {
 
   debug: {
     doMapViewpoint: false,
-    mapViewoint_W: 2,
-    mapViewoint_H: 2,
+    mapViewoint_W: 1,
+    mapViewoint_H: 1,
     MapViewpoint_Scale: 1,
     MapViewpoint_sc: 0.5, // --- Player size
-    displayTiles: 1, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient; 3 = Display tile as color instead of tileset
+
+    displayTiles: 1, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient; 3 = Display tile as color instead of tileset; 4 = Display random Hash map
     
     doShowHitboxes: false,
     doManagerBiome: false,
-    doObjectRednering: false
+    doObjectRendering: false
   }
 }
 

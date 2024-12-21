@@ -22,6 +22,8 @@ document.addEventListener("mousemove", function (e) {
         onChunkTile: mouse_onChunkTile,
         onTile: mouse_onTile,
         onbiome: World.chunkMap[[mouse_onChunk[0], mouse_onChunk[1]].toString()].biome[mouse_onChunkTile[1] * S.chunkSize + mouse_onChunkTile[0]],
+        onRanNoise: World.chunkMap[[mouse_onChunk[0], mouse_onChunk[1]].toString()].ranNoise[mouse_onChunkTile[1] * S.chunkSize + mouse_onChunkTile[0]],
+        
     }
 
     // --- Show on debug screen on mousemove
@@ -36,6 +38,7 @@ document.addEventListener("mousemove", function (e) {
     dom_mouse_temp.innerText = "TODO";
     dom_mouse_hum.innerText = "TODO";
     dom_mouse_biome.innerText = mouse.onbiome;
+    dom_mouse_ranNoise.innerText = mouse.onRanNoise;
 
     
 });

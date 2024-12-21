@@ -25,6 +25,7 @@ var dom_mouse_onTile_y = document.getElementById("mouse_onTile_y");
 var dom_mouse_temp = document.getElementById("mouse_temp");
 var dom_mouse_hum = document.getElementById("mouse_hum");
 var dom_mouse_biome = document.getElementById("mouse_biome");
+var dom_mouse_ranNoise = document.getElementById("mouse_ranNoise");
 
 
 var dbg = {

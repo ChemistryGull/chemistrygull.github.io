@@ -176,7 +176,6 @@ function main() {
         var tile = chunk.tile[y * S.chunkSize + x];
         
        
-
         // --- Test for hashMap
         // console.log(((chunk.obj[y * S.chunkSize + x] + 1) * 50));
         // ctx.fillStyle = "hsl(0, 0%, " + (chunk.ranNoise[y * S.chunkSize + x] * 100) + "%)";
@@ -191,6 +190,9 @@ function main() {
           
           case 1:
             if (true) {
+              if (tile == 100) {
+                ctx.fillStyle = "gray"; // --- Temporary for drawing tiles for structure generation
+              } else
               if (cval > -0.15 && cval < 0.15) {
                 ctx.fillStyle = "blue";
               } else {
@@ -234,6 +236,12 @@ function main() {
     
                 }
               }
+
+
+              if (chunk.ranNoise[y * S.chunkSize + x] > 0.999) {
+                ctx.fillStyle = "orangered";
+              }
+
               ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
     
             }
@@ -264,6 +272,7 @@ function main() {
               } else {
                 ctx.fillStyle = "maroon"
               }
+
     
               // ctx.fillStyle = "hsl(" + (cval * 180) + ", 100%, 50%)"
               ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
@@ -281,25 +290,28 @@ function main() {
         
             break;
 
+          case 4:
+
+            ctx.fillStyle = "hsl(0, 0%, " + (chunk.ranNoise[y * S.chunkSize + x] * 100) + "%)";
+
+            if (chunk.ranNoise[y * S.chunkSize + x] > 0.99) {
+              ctx.fillStyle = "red";
+            }            
+
+            ctx.fillRect(x * S.tw + chunk.x * S.chunkSize * S.tw + mainCv.x, y * S.th + chunk.y * S.chunkSize * S.th + mainCv.y, S.tw, S.th)
+          
+            break
         
           default:
             alert("Config S.debug.displayTiles is unvalid. Check settings.js")
             break;
         }
 
-
-
-
-        
-
         //
         //
         // if (cval == 0) {
         //   ctx.fillStyle = "red"
         // }
-
-        
-
 
       }
     }
@@ -320,13 +332,12 @@ function main() {
   if (keys[keyCode.mUp]) {player.vel.y -= player.speed;}
   if (keys[keyCode.mDown]) {player.vel.y += player.speed;}
 
-
-
-
   player.update();
   player.move();
   player.getPos()
 
+
+  // --- Object loading
   if (!S.debug.doMapViewpoint && S.debug.doObjectRendering) {
     
     for (var i = 0; i < World.loadedObj.length; i++) {
@@ -355,12 +366,11 @@ function main() {
   }
 
 
-  // --- Top right Debug
+  // --- Debug Layer
 
   // dbg.info(20 / S.scale, {timerMain: timerMain})
   dbg.plot(round(window.performance.now() - timerMain, 10), 30, "red");
   // dbg.plot(currentFps, 1, "red");
-
   dbg.infoDOM({timerMain: timerMain, ticknr: Time.tick})
   
 }
@@ -436,8 +446,19 @@ function modulus(x, y) {
   return x - y * Math.floor(x / y);
 }
 
+function rotateMatrix(matrix) {
+  return matrix[0].map((val, index) => matrix.map(row => row[index]).reverse());
+}
 
-
+function rotateArray(arr, height) {
+  if (arr.length == 2) {
+    return [height - 1 - arr[1], arr[0]];
+  } else if (arr.length == 3) {
+    return [height - 1 - arr[1], arr[0], arr[2] + 1];
+  } else {
+    console.warn("!!! rotateArray only works with Arrays with length of 2 or 3 and only rotates the first two elements (third element being the rotation itself just gets 1 added to it) !!!");
+  }
+}
 
 
 
