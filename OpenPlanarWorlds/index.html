@@ -16,10 +16,7 @@
       <canvas id="mainCv" width="600" height="600"></canvas>
     </div>
 
-    <div id="debugCon">
-      <canvas id="debugCv" width="300" height="150"></canvas>
-    </div>
-
+    
     <div id="debugManagerBiome" class="debugManagerBiome">
       Obj: <input type="text" id="plantName"><br>
       <input type="range" id="setSteps" min="1" max="5" value="1"><input type="text" id="setSteps" class="outputSpan" value="1"><br>
@@ -143,13 +140,45 @@
 
       </div>
     </div>
-    <span id="itemAtPointer" class="invItem"><div></div></span>
+
+    <div class="debugUi">
+      
+      <div class="debugInfo">
+        <div>FPS: <span id="debugGameFPS">[game paused]</span></div>
+        <div>TickNr: <span id="debugTickNr"></span></div>
+        <div>PlayerPos: <span id="debugPlayerPos_x"></span> | <span id="debugPlayerPos_y"></span></div>
+        <div>OnChunk: <span id="OnChunk_x"></span> | <span id="OnChunk_y"></span></div>
+        <div>OnTileInChunk: <span id="OnTileInChunk_x"></span> | <span id="OnTileInChunk_y"></span></div>
+        <div>Main Timer <span id="TimerMain"></span> ms</div>
+        <div>LoadedObjects: <span id="LoadedObjects"></span></div>
+        <div>Temperature: <span id="TileTemp"></span></div>
+        <div>Humidity: <span id="TileHum"></span></div>
+        <div>Biome: <span id="TileBiome"></span></div>
+        <br>
+        <div>Mouse:</div>
+        <div>Pos: <span id="mouse_pos_x"></span> | <span id="mouse_pos_y"></span></div>
+        <div>OnChunk: <span id="mouse_onChunk_x"></span> | <span id="mouse_onChunk_y"></span></div>
+        <div>OnTileInChunk: <span id="mouse_onChunkTile_x"></span> | <span id="mouse_onChunkTile_y"></span></div>
+        <div>OnTile: <span id="mouse_onTile_x"></span> | <span id="mouse_onTile_y"></span></div>
+        <div>Temperature: <span id="mouse_temp"></span></div>
+        <div>Humidity: <span id="mouse_hum"></span></div>
+        <div>Biome: <span id="mouse_biome"></span></div>
+      </div>
+
+      <div id="debugCon">
+        <canvas id="debugCv" width="300" height="150"></canvas>
+      </div>
+  
+    </div>
+
+    <!-- <span id="itemAtPointer" class="invItem"><div></div></span> -->
 
 
 
 
 
     <script src="lib/jquery-3.7.1.min.js" charset="utf-8"></script>
+    <script src="lib/avsc.js" charset="utf-8"></script>
 
 
 
@@ -170,6 +199,7 @@
     <script src="js/openSimplexNoise.js" charset="utf-8"></script>
     <script src="js/noiseTest.js" charset="utf-8"></script>
     <script src="js/viewport.js" charset="utf-8"></script>
+    <script src="js/mouse.js" charset="utf-8"></script>
     <script src="js/chunkManager.js" charset="utf-8"></script>
     <script src="js/entity.js" charset="utf-8"></script>
     <script src="js/main.js" charset="utf-8"></script>

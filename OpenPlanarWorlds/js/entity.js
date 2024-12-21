@@ -25,7 +25,7 @@ function Entity(inp) {
 	};
   this.getPos = function () {
     this.onChunk = [Math.floor(this.pos.x / (S.chunkSize * S.tw)), Math.floor(this.pos.y / (S.chunkSize * S.th))]
-    this.onChunkTile = [Math.abs(Math.floor(this.pos.x / S.tw % S.chunkSize)), Math.abs(Math.floor(this.pos.y / S.th % S.chunkSize))]
+    this.onChunkTile = [Math.abs(Math.trunc(modulus(this.pos.x / S.tw, S.chunkSize))), Math.abs(Math.trunc(modulus(this.pos.y / S.th, S.chunkSize)))]
   }
 
   this.collision = function (hitbox) {

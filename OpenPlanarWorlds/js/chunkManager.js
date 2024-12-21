@@ -15,6 +15,7 @@ function GameMap(worldConfigObject) {
 
   this.createChunk = function (cx, cy) {
 
+
     // --- TO DO !!!: Make it possible to choose amount of noise functions dynamically?
 
     var tempChunk = {x: cx, y: cy, tile: [], ranNoise: [], obj: [], c: [], tem: [], hum: [], biome: []}

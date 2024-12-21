@@ -49,7 +49,14 @@ const tileSets = {
 var starterFrameCount = 0;
 var fps, fpsInterval, startTime, now, then, then2, elapsed, currentFps;
 
+
+
 window.onload = function () {
+
+
+
+
+
   mainCv = new Canvas("mainCv", S.scale);
   ctx = mainCv.ctx;
 
@@ -58,8 +65,8 @@ window.onload = function () {
   // then = Date.now();
   // startTime = then;
 
-  // World = new GameMap(worldTypeEarth);
-  World = new GameMap(worldTypeCaves);
+  World = new GameMap(worldTypeEarth);
+  // World = new GameMap(worldTypeCaves);
 
   World.createChunk(0,0)
   // World.createChunk(0,1)
@@ -69,10 +76,11 @@ window.onload = function () {
 
   if (S.debug.doMapViewpoint) {
 
-    S.tw = 2;
-    S.th = 2;
-    S.scale = 1;
-    mainCv.sc = 0.5;
+
+    S.tw = S.debug.mapViewoint_W;
+    S.th = S.debug.mapViewoint_H;
+    S.scale = S.debug.MapViewpoint_Scale;
+    mainCv.sc = S.debug.MapViewpoint_sc;
 
     mainCv.resize()
 
@@ -297,8 +305,14 @@ function main() {
     }
   }
 
+  
+  // --- Mouse Block selection
+  ctx.strokeStyle = "Orange";
+  ctx.strokeRect(mainCv.x + mouse.onTile[0] * S.tw, mainCv.y + mouse.onTile[1] * S.th, S.tw, S.th)
 
 
+
+  // --- Player
   player.vel = new Vector(0, 0);
 
   if (keys[keyCode.mLeft]) {player.vel.x -= player.speed;}
@@ -313,7 +327,7 @@ function main() {
   player.move();
   player.getPos()
 
-  if (!S.debug.doMapViewpoint) {
+  if (!S.debug.doMapViewpoint && S.debug.doObjectRendering) {
     
     for (var i = 0; i < World.loadedObj.length; i++) {
       World.loadedObj[i].update();
@@ -343,10 +357,12 @@ function main() {
 
   // --- Top right Debug
 
-  dbg.info(20 / S.scale, {timerMain: timerMain})
+  // dbg.info(20 / S.scale, {timerMain: timerMain})
   dbg.plot(round(window.performance.now() - timerMain, 10), 30, "red");
   // dbg.plot(currentFps, 1, "red");
 
+  dbg.infoDOM({timerMain: timerMain, ticknr: Time.tick})
+  
 }
 
 
@@ -415,3 +431,17 @@ function TileSet(src) {
 function round(num, dec) {
   return Math.round(num * (10**dec)) / (10**dec)
 }
+
+function modulus(x, y) {
+  return x - y * Math.floor(x / y);
+}
+
+
+
+
+
+
+
+
+
+

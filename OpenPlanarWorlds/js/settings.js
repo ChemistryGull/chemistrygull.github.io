@@ -12,7 +12,7 @@ var S = {
   // scale: 0.01,
   scale: 2,
 
-  playerSpeed: 4,
+  playerSpeed: 2,
 
   itemMaxStackSize: 64,
 
@@ -22,10 +22,16 @@ var S = {
   plantGrowthSuccessChance: 0.5, // --- [0;1]
 
   debug: {
-    doMapViewpoint: true,
-    displayTiles: 3, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient; 3 = Display tile as color instead of tileset
+    doMapViewpoint: false,
+    mapViewoint_W: 2,
+    mapViewoint_H: 2,
+    MapViewpoint_Scale: 1,
+    MapViewpoint_sc: 0.5, // --- Player size
+    displayTiles: 1, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient; 3 = Display tile as color instead of tileset
+    
     doShowHitboxes: false,
-    doManagerBiome: false
+    doManagerBiome: false,
+    doObjectRednering: false
   }
 }
 

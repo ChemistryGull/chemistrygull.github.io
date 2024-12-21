@@ -1,4 +1,5 @@
 function openSimplexNoise(clientSeed) {
+	
 	"use strict";
 	const SQ5 = 2.23606797749979;
 	const SQ4 = 2;
