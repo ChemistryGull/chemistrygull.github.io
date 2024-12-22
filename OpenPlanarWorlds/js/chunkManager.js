@@ -67,6 +67,7 @@ function GameMap(worldConfigObject) {
     // this.loadedChunks.push(this.existingChunks.indexOf())
 
     if (mainCv.startChunk.toString() != this.startChunkTemp.toString() || mainCv.endChunk.toString() != this.endChunkTemp.toString()) {
+    // if (true) {  // --- ACTIVATE WHEN NOT WANTING TO LOAD NEW CHUNKS
 
       console.log("Load Chunks...");
 
@@ -76,14 +77,28 @@ function GameMap(worldConfigObject) {
         for (var x = mainCv.startChunk[0]; x < mainCv.endChunk[0]; x++) {
           var thisChunk = x + "," + y
           this.loadedChunks.push(thisChunk)
+
           if (!this.chunkMap.hasOwnProperty(thisChunk)) {
             this.createChunk(x,y)
-            // console.log("Created new chunk: " + x + " | " + y);
+            // console.log("Created new chunk from loadChunk: " + x + " | " + y);
+
           }
+            
+          this.loadedChunks.push(thisChunk)
+          this.loadedObj = this.loadedObj.concat(this.chunkMap[thisChunk].obj)
+
+          
+
+          // if (this.chunkMap.hasOwnProperty(thisChunk)) { // --- ACTIVATE WHEN NOT WANTING TO LOAD NEW CHUNKS (COMMENT THE ABOVE LINES)
+            
+          //   this.loadedChunks.push(thisChunk)
+          //   this.loadedObj = this.loadedObj.concat(this.chunkMap[thisChunk].obj)
+
+          // }
+
           // for (var o = 0; o < overWorld.chunkMap[thisChunk].obj.length; o++) {
           //   this.loadedObj.push(overWorld.chunkMap[thisChunk].obj[o]);
           // }
-          this.loadedObj = this.loadedObj.concat(this.chunkMap[thisChunk].obj)
           // console.log();
 
         }

@@ -51,8 +51,9 @@ var dbg = {
 
   },
   infoDOM: function (inp) {
-
-    if (inp.ticknr % 10 == 0) {
+    
+    if ((inp.ticknr % 10) - 1 == 0) {
+      
       dom_debugGameFPS.innerText = currentFps;
       dom_debugTickNr.innerText = inp.ticknr;
       dom_debugPlayerPos_x.innerText = player.pos.x;
@@ -61,7 +62,7 @@ var dbg = {
       dom_OnChunk_y.innerText = player.onChunk[1];
       dom_OnTileInChunk_x.innerText = player.onChunkTile[1];
       dom_OnTileInChunk_y.innerText = player.onChunkTile[0];
-      dom_TimerMain.innerText = round(window.performance.now() - inp.timerMain, 4);
+      dom_TimerMain.innerText = inp.timerMain;
       dom_LoadedObjects.innerText = World.loadedObj.length;
       dom_TileTemp.innerText = World.chunkMap[[player.onChunk[0], player.onChunk[1]].toString()].tem[player.onChunkTile[1] * S.chunkSize + player.onChunkTile[0]];
       dom_TileHum.innerText = World.chunkMap[[player.onChunk[0], player.onChunk[1]].toString()].hum[player.onChunkTile[1] * S.chunkSize + player.onChunkTile[0]];
@@ -72,15 +73,17 @@ var dbg = {
 
 
   },
-  plot: function (v, f, color) {
-
-    v = v * f;
-
-
-    // this.ctx.globalAlpha = 0.5;
-    this.ctx.fillStyle = color;
-    this.ctx.fillRect(this.count, this.h - v, 1, v);
-    this.ctx.globalAlpha = 1;
+  // plot: function (v, f, color) {
+  plot: function (val, col, f) {
+    
+    for (let i = 0; i < val.length; i++) {
+      var v = val[i] * f;
+      
+      // this.ctx.globalAlpha = 0.5;
+      this.ctx.fillStyle = col[i];
+      this.ctx.fillRect(this.count, this.h - v, 1, v);
+      this.ctx.globalAlpha = 1;
+    }
 
 
     this.ctx.clearRect(this.count + 1, 0, 10, this.h);

@@ -119,7 +119,7 @@ var worldTypeEarth = {
 
       // ### OBJECT PLACEMENT ###
   
-      if (tileTextures[currTile.tile][4].type == "soil") {
+      if (tileTextures[currTile.tile][4].type == "soil" && S.debug.doObjectGeneration) {
   
         // --- LARGE OBJECTS
   

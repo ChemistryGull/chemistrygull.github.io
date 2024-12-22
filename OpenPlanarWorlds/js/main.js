@@ -48,6 +48,7 @@ const tileSets = {
 // --- FPS counter
 var starterFrameCount = 0;
 var fps, fpsInterval, startTime, now, then, then2, elapsed, currentFps;
+var debugRenderTimeMedian = [];
 
 
 
@@ -69,9 +70,9 @@ window.onload = function () {
   // World = new GameMap(worldTypeCaves);
 
   World.createChunk(0,0)
-  // World.createChunk(0,1)
-  // World.createChunk(1,1)
-  // World.createChunk(1,0)
+  World.createChunk(0,-1)
+  World.createChunk(-1,0)
+  World.createChunk(-1,-1)
 
 
   if (S.debug.doMapViewpoint) {
@@ -123,9 +124,12 @@ window.onresize = function () {
   mainCv.resize();
 }
 
+
 // var ses = -4;
 // var sas = 0;
 function main() {
+
+  
   // var plant = "oak"
   // var hum = referenceBook[plant].hum;
   // var tem = referenceBook[plant].tem;
@@ -159,8 +163,9 @@ function main() {
   mainCv.clear();
   mainCv.update(player.pos.x, player.pos.y);
 
+  var timerBeforChunkGen = window.performance.now();
   World.loadChunk();
-
+  var timerAfterChunkGen = window.performance.now() - timerBeforChunkGen;
 
 
   // --- Draw only loaded Chunks
@@ -168,10 +173,11 @@ function main() {
   ctx.globalAlpha = 1;
 
   for (var c = 0; c < World.loadedChunks.length; c++) {
+    
+    var chunk = World.chunkMap[World.loadedChunks[c]];
+
     for (var y = 0; y < S.chunkSize; y++) {
       for (var x = 0; x < S.chunkSize; x++) {
-
-        var chunk = World.chunkMap[World.loadedChunks[c]];
         var cval = chunk.c[y * S.chunkSize + x];
         var tile = chunk.tile[y * S.chunkSize + x];
         
@@ -192,6 +198,8 @@ function main() {
             if (true) {
               if (tile == 100) {
                 ctx.fillStyle = "gray"; // --- Temporary for drawing tiles for structure generation
+              } else if (tile == 200) {
+                ctx.fillStyle = "lightgray"; // --- Temporary for drawing tiles for structure generation
               } else
               if (cval > -0.15 && cval < 0.15) {
                 ctx.fillStyle = "blue";
@@ -322,6 +330,7 @@ function main() {
   ctx.strokeStyle = "Orange";
   ctx.strokeRect(mainCv.x + mouse.onTile[0] * S.tw, mainCv.y + mouse.onTile[1] * S.th, S.tw, S.th)
 
+  
 
 
   // --- Player
@@ -369,10 +378,19 @@ function main() {
   // --- Debug Layer
 
   // dbg.info(20 / S.scale, {timerMain: timerMain})
-  dbg.plot(round(window.performance.now() - timerMain, 10), 30, "red");
+  // console.log("Chunk generation time: " + timerAfterChunkGen);
+  // console.log("Render time + gen time " + (window.performance.now() - timerMain));
+
+  debugRenderTimeMedian.push(window.performance.now() - timerMain);
+
+  if (Time.tick % 1000 == 0) {
+    console.log("Median time after " + Time.tick + " ticks = " + median(debugRenderTimeMedian) + " ms");
+  }
+
+  dbg.plot([round(window.performance.now() - timerMain, 10), round(timerAfterChunkGen, 10)], ["red", "yellow"], 10);
+  // dbg.plot([round(window.performance.now() - timerMain, 10)], ["red"], 30);
   // dbg.plot(currentFps, 1, "red");
-  dbg.infoDOM({timerMain: timerMain, ticknr: Time.tick})
-  
+  dbg.infoDOM({timerMain: window.performance.now() - timerMain, ticknr: Time.tick})
 }
 
 
@@ -460,7 +478,24 @@ function rotateArray(arr, height) {
   }
 }
 
+function median(values) {
 
+  if (values.length === 0) {
+    throw new Error('Input array is empty');
+  }
+
+  // Sorting values, preventing original array
+  // from being mutated.
+  values = [...values].sort((a, b) => a - b);
+
+  const half = Math.floor(values.length / 2);
+
+  return (values.length % 2
+    ? values[half]
+    : (values[half - 1] + values[half]) / 2
+  );
+
+}
 
 
 

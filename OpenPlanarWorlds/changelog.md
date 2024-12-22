@@ -34,7 +34,33 @@ Instead of just clicking this local index.html file
 ### Fix stuttering while walking
 Sometimes when walking there is stuttering from time to time, feels like the framerate drops. Find the reason for it or find a workaround (like making movement speed FPS dependent)
 
+
+
+
+
 # Changelog
+## v0.1.2-alpha - *2024.12.23*
+- ADDED: Generate chunks that have not been generated if village loads in them.
+    - (or just directly preload all chunks, look at the reddit answers)...
+- CHANGED `dbg.plot()` in `debugCv.js`: It now plots multiple values in different colors.
+- Structure generation now considers bounding boxes of other structure parts and avoids them if possible. **TODO: IMPLEMENT so that the bonding box can be smaller than the actural layout -> it edits structures around it to e.g. break a hole into the tunnel wall where it connects**. Also still the other Todos:
+- Improved rendering performance by 1-5% by moving a line in the rendering loop one loop out :)
+
+Todo for next version:
+- ~~Stop Paths from spwaning over one another~~ SOLVED
+- merge connect_to_house and connect_to_path [x, y, orientation, connectionType] (need to change rotateArray for this) IMPORTANT!
+- Randomize path generation
+- Procedural pseudorandom positioning of village roots via hash
+- Generate chunks that have not been generated if village loads in them. (or just directly preload all chunks, look at the reddit answers) *Partially solved, needs changes*
+- ~~Test if computing noise values is faster than loading them from memory.~~ It doesnt seem like it
+- Removing biomes from world.chunkMap (they use up too much space)
+- Add block collision
+- Remake TODO list...
+
+And soon:
+- Port to three.js or pixi.js
+- Take advantage of WebAssembly and replace part of the script with rust hehe
+
 ## v0.1.1-alpha - *2024.12.21*
 - ADDED `S.debug.displayTiles` value 4 = Display random Hash map in `settings.js`
 - ADDED `structureManager.js`
@@ -42,15 +68,6 @@ Sometimes when walking there is stuttering from time to time, feels like the fra
 - ADDED `rotateArray()` in `main.js`
 - ADDED `rotatePart()` in `structureManager.js`: Rotates entire structure parts including connection points etc.
 - ADDED `drawStructurePart(part, pos_x, pos_y)` in `structureManager.js`: Draws a part of the structure (like path, house etc.)
-
-Todo for next version:
-- Stop Paths from spwaning over one another
-- merge connect_to_house and connect_to_path [x, y, orientation, connectionType] (need to change rotateArray for this)
-- Randomize path generation
-- Procedural pseudorandom positioning of village roots via hash
-- Generate chunks that have not been generated if village loads in them. (or just directly preload all chunks, look at the reddit answers)
-- Test if computing noise values is faster than loading them from memory.
-- Removing biomes from world.chunkMap (they use up too much space)
 
 ## v0.1.0-alpha - *2024.12.20*
 Why minor release incerase instead of patch? Because i picked the project up after almost a year and cleaned up a bit.

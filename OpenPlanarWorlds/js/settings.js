@@ -32,7 +32,8 @@ var S = {
     
     doShowHitboxes: false,
     doManagerBiome: false,
-    doObjectRendering: false
+    doObjectRendering: false,
+    doObjectGeneration: false
   }
 }
 

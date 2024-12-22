@@ -1,6 +1,7 @@
 function Canvas(id, sc) {
   this.canvas = document.getElementById(id);
   this.ctx = this.canvas.getContext("2d");
+  // this.ctx = enableWebGLCanvas(this.canvas); // --- see lib/Canvas2DtoWebGL.js. Currently deactivated because it makes things slower (And still on cpu...)
 
   this.sc = sc;
 
