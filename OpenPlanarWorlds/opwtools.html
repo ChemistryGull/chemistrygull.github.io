@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>OPW - v0.1.2-alpha</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/ui.css">
+    <link rel="stylesheet" href="css/uiInv.css">
+    <link rel="stylesheet" href="css/debug.css">
+
+  </head>
+  <body>
+
+    <div id="mainCon">
+      <canvas id="mainCv" width="600" height="600"></canvas>
+    </div>
+
+    
+    <div id="debugManagerBiome" class="debugManagerBiome">
+      Obj: <input type="text" id="plantName"><br>
+      <input type="range" id="setSteps" min="1" max="5" value="1"><input type="text" id="setSteps" class="outputSpan" value="1"><br>
+      <input type="range" id="setOpac" min="0" max="1" value="0.9" step="0.02"><input type="text" id="setOpac" class="outputSpan" value="0.9"><br>
+
+      <div>
+        <p>Temperature</p>
+        <table>
+          <tr>
+            <td><span>Pos:</span></td>
+            <td><input id="tem_pos" type="range" min="-1" max="1" step="0.01" value="0"></td>
+            <td><input type="text" id="tem_pos" class="outputSpan" value="0"></td>
+          </tr>
+          <tr>
+            <td><span>Radius:</span></td>
+            <td><input id="tem_rad" type="range" min="0" max="2" step="0.01" value="1"></td>
+            <td><input type="text" id="tem_rad" class="outputSpan" value="1"></td>
+          </tr>
+          <tr>
+            <td><span>Steepness:</span></td>
+            <td><input id="tem_ste" type="range" min="0" max="20" step="0.01" value="1"></td>
+            <td><input type="text" id="tem_ste" class="outputSpan" value="1"></td>
+          </tr>
+          <tr>
+            <td><span>Capping:</span></td>
+            <td><input id="tem_cap" type="range" min="1" max="20" step="0.01" value="1"></td>
+            <td><input type="text" id="tem_cap" class="outputSpan" value="1"></td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <p>Humidity</p>
+        <table>
+          <tr>
+            <td><span>Pos:</span></td>
+            <td><input id="hum_pos" type="range" min="-1" max="1" step="0.01" value="0"></td>
+            <td><input type="text" id="hum_pos" class="outputSpan" value="0"></td>
+          </tr>
+          <tr>
+            <td><span>Radius:</span></td>
+            <td><input id="hum_rad" type="range" min="0" max="2" step="0.01" value="1"></td>
+            <td><input type="text" id="hum_rad" class="outputSpan" value="1"></td>
+          </tr>
+          <tr>
+            <td><span>Steepness:</span></td>
+            <td><input id="hum_ste" type="range" min="0" max="20" step="0.01" value="1"></td>
+            <td><input type="text" id="hum_ste" class="outputSpan" value="1"></td>
+          </tr>
+          <tr>
+            <td><span>Capping:</span></td>
+            <td><input id="hum_cap" type="range" min="1" max="20" step="0.01" value="1"></td>
+            <td><input type="text" id="hum_cap" class="outputSpan" value="1"></td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <br>
+        <textarea id="formattedCodeOut" cols="35" rows="3"></textarea>
+      </div>
+    </div>
+
+
+    <div class="gameUi">
+      <div class="gameUiGrid">
+
+        <div class="gridTop">
+          <div class="statBar">
+            <div class="statItem statLvl">
+
+            </div>
+            <div class="statItem statVital">
+              <div class="stHealth">
+
+              </div>
+              <div class="stHunger">
+
+              </div>
+              <div class="stThirst">
+
+              </div>
+              <div class="stHeat">
+
+              </div>
+              <div class="stHeat">
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gridSideRight"></div>
+
+        <div class="gridCenter">
+          <div class="inv1">
+            <div class="invWrapper inv1inv inv" id="pInv">
+
+
+            </div>
+          </div>
+          <div class="inv2 inv2inv inv">
+
+          </div>
+        </div>
+
+        <div class="gridSideLeft"></div>
+
+        <div class="gridBottom">
+          <div class="">
+
+          </div>
+          <div class="hotbarWrapper">
+            <div class="hotbar inv" id="pHB">
+
+            </div>
+          </div>
+          <div class="">
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="debugUi">
+      
+      <div class="debugInfo">
+        <div>FPS: <span id="debugGameFPS">[game paused]</span></div>
+        <div>TickNr: <span id="debugTickNr"></span></div>
+        <div>PlayerPos: <span id="debugPlayerPos_x"></span> | <span id="debugPlayerPos_y"></span></div>
+        <div>OnChunk: <span id="OnChunk_x"></span> | <span id="OnChunk_y"></span></div>
+        <div>OnTileInChunk: <span id="OnTileInChunk_x"></span> | <span id="OnTileInChunk_y"></span></div>
+        <div>Main Timer <span id="TimerMain"></span> ms</div>
+        <div>LoadedObjects: <span id="LoadedObjects"></span></div>
+        <div>Temperature: <span id="TileTemp"></span></div>
+        <div>Humidity: <span id="TileHum"></span></div>
+        <div>Biome: <span id="TileBiome"></span></div>
+        <br>
+        <div>Mouse:</div>
+        <div>Pos: <span id="mouse_pos_x"></span> | <span id="mouse_pos_y"></span></div>
+        <div>OnChunk: <span id="mouse_onChunk_x"></span> | <span id="mouse_onChunk_y"></span></div>
+        <div>OnTileInChunk: <span id="mouse_onChunkTile_x"></span> | <span id="mouse_onChunkTile_y"></span></div>
+        <div>OnTile: <span id="mouse_onTile_x"></span> | <span id="mouse_onTile_y"></span></div>
+        <div>Temperature: <span id="mouse_temp"></span></div>
+        <div>Humidity: <span id="mouse_hum"></span></div>
+        <div>Biome: <span id="mouse_biome"></span></div>
+        <div>RanNoise: <span id="mouse_ranNoise"></span></div>
+      </div>
+
+      <div id="debugCon">
+        <canvas id="debugCv" width="300" height="150"></canvas>
+      </div>
+  
+    </div>
+
+    <!-- <span id="itemAtPointer" class="invItem"><div></div></span> -->
+
+
+
+
+
+    <script src="lib/jquery-3.7.1.min.js" charset="utf-8"></script>
+    <script src="lib/avsc.js" charset="utf-8"></script>
+
+    <script src="lib/gl-matrix-min.js"></script>
+    <script src="lib/litegl.min.js"></script>
+    <script src="lib/Canvas2DtoWebGL.js"></script>
+
+
+
+
+    <script src="worldTypes/earth.js"></script>
+    <script src="worldTypes/caves.js"></script>
+
+    <script src="js/ui.js" charset="utf-8"></script>
+
+    <script src="js/debugCv.js" charset="utf-8"></script>
+    <script src="opwTools/tools_settings.js" charset="utf-8"></script>
+    <script src="opwTools/debugScript.js" charset="utf-8"></script>
+
+
+    <script src="js/math.js" charset="utf-8"></script>
+    <script src="js/keyManager.js" charset="utf-8"></script>
+    <script src="js/vector.js" charset="utf-8"></script>
+    <script src="js/distributionFunctions.js" charset="utf-8"></script>
+    <script src="js/settings.js" charset="utf-8"></script>
+    <script src="js/prng.js" charset="utf-8"></script>
+    <script src="js/openSimplexNoise.js" charset="utf-8"></script>
+    <script src="js/noiseTest.js" charset="utf-8"></script>
+    <script src="js/viewport.js" charset="utf-8"></script>
+    <script src="js/mouse.js" charset="utf-8"></script>
+    <script src="js/chunkManager.js" charset="utf-8"></script>
+    <script src="js/structureManager.js" charset="utf-8"></script>
+    <script src="js/entity.js" charset="utf-8"></script>
+       
+    <script src="opwTools/tools_main.js" charset="utf-8"></script>
+
+
+    <!--
+<script src="js/main.js" charset="utf-8"></script>-->
+
+  </body>
+</html>

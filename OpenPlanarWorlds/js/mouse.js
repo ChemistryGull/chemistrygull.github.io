@@ -15,6 +15,10 @@ document.addEventListener("mousemove", function (e) {
     var mouse_onChunkTile = [Math.abs(Math.trunc(modulus(mouse_pos[0] / S.tw, S.chunkSize))), Math.abs(Math.trunc(modulus(mouse_pos[1] / S.th, S.chunkSize)))];
     var mouse_onTile = [Math.floor(mouse_pos[0] / S.tw), Math.floor(mouse_pos[1] / S.th)];
 
+    if (World == undefined || World.chunkMap[[mouse_onChunk[0], mouse_onChunk[1]].toString()] == undefined) {
+        return;
+    }
+
     mouse = {
         posrelScreen: [e.clientX, e.clientY],
         pos: mouse_pos,

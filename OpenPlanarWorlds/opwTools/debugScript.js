@@ -1,7 +1,7 @@
 
 
 function managerBiome(lookForObj, steps = 0.01, opac = 0.9) {
-
+  worldType = worldTypeEarth;
   ctx.fillStyle = "red";
 
   for (var i = 0; i < 11; i++) {
@@ -14,11 +14,11 @@ function managerBiome(lookForObj, steps = 0.01, opac = 0.9) {
   }
 
 
-  for (var y = 0; y < climateGuide.length; y++) {
-    for (var x = 0; x < climateGuide[y].length; x++) {
+  for (var y = 0; y < worldType.climateGuide.length; y++) {
+    for (var x = 0; x < worldType.climateGuide[y].length; x++) {
 
 
-        switch (climateGuide[y][x]) {
+        switch (worldType.climateGuide[y][x]) {
 
           case "plains":
             ctx.fillStyle = "greenyellow"
