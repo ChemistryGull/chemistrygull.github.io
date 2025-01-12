@@ -8,7 +8,7 @@
 
 
 .header-container {
-    background-color: lightcyan;
+    background-color: var(--color-header);
     box-sizing: border-box;
 }
 
