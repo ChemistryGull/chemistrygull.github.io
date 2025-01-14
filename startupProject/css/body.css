@@ -111,6 +111,7 @@ p {
 }
 .percentage-list p {
     font-size: 1.3em;
+    text-align: center !important;
 }
 .p-big-num {
     font-size: 4em !important;
@@ -177,4 +178,8 @@ a:hover {
     display: flex;
     font-size: 16px;
     flex-wrap: wrap;   
+}
+
+p {
+    text-align: justify;
 }
