@@ -1,0 +1,27 @@
+.three-image-layer img {
+    display: none;
+}
+.three-image-layer img:nth-child(3) {
+    display: block;
+    max-width: 100%;
+}
+
+.flex-two-columns {
+    flex-direction: column;
+}
+.flex-two-columns-reverse {
+    flex-direction: column;
+}
+
+.flex-two-rows-vert {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-two-rows-vert>div {
+    width: 100%;
+}
+
+.flex-two-columns>div {
+    padding: 0;
+}

@@ -35,7 +35,27 @@ header {
 
 .header-mainlogo {
     height: 3em;
+    display: flex;
+    align-items: center;
 }
+.header-mainlogo img {
+    height: 3em;
+}
+.header-title {
+    padding-left: 0.5em;
+    font-size: 1.5em;
+    text-shadow: 1px 1px black;
+    font-weight: 600;
+    color: var(--main-brown);
+    text-decoration: none;
+}
+.header-title:hover {
+    color: var(--main-color);
+}
+.header-title:hover>span {
+    color: var(--main-brown) !important;
+}
+
 
 .header-item-spacer {
     flex-grow: 0;

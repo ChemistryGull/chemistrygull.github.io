@@ -8,7 +8,7 @@ section {
 .sec-centered {
     max-width: var(--page-max-width);
     margin: 0 auto;
-    padding: 3em 2em;
+    padding: 1em 2em;
 
 
 }
@@ -38,17 +38,14 @@ section {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-
+}
+.flex-two-columns-reverse {
+    flex-direction: row-reverse;
 }
 
 .flex-two-columns>div {
     box-sizing: border-box;
     padding: 1em;
-    min-width: 400px;
-    /* max-width: 300px; */
-    /* border: solid 1px black; */
-    /* flex-basis: 25%; */
-    /* flex-grow: 1; */
     flex: 1 1 0;
 }
 
@@ -73,6 +70,7 @@ section {
 .flex-two-rows-vert>div {
     width: 30%;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     justify-content: space-between;
     /* text-align: center; */
@@ -108,7 +106,8 @@ p {
 }
 
 .p-big-quote {
-    font-size: 2em;
+    font-size: 1.7em;
+    text-align: center;
 }
 
 h1 {
@@ -119,9 +118,16 @@ h1 {
 
 h3 {
     color: var(--main-color);
-    font-size: 1.2em;
-    font-weight: 1000;
-    /* text-shadow: 1px 1px black; */
+    font-size: 1.3em;
+    /* font-weight: 1000; */
+    text-shadow: 0.5px 0.5px 0.5px black;
+    margin: 1.5em 0 0.5em 0;
 
 }
 
+a {
+    color: inherit;
+}
+a:hover {
+    color: var(--main-color);
+}
