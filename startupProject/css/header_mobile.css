@@ -10,6 +10,7 @@
 .header-container {
     background-color: var(--color-header);
     box-sizing: border-box;
+    z-index: 10;
 }
 
 .header-row {
@@ -43,8 +44,9 @@ nav.menu {
     padding: 1em;
     width: 100vw;
     box-sizing: border-box;
+    z-index: 10;
 
-    background-color: gray;
+    background-color: var(--color-header);
 }
 
 ul.menu-list,ul.sub-menu-list {
