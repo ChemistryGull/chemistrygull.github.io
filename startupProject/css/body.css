@@ -1,4 +1,5 @@
 
+
 section {
     width: 100%;
     /* margin: 2em 0; */
@@ -64,3 +65,55 @@ section {
     padding: 1em;
     flex-basis: 300px;
 }
+
+.flex-two-rows-vert {
+    display: flex;
+    justify-content: space-between;
+}
+.flex-two-rows-vert>div {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* text-align: center; */
+}
+
+.three-image-layer {
+    display: flex;
+    justify-content: space-around;
+}
+.three-image-layer>img {
+    max-width: 33%;
+}
+
+.div-bg-cloths {
+    /* background-image: url(../img/tshirtsbackground.webp); */
+    /* filter: blur(8px); */
+    /* SOURCHE: https://www.pexels.com/photo/white-long-sleeves-shirts-on-brown-wooden-clothes-hanger-3735641/ */
+}
+
+
+img.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;      
+}
+.center-vert {
+    display: flex;
+    align-items: center;  
+}
+
+p {
+    /* text-align: justify; */
+}
+
+.p-big-quote {
+    font-size: 2em;
+}
+
+h1 {
+    font-size: 3em;
+    color: var(--main-color);
+    text-shadow: 1px 1px black;
+}
+

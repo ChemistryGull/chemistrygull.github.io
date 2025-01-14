@@ -1,19 +1,24 @@
 :root {
    --page-max-width: 1000px;
 
-   --color-header: slategray;
+   --color-header: lightgray;
+   /* --color-header: slategray; */
    --color-body: lightgray;
+   --main-color: green;
 }
 
 body {
    margin: 0;
    background-color: var(--color-header);
    font-family: Inter, sans-serif;
+   font-size: 18px;
 }
 
 main {
    background-color: var(--color-body);
 }
+
+
 
 
 .DEBUG-isDesktop {

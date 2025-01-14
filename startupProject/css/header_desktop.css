@@ -10,6 +10,7 @@
 header {
     position: sticky;
     top: 0;
+    z-index: 10;
 }
 
 .header-container {
@@ -82,7 +83,7 @@ li.menu-item>a {
     margin: 0 auto; /* --- Centers underline, making it grow from the center*/
     width: 0%;
     height: 0.15em;
-    background-color: black;
+    background-color: var(--main-color);
 }
 
 li.menu-item:hover .menu-item-underline {
