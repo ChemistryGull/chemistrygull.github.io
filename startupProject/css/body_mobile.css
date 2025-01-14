@@ -8,6 +8,7 @@
 
 .flex-two-columns {
     flex-direction: column;
+    padding: 0;
 }
 .flex-two-columns-reverse {
     flex-direction: column;
@@ -19,9 +20,31 @@
 }
 
 .flex-two-rows-vert>div {
-    width: 100%;
+    padding: 0;
+    width: 100% !important;
 }
 
 .flex-two-columns>div {
     padding: 0;
+}
+
+.mobile-line {
+    width: 100%;
+    display: block;
+}
+.mobile-line-only {
+    display: block;
+}
+
+h3 {
+    margin: 1.5em 0 0.5em 0;
+}
+
+.footer-flex {
+    justify-content: center;
+    text-align: center;
+    margin: 0;
+}
+.footer-flex>.header-mainlogo {
+    padding: 1em;
 }
