@@ -44,6 +44,16 @@ Sometimes when walking there is stuttering from time to time, feels like the fra
 
 
 # Changelog
+## v0.2.1-alpha - *2025.02.06*
+- MOVED: objectPool tp objectPool.js
+- CHANGED in chunkManager.js: Replaced `mapContainer.children.pop()` with `mapContainer.removeChildAt(mapContainer.children.length - 1)`. It is needed to use Pixis own functions so that the renderer is properly updated.
+
+- Immediate next goal: Make use of sprites OR textured graphics (Performance?)
+    - Add chunkTextures type to objectPool
+    - Change ChunkManager .renderUpdate() to work with sprites.
+    - Check performance
+
+
 ## v0.2.0-alpha - *2025.02.06*
 
 - **MOVED TO PIXI.JS** This is a big update. The Codebase was moved to the WebGl game engine Pixi.js in hopes for performance gains. This brings some rewriting as it now also uses Vite. Thats why this is a new Minor version (instead of a patch). The old version has been moved to OpenPlanarWorlds_old.

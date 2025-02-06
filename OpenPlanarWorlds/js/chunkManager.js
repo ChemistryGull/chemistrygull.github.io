@@ -66,6 +66,128 @@ function GameMap(worldConfigObject) {
 
   }
 
+  this.loadChunk = function (vp) {
+    if (vp.startChunk.toString() != this.startChunkTemp.toString() || vp.endChunk.toString() != this.endChunkTemp.toString()) {
+  
+    console.log("+++ Load Chunks +++");
+    console.time("|--- Load Chunks Time");
+
+    console.time("|--- Build newChunks list");
+
+    this.loadedObj = [];
+
+    var newChunks = []
+
+    
+    for (var y = vp.startChunk[1]; y < vp.endChunk[1]; y++) {
+      for (var x = vp.startChunk[0]; x < vp.endChunk[0]; x++) {
+        var thisChunk = x + "," + y
+
+        if (!this.chunkMap.hasOwnProperty(thisChunk)) {
+          this.createChunk(x,y)
+          // console.log("Created new chunk from loadChunk: " + x + " | " + y);
+
+        }
+
+          
+        newChunks.push(thisChunk)
+
+        // this.loadedObj = this.loadedObj.concat(this.chunkMap[thisChunk].obj)
+
+        
+
+        // if (this.chunkMap.hasOwnProperty(thisChunk)) { // --- ACTIVATE WHEN NOT WANTING TO LOAD NEW CHUNKS (COMMENT THE ABOVE LINES)
+          
+        //   this.loadedChunks.push(thisChunk)
+        //   this.loadedObj = this.loadedObj.concat(this.chunkMap[thisChunk].obj)
+
+        // }
+
+        // for (var o = 0; o < overWorld.chunkMap[thisChunk].obj.length; o++) {
+        //   this.loadedObj.push(overWorld.chunkMap[thisChunk].obj[o]);
+        // }
+        // console.log();
+
+      }
+    }
+
+    
+    this.startChunkTemp = [...vp.startChunk];
+    this.endChunkTemp = [...vp.endChunk];
+
+    console.timeEnd("|--- Build newChunks list");
+    
+
+    console.time("|--- Allocate Chunks");
+    
+    for (let i = this.loadedChunks.length; i < newChunks.length; i++) {
+      console.log("## ALLOCATED NEW CHUNK");
+
+      // const chunkContainer = ; 
+      mapContainer.addChild(chunkPool.allocate());
+
+    }   
+    console.timeEnd("|--- Allocate Chunks");
+
+
+    console.time("|--- Remove Chunks")
+
+    for (let i = newChunks.length; i < this.loadedChunks.length; i++) {
+      console.log("## REMOVE CHUNK");
+      
+      chunkPool.release(mapContainer.children[mapContainer.children.length - 1]);
+      // mapContainer.children[mapContainer.children.length - 1].removeFromParent()
+      mapContainer.removeChildAt(mapContainer.children.length - 1);
+    
+    }   
+    console.timeEnd("|--- Remove Chunks")
+
+
+    console.time("|--- Set Chunk Position");
+    for (let i = 0; i < mapContainer.children.length; i++) {
+
+      var chunk = world.chunkMap[newChunks[i]];
+      mapContainer.children[i].position.set(chunk.x * S.chunkSize * S.tw, chunk.y * S.chunkSize * S.th);
+    }
+    console.timeEnd("|--- Set Chunk Position");
+
+
+    this.loadedChunks = newChunks;
+    
+    this.renderUpdate(); 
+
+    console.timeEnd("|--- Load Chunks Time");
+    console.log("+");
+
+    }
+  }
+
+  this.renderUpdate = function (params) {
+    console.time("|--- Update Renderer");
+
+    var c = 0;
+    for (const chunkName of world.loadedChunks) {
+
+      var chunk = world.chunkMap[chunkName];
+      
+      var chunkContainer = mapContainer.children[c];
+      
+      for (var y = 0; y < S.chunkSize; y++) {
+        for (var x = 0; x < S.chunkSize; x++) {
+
+          var tile = chunk.tile[y * S.chunkSize + x];         
+          chunkContainer.children[y * S.chunkSize + x].tint = tileTextures[tile].altColor;
+        }
+      }
+      c++;
+    }
+    console.timeEnd("|--- Update Renderer");
+  }
+
+
+
+  // --- Everything after this is not needed, only here if i ever need to change something
+
   this.loadChunk__ = function (vp) {
 
     // --- Maybe improve with .has() in future? idk what performs better. Probably this tho
@@ -143,119 +265,6 @@ function GameMap(worldConfigObject) {
 
     }
   }
-
-
-  this.loadChunk = function (vp) {
-    if (vp.startChunk.toString() != this.startChunkTemp.toString() || vp.endChunk.toString() != this.endChunkTemp.toString()) {
-  
-    console.log("+++ Load Chunks +++");
-    console.time("|--- Load Chunks Time");
-
-    console.time("|--- Build newChunks list");
-
-    this.loadedObj = [];
-
-    var newChunks = []
-
-    for (var y = vp.startChunk[1]; y < vp.endChunk[1]; y++) {
-      for (var x = vp.startChunk[0]; x < vp.endChunk[0]; x++) {
-        var thisChunk = x + "," + y
-
-        if (!this.chunkMap.hasOwnProperty(thisChunk)) {
-          this.createChunk(x,y)
-          // console.log("Created new chunk from loadChunk: " + x + " | " + y);
-
-        }
-          
-        newChunks.push(thisChunk)
-        // this.loadedObj = this.loadedObj.concat(this.chunkMap[thisChunk].obj)
-
-        
-
-        // if (this.chunkMap.hasOwnProperty(thisChunk)) { // --- ACTIVATE WHEN NOT WANTING TO LOAD NEW CHUNKS (COMMENT THE ABOVE LINES)
-          
-        //   this.loadedChunks.push(thisChunk)
-        //   this.loadedObj = this.loadedObj.concat(this.chunkMap[thisChunk].obj)
-
-        // }
-
-        // for (var o = 0; o < overWorld.chunkMap[thisChunk].obj.length; o++) {
-        //   this.loadedObj.push(overWorld.chunkMap[thisChunk].obj[o]);
-        // }
-        // console.log();
-
-      }
-    }
-    this.startChunkTemp = [...vp.startChunk];
-    this.endChunkTemp = [...vp.endChunk];
-
-    console.timeEnd("|--- Build newChunks list");
-    
-
-    console.time("|--- Allocate Chunks");
-
-    for (let i = this.loadedChunks.length; i < newChunks.length; i++) {
-      console.log("## ALLOCATED NEW CHUNK");
-
-      const chunkContainer = chunkPool.allocate();  
-      mapContainer.addChild(chunkContainer);
-    }   
-    console.timeEnd("|--- Allocate Chunks");
-
-
-    console.time("|--- Remove Chunks")
-
-    for (let i = newChunks.length; i < this.loadedChunks.length; i++) {
-      console.log("## REMOVE CHUNK");
-      
-      chunkPool.release(mapContainer.children[mapContainer.children.length - 1]);
-      mapContainer.children.pop();
-
-    }   
-    console.timeEnd("|--- Remove Chunks")
-
-
-    console.time("|--- Set Chunk Position");
-    for (let i = 0; i < mapContainer.children.length; i++) {
-
-      var chunk = world.chunkMap[newChunks[i]];
-      mapContainer.children[i].position.set(chunk.x * S.chunkSize * S.tw, chunk.y * S.chunkSize * S.th);
-    }
-    console.timeEnd("|--- Set Chunk Position");
-
-
-    this.loadedChunks = newChunks;
-    
-    this.renderUpdate(); 
-
-    console.timeEnd("|--- Load Chunks Time");
-    console.log("+");
-
-
-    }
-  }
-
-  this.renderUpdate = function (params) {
-    console.time("|--- Update Renderer");
-
-    var c = 0;
-    for (const chunkName of world.loadedChunks) {
-
-      var chunk = world.chunkMap[chunkName];
-      var chunkContainer = app.stage.children[0].children[c];
-      
-      for (var y = 0; y < S.chunkSize; y++) {
-        for (var x = 0; x < S.chunkSize; x++) {
-
-          var tile = chunk.tile[y * S.chunkSize + x];         
-          chunkContainer.children[y * S.chunkSize + x].tint = tileTextures[tile].altColor;
-        }
-      }
-      c++;
-    }
-    console.timeEnd("|--- Update Renderer");
-  }
-
 
   this.loadChunk_ = function (vp) {
     
@@ -348,7 +357,6 @@ function GameMap(worldConfigObject) {
     }
   }
   
-
   this.addChunkToRenderer_Graphics = function (chunkName) {
     // --- ATTENTION! This IGNORES the Render Order Of Maps. There would be a different implementation to make it render correctly. this will need to be implemented AFTER switching from Graphics to Sprites as Tiles
     console.log("Load Chunk " + chunkName);
@@ -439,12 +447,6 @@ function GameMap(worldConfigObject) {
     //   }
     // }
   }
-
-
-
-
-
-
 
   this.loadChunkOld = function (vp) {
     // this.loadedChunks.push(this.existingChunks.indexOf())

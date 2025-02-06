@@ -28,21 +28,21 @@ function Viewport() {
 
 
       // // --- Use this in prod. - renders more chunks than viewport
-      // this.startChunk[0] = player.onChunk[0] - 1 - Math.floor((this.screen[0] / 2) / (S.tw * S.chunkSize));
-      // this.startChunk[1] = player.onChunk[1] - 1 - Math.floor((this.screen[1] / 2) / (S.th * S.chunkSize));
+      this.startChunk[0] = player.onChunk[0] - 1 - Math.floor((this.screen[0] / 2) / (S.tw * S.chunkSize));
+      this.startChunk[1] = player.onChunk[1] - 1 - Math.floor((this.screen[1] / 2) / (S.th * S.chunkSize));
 
-      // this.endChunk[0] = player.onChunk[0] + 1 + Math.ceil((this.screen[0] / 2) / (S.tw * S.chunkSize));
-      // this.endChunk[1] = player.onChunk[1] + 1 + Math.ceil((this.screen[1] / 2) / (S.th * S.chunkSize));
+      this.endChunk[0] = player.onChunk[0] + 1 + Math.ceil((this.screen[0] / 2) / (S.tw * S.chunkSize));
+      this.endChunk[1] = player.onChunk[1] + 1 + Math.ceil((this.screen[1] / 2) / (S.th * S.chunkSize));
 
       // --- Use This for dev. only - renders less chunks than viewport (you can see end of renderd map)
-      this.startChunk[0] = player.onChunk[0] + 1 - Math.floor((this.screen[0] / 2) / (S.tw * S.chunkSize));
-      this.startChunk[1] = player.onChunk[1] + 1 - Math.floor((this.screen[1] / 2) / (S.th * S.chunkSize));
+      // this.startChunk[0] = player.onChunk[0] + 1 - Math.floor((this.screen[0] / 2) / (S.tw * S.chunkSize));
+      // this.startChunk[1] = player.onChunk[1] + 1 - Math.floor((this.screen[1] / 2) / (S.th * S.chunkSize));
 
-      this.endChunk[0] = player.onChunk[0] - 1 + Math.ceil((this.screen[0] / 2) / (S.tw * S.chunkSize));
-      this.endChunk[1] = player.onChunk[1] - 1 + Math.ceil((this.screen[1] / 2) / (S.th * S.chunkSize));
+      // this.endChunk[0] = player.onChunk[0] - 1 + Math.ceil((this.screen[0] / 2) / (S.tw * S.chunkSize));
+      // this.endChunk[1] = player.onChunk[1] - 1 + Math.ceil((this.screen[1] / 2) / (S.th * S.chunkSize));
 
 
-
+      
 
       // var tile = [Math.floor(px / tileW), Math.floor(py / tileH)];
       //
@@ -72,7 +72,11 @@ function Viewport() {
     // this.ctx.setTransform(sc,0,0,sc,0,0);
   }
   this.resize = function () {
-    this.screen = [app.canvas.width / this.sc, app.canvas.height / this.sc]
+    // this.screen = [app.canvas.width / this.sc, app.canvas.height / this.sc]
+    this.screen = [window.innerWidth / this.sc, window.innerHeight / this.sc]
+    // --- set to window.innerWidth because app.canvas.width doesnt properly update on resize
+    
+    
     // Ui.resize(); TOaDD
 
 

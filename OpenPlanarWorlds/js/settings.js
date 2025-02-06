@@ -3,11 +3,11 @@ var S = {
   // swamp seeds: 336 366 36987 savannah next to wood 7979 plains next to forest  8787999
   fps: 60,
 
-  texW: 16,
-  texH: 16,
+  texW: 32,
+  texH: 32,
 
-  tw: 16,
-  th: 16,
+  tw: 32,
+  th: 32,
   chunkSize: 8,
   // scale: 0.01,
   scale: 1,
