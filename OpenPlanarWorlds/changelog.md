@@ -1,3 +1,8 @@
+# TODO:
+- Add support for multiple tilesets in main() loop (or see if it is supported out of the box by just adding a second tileset)
+
+- Speed up Loading by only looping through and adding new chunks, movement will be done with transform
+
 # Known Bugs/Issues/Change proposals/ToDo
 
 ### Reuse onChunk_fromTile function more often.
@@ -39,6 +44,18 @@ Sometimes when walking there is stuttering from time to time, feels like the fra
 
 
 # Changelog
+## v0.2.0-alpha - *2025.02.06*
+
+- **MOVED TO PIXI.JS** This is a big update. The Codebase was moved to the WebGl game engine Pixi.js in hopes for performance gains. This brings some rewriting as it now also uses Vite. Thats why this is a new Minor version (instead of a patch). The old version has been moved to OpenPlanarWorlds_old.
+- What Has currently been moved:
+    - Chunk generation (Will also be edited)
+    - Chunk Rendering (only with graphics)
+    - Movement (No velocity yet)
+- The rest is still to be moved/integrated and will certainly see some rewrites.
+- There will likely be soon a patch when I clean stuff up, but for now this is a long needed commit.
+
+
+
 ## v0.1.2-alpha - *2024.12.23*
 - ADDED: Generate chunks that have not been generated if village loads in them.
     - (or just directly preload all chunks, look at the reddit answers)...

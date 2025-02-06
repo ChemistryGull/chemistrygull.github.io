@@ -3,11 +3,11 @@ var S = {
   // swamp seeds: 336 366 36987 savannah next to wood 7979 plains next to forest  8787999
   fps: 60,
 
-  texW: 32,
-  texH: 32,
+  texW: 16,
+  texH: 16,
 
-  tw: 32,
-  th: 32,
+  tw: 16,
+  th: 16,
   chunkSize: 8,
   // scale: 0.01,
   scale: 1,
@@ -37,21 +37,37 @@ var S = {
   }
 }
 
+// // --- Old tileTexture
+// var tileTextures = [
+//   [0, 0, "tileTEX", "void", {type: "void", altColor: "#ff00ff"}],
+//   [1, 0, "tileTEX", "grass", {type: "soil", altColor: "#ff00ff"}],
+//   [2, 0, "tileTEX", "water", {type: "water"}],
+//   [3, 0, "tileTEX", "sand", {type: "soil"}],
+//   [4, 0, "tileTEX", "grass_savannah", {type: "soil"}],
+//   [5, 0, "tileTEX", "grass_taiga", {type: "soil"}],
+//   [6, 0, "tileTEX", "grass_tundra", {type: "soil"}],
+//   [7, 0, "tileTEX", "grass_rainforest", {type: "soil"}],
+//   [8, 0, "tileTEX", "snow", {type: "soil"}],
+//   [9, 0, "tileTEX", "icedesert_stone", {type: "soil"}],
+//   [10, 0, "tileTEX", "dirt_dry", {type: "soil"}],
+//   [11, 0, "tileTEX", "dirt", {type: "soil"}],
+//   [12, 0, "tileTEX", "dirt_wet", {type: "soil"}],
+// ]
 
 var tileTextures = [
-  [0, 0, "tileTEX", "void", {type: "void"}],
-  [1, 0, "tileTEX", "grass", {type: "soil"}],
-  [2, 0, "tileTEX", "water", {type: "water"}],
-  [3, 0, "tileTEX", "sand", {type: "soil"}],
-  [4, 0, "tileTEX", "grass_savannah", {type: "soil"}],
-  [5, 0, "tileTEX", "grass_taiga", {type: "soil"}],
-  [6, 0, "tileTEX", "grass_tundra", {type: "soil"}],
-  [7, 0, "tileTEX", "grass_rainforest", {type: "soil"}],
-  [8, 0, "tileTEX", "snow", {type: "soil"}],
-  [9, 0, "tileTEX", "icedesert_stone", {type: "soil"}],
-  [10, 0, "tileTEX", "dirt_dry", {type: "soil"}],
-  [11, 0, "tileTEX", "dirt", {type: "soil"}],
-  [12, 0, "tileTEX", "dirt_wet", {type: "soil"}],
+  {x: 0, y: 0, name: "void", tileSet: "tileTex", altColor: 0xff00ff, props: new Set(["void"])},
+  {x: 1, y: 0, name: "grass", tileSet: "tileTex", altColor: 0x00ff00, props: new Set(["soil"])},
+  {x: 2, y: 0, name: "water", tileSet: "tileTex", altColor: 0x00bbff, props: new Set(["water"])},
+  {x: 3, y: 0, name: "sand", tileSet: "tileTex", altColor: 0xffff66, props: new Set(["soil"])},
+  {x: 4, y: 0, name: "grass_savannah", tileSet: "tileTex", altColor: 0xc0ff62, props: new Set(["soil"])},
+  {x: 5, y: 0, name: "grass_taiga", tileSet: "tileTex", altColor: 0x007744, props: new Set(["soil"])},
+  {x: 6, y: 0, name: "grass_tundra", tileSet: "tileTex", altColor: 0x3ab387, props: new Set(["soil"])},
+  {x: 7, y: 0, name: "grass_rainforest", tileSet: "tileTex", altColor: 0x006600, props: new Set(["soil"])},
+  {x: 8, y: 0, name: "snow", tileSet: "tileTex", altColor: 0xbae2e7, props: new Set(["soil"])},
+  {x: 9, y: 0, name: "icedesert_stone", tileSet: "tileTex", altColor: 0x698083, props: new Set(["soil"])},
+  {x: 10, y: 0, name: "dirt_dry", tileSet: "tileTex", altColor: 0xbd7727, props: new Set(["soil"])},
+  {x: 11, y: 0, name: "dirt", tileSet: "tileTex", altColor: 0x623e14, props: new Set(["soil"])},
+  {x: 12, y: 0, name: "dirt_wet", tileSet: "tileTex", altColor: 0x221507, props: new Set(["soil"])},
 ]
 
 var itemList = {

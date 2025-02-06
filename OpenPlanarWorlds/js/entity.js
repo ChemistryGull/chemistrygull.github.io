@@ -15,17 +15,26 @@ function Entity(inp) {
   this.inventory = [["red_apple", 62], ["red_apple", 4], ["red_apple", 1], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0], ["_", 0]];
   this.hotbar = [["debug", 8], ["red_apple", 54], ["carrot", 1, {durability: 147}], ["raw_chicken", 1], ["cooked_chicken", 1], ["fig", 7], ["fig", 2], ["_", 0], ["_", 0]];
 
-  this.update = function () {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(mainCv.x + this.pos.x, mainCv.y + this.pos.y, this.w, this.h)
-  };
+  
   this.move = function () {
+
+    player.vel = new Vector(0, 0);
+
+    if (keys[keyCode.mLeft]) {player.vel.x -= player.speed;}
+    if (keys[keyCode.mRight]) {player.vel.x += player.speed;}
+    if (keys[keyCode.mUp]) {player.vel.y -= player.speed;}
+    if (keys[keyCode.mDown]) {player.vel.y += player.speed;}
+
+
 		this.pos.x += this.vel.x;
 		this.pos.y += this.vel.y;
+
+    player.getPos()
+
 	};
   this.getPos = function () {
     this.onChunk = [Math.floor(this.pos.x / (S.chunkSize * S.tw)), Math.floor(this.pos.y / (S.chunkSize * S.th))]
-    this.onChunkTile = [Math.abs(Math.trunc(modulus(this.pos.x / S.tw, S.chunkSize))), Math.abs(Math.trunc(modulus(this.pos.y / S.th, S.chunkSize)))]
+    this.onChunkTile = [Math.abs(Math.trunc(math_.modulus(this.pos.x / S.tw, S.chunkSize))), Math.abs(Math.trunc(math_.modulus(this.pos.y / S.th, S.chunkSize)))]
   }
 
   this.collision = function (hitbox) {

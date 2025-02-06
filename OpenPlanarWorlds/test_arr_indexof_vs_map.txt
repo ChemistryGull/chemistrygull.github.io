@@ -1,0 +1,137 @@
+window.onload = function () {
+  var arr = [];
+  var set = new Set()
+
+  for (let i = 0; i < 1000; i++) {
+    arr.push("shah" + i);
+    set.add("shah" + i)
+    if (i == 800) {
+      arr.push("THIS");
+      set.add("THIS");
+    }
+  }
+
+  var map = new Map(arr.map((value, index) => [value, index]));
+
+
+  console.log(arr);
+
+  console.log(map);
+
+  console.time("indexOf");
+
+  for (let i = 0; i < 1000000; i++) {
+    arr.indexOf("THIS");
+  }
+  console.timeEnd("indexOf");
+
+  console.time("get");
+
+  for (let i = 0; i < 1000000; i++) {
+    map.get("THIS");
+  }
+
+  console.timeEnd("get");
+
+
+
+
+  console.time("indexOf");
+
+  for (let i = 0; i < 1000; i++) {
+    arr.indexOf("THIS");
+  }
+  console.timeEnd("indexOf");
+
+  console.time("get");
+
+  for (let i = 0; i < 1000; i++) {
+    map.get("THIS");
+  }
+
+  console.timeEnd("get");
+
+  console.log("###");
+
+
+
+
+  console.time("set has");
+
+  for (let i = 0; i < 1000000; i++) {
+    set.has("THIS");
+  }
+
+  console.timeEnd("set has");
+
+  console.time("map has");
+
+  for (let i = 0; i < 1000000; i++) {
+    map.has("THIS");
+  }
+
+  console.timeEnd("map has");
+
+
+
+  console.time("set has");
+
+  for (let i = 0; i < 1000000; i++) {
+    set.has("THIS");
+  }
+
+  console.timeEnd("set has");
+
+  console.time("map has");
+
+  for (let i = 0; i < 1000000; i++) {
+    map.has("THIS");
+  }
+
+  console.timeEnd("map has");
+
+
+  console.time("set has");
+
+  for (let i = 0; i < 1000000; i++) {
+    set.has("THIS");
+  }
+
+  console.timeEnd("set has");
+
+  console.time("map has");
+
+  for (let i = 0; i < 1000000; i++) {
+    map.has("THIS");
+  }
+
+  console.timeEnd("map has");
+
+  console.time("map has");
+
+  for (let i = 0; i < 1000000; i++) {
+    map.has("THIS");
+  }
+
+  console.timeEnd("map has");
+
+
+  console.time("set has");
+
+  for (let i = 0; i < 1000000; i++) {
+    set.has("THIS");
+  }
+
+  console.timeEnd("set has");
+
+  console.time("map has");
+
+  for (let i = 0; i < 1000000; i++) {
+    map.has("THIS");
+  }
+
+  console.timeEnd("map has");
+
+
+
+}

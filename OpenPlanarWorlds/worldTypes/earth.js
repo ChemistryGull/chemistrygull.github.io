@@ -8,6 +8,7 @@ var worldTypeEarth = {
   
       var currTile = {
         tile: 0,
+        tileName: "",
         c: 0,
         tem: 0,
         hum: 0,
@@ -65,39 +66,40 @@ var worldTypeEarth = {
   
   
       // --- From all the above: create Tile Map:     - This is where the Magic happens -
-      currTile.tile = "void";
+      currTile.tileName = "void";
   
       if (currTile.c > -0.15 && currTile.c < 0.15) {
-        currTile.tile = "water";
+        currTile.tileName = "water";
       } else {
         if (currTile.biome == "desert") {
-          currTile.tile = "sand";
+          currTile.tileName = "sand";
         } else if (currTile.biome == "savannah") {
-          currTile.tile = "grass_savannah";
+          currTile.tileName = "grass_savannah";
         } else if (currTile.biome == "taiga") {
-          currTile.tile = "grass_taiga";
+          currTile.tileName = "grass_taiga";
         } else if (currTile.biome == "tundra") {
-          currTile.tile = "grass_tundra";
+          currTile.tileName = "grass_tundra";
         } else if (currTile.biome == "rainforest") {
-          currTile.tile = "grass_rainforest";
+          currTile.tileName = "grass_rainforest";
         } else if (currTile.biome == "arctic") {
-          currTile.tile = "snow";
+          currTile.tileName = "snow";
         } else if (currTile.biome == "dry_ice_desert") {
-          currTile.tile = "icedesert_stone";
+          currTile.tileName = "icedesert_stone";
         } else if (currTile.biome == "swamp") {
-          currTile.tile = "dirt_wet";
+          currTile.tileName = "dirt_wet";
         } else if (currTile.biome == "forest") {
-          currTile.tile = "grass";
+          currTile.tileName = "grass";
   
   
   
         } else if (currTile.biome == "plains") {
-          currTile.tile = "grass";
+          currTile.tileName = "grass";
         }
       }
   
-  
-      currTile.tile = tileTextures.indexOf(tileTextures.find(e => e[3] == currTile.tile))
+      // --- THIS IS TEMPORARY: It would be smarter and better performacne whise to define currTile.tile directly by number above. .tileName would not be needed anymore and the inefficient .find function below would be avoided.
+      
+      currTile.tile = tileTextures.indexOf(tileTextures.find(e => e.name == currTile.tileName))
   
       if (currTile.tile == -1) {
         currTile.tile = 0;
@@ -107,19 +109,19 @@ var worldTypeEarth = {
 
       // ### STRUCTURE PLACEMENT ### //
 
-      if (valueIsBetween(currTile.ranNoise, ranNoiseMapAddressList.village[0], ranNoiseMapAddressList.village[1])) { // --- Checks if random noise map is between two values. Type Village does only attempt to spawn on this tile if this tile has a random Noise (ranNoise) value in a specific range defined in ranNoiseMapAddressList
+      // if (valueIsBetween(currTile.ranNoise, ranNoiseMapAddressList.village[0], ranNoiseMapAddressList.village[1])) { // --- Checks if random noise map is between two values. Type Village does only attempt to spawn on this tile if this tile has a random Noise (ranNoise) value in a specific range defined in ranNoiseMapAddressList
         
-        // --- Check if there is another village root in specific radius.
+      //   // --- Check if there is another village root in specific radius.
         
-        console.log(currTile.ranNoise);
+      //   console.log(currTile.ranNoise);
         
-      }
+      // }
   
 
 
       // ### OBJECT PLACEMENT ###
   
-      if (tileTextures[currTile.tile][4].type == "soil" && S.debug.doObjectGeneration) {
+      if (tileTextures[currTile.tile].props.has("soil") && S.debug.doObjectGeneration) {
   
         // --- LARGE OBJECTS
   

@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: black;
+  cursor: default;
+}
+#mainCv {
+  /* image-rendering: pixelated; */
+
+}
+#mainCon {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+
+}
