@@ -1,4 +1,4 @@
-import * as PIXI from "../node_modules/pixi.js/dist/pixi";
+import * as PIXI from "../node_modules/pixi.js/dist/pixi.mjs";
 
 // import { GameMap } from "./chunkManager.js";
 
