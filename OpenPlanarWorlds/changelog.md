@@ -44,6 +44,11 @@ Sometimes when walking there is stuttering from time to time, feels like the fra
 
 
 # Changelog
+## v0.2.2-alpha - *2025.02.09*
+- ADDED: Drawing tiles as Sprites. It can be toggled between drawing tiles as sprites/Graphics via S.debug.displayTiles
+
+
+
 ## v0.2.1-alpha - *2025.02.06*
 - MOVED: objectPool tp objectPool.js
 - CHANGED in chunkManager.js: Replaced `mapContainer.children.pop()` with `mapContainer.removeChildAt(mapContainer.children.length - 1)`. It is needed to use Pixis own functions so that the renderer is properly updated.

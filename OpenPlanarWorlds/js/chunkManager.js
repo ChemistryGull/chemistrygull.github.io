@@ -1,3 +1,5 @@
+// import { hello } from "./main.js";
+
 function GameMap(worldConfigObject) {
 
   this.preset = worldConfigObject;
@@ -123,7 +125,6 @@ function GameMap(worldConfigObject) {
     for (let i = this.loadedChunks.length; i < newChunks.length; i++) {
       console.log("## ALLOCATED NEW CHUNK");
 
-      // const chunkContainer = ; 
       mapContainer.addChild(chunkPool.allocate());
 
     }   
@@ -154,15 +155,22 @@ function GameMap(worldConfigObject) {
 
     this.loadedChunks = newChunks;
     
-    this.renderUpdate(); 
+
+    if (S.debug.displayTiles == 0) {
+      this.renderUpdateSprites();
+
+    } else {
+      this.renderUpdateGraphics();
+
+    }
 
     console.timeEnd("|--- Load Chunks Time");
     console.log("+");
 
-    }
+    }   
   }
 
-  this.renderUpdate = function (params) {
+  this.renderUpdateGraphics = function () {
     console.time("|--- Update Renderer");
 
     var c = 0;
@@ -177,6 +185,28 @@ function GameMap(worldConfigObject) {
 
           var tile = chunk.tile[y * S.chunkSize + x];         
           chunkContainer.children[y * S.chunkSize + x].tint = tileTextures[tile].altColor;
+        }
+      }
+      c++;
+    }
+    console.timeEnd("|--- Update Renderer");
+  }
+
+  this.renderUpdateSprites = function () {
+    console.time("|--- Update Renderer");
+
+    var c = 0;
+    for (const chunkName of world.loadedChunks) {
+
+      var chunk = world.chunkMap[chunkName];
+      
+      var chunkContainer = mapContainer.children[c];
+      
+      for (var y = 0; y < S.chunkSize; y++) {
+        for (var x = 0; x < S.chunkSize; x++) {
+
+          var tile = chunk.tile[y * S.chunkSize + x];          
+          chunkContainer.children[y * S.chunkSize + x].texture = tileSheet.textures[tileTextures[tile].name];
         }
       }
       c++;

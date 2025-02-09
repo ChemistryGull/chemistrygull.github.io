@@ -26,7 +26,7 @@ var S = {
     mapViewoint_W: 1,
     mapViewoint_H: 1,
     MapViewpoint_Scale: 1,
-    MapViewpoint_sc: 0.5, // --- Player size
+    MapViewpoint_sc: 1, // --- Player size
 
     displayTiles: 1, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient; 3 = Display tile as color instead of tileset; 4 = Display random Hash map
     

@@ -1,4 +1,6 @@
-import * as PIXI from "pixi.js";
+import * as PIXI from "../node_modules/pixi.js/dist/pixi";
+
+// import { GameMap } from "./chunkManager.js";
 
 // import { math_ } from "/js/math.js";
 // import { GameMap } from "/js/chunkManager.js";
@@ -7,11 +9,15 @@ const app = new PIXI.Application();
 // playerContainer.zIndex = 1;
 
 
+if (S.debug.displayTiles == 0) {
+  window.chunkPool = new objectPool("spriteChunk");
+} else {
+  window.chunkPool = new objectPool("tileChunk");
+}
+
+
+
 window.mapContainer = null;
-
-
-
-
 
 
 var world = new GameMap(worldTypeEarth);
@@ -22,6 +28,7 @@ const openSimplex1 = openSimplexNoise(S.seed);
 const openSimplex2 = openSimplexNoise(S.seed << 9 + 11);
 const openSimplex3 = openSimplexNoise(S.seed >> 4);
 const openSimplex4 = openSimplexNoise(S.seed << 7 + 323);
+
 
 // --- IN GAME TIME
 var Time = {
@@ -70,13 +77,21 @@ var Time = {
       src: 'dist/assets/atlas.json',
       data: {texture: sheetTexture} // using of preloaded texture
   });
-  const sheet = await PIXI.Assets.load('atlas')
+  window.tileSheet = await PIXI.Assets.load('atlas')
+  // await sheet.parse();
 
   console.log(sheetTexture);
-  console.log(sheet);
+  console.log(tileSheet);
+  console.log(tileSheet.textures);
   
+  var testSprite = new PIXI.Sprite(tileSheet.textures.grass);
+  
+  console.log(testSprite);
+  
+  
+  // app.stage.addChild(testSprite);
 
-  
+  // return;
 
   // playerContainer.addChild(rectangle);
 
@@ -105,7 +120,6 @@ var Time = {
   // --- create mapContainer, all chunks go into this container
   mapContainer = new PIXI.Container();
   app.stage.addChild(mapContainer);
-
 
 
   // graphicsPool.reserve(12800);
@@ -192,9 +206,7 @@ function renderLoop() {
 
 
 
-window.graphicsPool = new objectPool("graphics");
-window.containerPool = new objectPool("container");
-window.chunkPool = new objectPool("tileChunk");
+
 
 
 

@@ -16,6 +16,7 @@ class objectPool {
           return item;
         }
         break;
+
       case "container":
         this.create = function (index) {
           let item = new PIXI.Container();
@@ -24,6 +25,7 @@ class objectPool {
           return item;
         }
         break;
+
       case "tileChunk":
         // --- Theoretical way to implement this
         this.create = function (index) {
@@ -54,8 +56,39 @@ class objectPool {
         }
         
         break;
+      
+      case "spriteChunk":
+        // --- Theoretical way to implement this
+        this.create = function (index) {
+
+          let chunkContainer = new PIXI.Container();
+          chunkContainer.poolIndex = index;
+          
+          
+          for (var y = 0; y < S.chunkSize; y++) {
+            for (var x = 0; x < S.chunkSize; x++) {
+
+              const sprite = new PIXI.Sprite();
+              sprite.position.x = x * S.tw;
+              sprite.position.y = y * S.th;
+              sprite.width = S.texW;
+              sprite.height = S.texH;
+              chunkContainer.addChild(sprite);
+
+            }
+          }
+          this.freeIndexes.push(index);
+          console.log("## CREATE");
+
+          return chunkContainer;
+
+          // return new PIXI.Graphics()
+          //   .rect(x * S.tw, y * S.th, S.tw, S.th)
+          //   .fill({ color: 0xffffff });
+        }
         
-      // --- TODO: Add Sprites etc...
+        break;
+        
     
       default:
         alert("!!! object pool property must be defined!\n'" + this.type + "' is not a available objectPool type.")
