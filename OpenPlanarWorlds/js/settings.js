@@ -1,13 +1,13 @@
 var S = {
-  seed: 603, //Math.floor(Math.random() * 1000), // cool seeds: 178, 99632178, 874133, 8787999 (wierd desert+ocean), 9963 (swamp, watery savannah), 978446 spawn in wood, near ocean and all biomes
-  // swamp seeds: 336 366 36987 savannah next to wood 7979 plains next to forest  8787999
+  seed: 999, //Math.floor(Math.random() * 1000), // cool seeds: 178, 99632178, 874133, 8787999 (wierd desert+ocean), 9963 (swamp, watery savannah), 978446 spawn in wood, near ocean and all biomes
+  // swamp seeds: 336 366 36987 savannah next to wood 7979 plains next to forest  8787999 Another seed i developed long on: 603
   fps: 60,
 
   texW: 32,
   texH: 32,
 
-  tw: 32,
-  th: 32,
+  tw: 2,
+  th: 2,
   chunkSize: 8,
   // scale: 0.01,
   scale: 1,
@@ -28,8 +28,17 @@ var S = {
     MapViewpoint_Scale: 1,
     MapViewpoint_sc: 1, // --- Player size
 
-    displayTiles: 1, // --- 0 = Display Textures (Default in game); 1 = Display Biomes; 2 = Display Height Gradient; 3 = Display tile as color instead of tileset; 4 = Display random Hash map
-    
+    displayTiles: 11, 
+    /*
+      0 = Display Textures (Default in game)
+      1 = Display tile as color instead of tileset
+      11 = Display Biomes;
+      21 = Display SimplexNoise Map 1 (c / height)
+      22 = Display SimplexNoise Map 2 (tem)
+      23 = Display SimplexNoise Map 3 (hum)
+      31 = Display RandomHash Map 1 (ranNoise)
+    */
+
     doShowHitboxes: false,
     doManagerBiome: false,
     doObjectRendering: false,

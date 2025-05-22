@@ -27,7 +27,6 @@ class objectPool {
         break;
 
       case "tileChunk":
-        // --- Theoretical way to implement this
         this.create = function (index) {
 
           let chunkContainer = new PIXI.Container();
@@ -46,7 +45,6 @@ class objectPool {
             }
           }
           this.freeIndexes.push(index);
-          console.log("## CREATE");
 
           return chunkContainer;
 
@@ -57,8 +55,35 @@ class objectPool {
         
         break;
       
+      case "textMarking":
+        this.create = function (index) {
+
+          let chunkContainer = new PIXI.Container();
+          chunkContainer.poolIndex = index;
+
+          const item = new PIXI.Graphics()
+            .rect(0, 0, 3, 3)
+            .fill({ color: 0xff0000 });
+
+          const text = new PIXI.Text({
+              text: 'Hello Pixi!',
+              style: {
+                  fontFamily: 'Arial',
+                  fontSize: 12,
+                  fill: 0xff0000,
+              }
+          });
+          chunkContainer.addChild(item);
+          chunkContainer.addChild(text);
+
+          this.freeIndexes.push(index);
+          return chunkContainer;
+
+        }
+        
+        break;
+      
       case "spriteChunk":
-        // --- Theoretical way to implement this
         this.create = function (index) {
 
           let chunkContainer = new PIXI.Container();
@@ -78,7 +103,6 @@ class objectPool {
             }
           }
           this.freeIndexes.push(index);
-          console.log("## CREATE");
 
           return chunkContainer;
 
@@ -183,7 +207,6 @@ class objectPoolPop {
               }
             }
             this.freeIndexes.push(index);
-            console.log("## CREATE");
   
             return chunkContainer;
   

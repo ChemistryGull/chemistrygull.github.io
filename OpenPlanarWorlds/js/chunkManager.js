@@ -1,5 +1,3 @@
-// import { hello } from "./main.js";
-
 function GameMap(worldConfigObject) {
 
   this.preset = worldConfigObject;
@@ -23,7 +21,8 @@ function GameMap(worldConfigObject) {
 
     // --- TO DO !!!: Make it possible to choose amount of noise functions dynamically?
 
-    var tempChunk = {x: cx, y: cy, tile: [], ranNoise: [], obj: [], c: [], tem: [], hum: [], biome: []}
+    // var tempChunk = {x: cx, y: cy, tile: [], ranNoise: [], obj: [], c: [], tem: [], hum: [], biome: []}
+    var tempChunk = new this.preset.emptyChunk(cx, cy);
     // var zoom = 100
 
     for (var y = 0; y < S.chunkSize; y++) {
@@ -37,16 +36,18 @@ function GameMap(worldConfigObject) {
 
 
         tempChunk.tile.push(currTile.tile)
-        tempChunk.c.push(currTile.c)
+        tempChunk.c.push(currTile.continentalness)
         // tempChunk.c.push(Math.abs(currTile.c))
-        tempChunk.tem.push(currTile.tem)
-        tempChunk.hum.push(currTile.hum)
+        tempChunk.tem.push(currTile.temperature)
+        tempChunk.hum.push(currTile.humidity)
+        tempChunk.veg.push(currTile.vegitation)
+        tempChunk.con.push(currTile.continentalness)
 
 
         tempChunk.biome.push(currTile.biome)
 
 
-        tempChunk.ranNoise.push(currTile.ranNoise)
+        tempChunk.ranNoise.push(currTile.ranNoise1)
 
         if (currTile.obj != undefined) {
           tempChunk.obj.push(currTile.obj)
@@ -69,12 +70,13 @@ function GameMap(worldConfigObject) {
   }
 
   this.loadChunk = function (vp) {
+    
     if (vp.startChunk.toString() != this.startChunkTemp.toString() || vp.endChunk.toString() != this.endChunkTemp.toString()) {
   
     console.log("+++ Load Chunks +++");
     console.time("|--- Load Chunks Time");
 
-    console.time("|--- Build newChunks list");
+    // console.time("|--- Build newChunks list");
 
     this.loadedObj = [];
 
@@ -117,21 +119,21 @@ function GameMap(worldConfigObject) {
     this.startChunkTemp = [...vp.startChunk];
     this.endChunkTemp = [...vp.endChunk];
 
-    console.timeEnd("|--- Build newChunks list");
+    // console.timeEnd("|--- Build newChunks list");
     
 
-    console.time("|--- Allocate Chunks");
+    // console.time("|--- Allocate Chunks");
     
     for (let i = this.loadedChunks.length; i < newChunks.length; i++) {
-      console.log("## ALLOCATED NEW CHUNK");
+      // console.log("## ALLOCATED NEW CHUNK");
 
       mapContainer.addChild(chunkPool.allocate());
 
     }   
-    console.timeEnd("|--- Allocate Chunks");
+    // console.timeEnd("|--- Allocate Chunks");
 
 
-    console.time("|--- Remove Chunks")
+    // console.time("|--- Remove Chunks")
 
     for (let i = newChunks.length; i < this.loadedChunks.length; i++) {
       console.log("## REMOVE CHUNK");
@@ -141,37 +143,43 @@ function GameMap(worldConfigObject) {
       mapContainer.removeChildAt(mapContainer.children.length - 1);
     
     }   
-    console.timeEnd("|--- Remove Chunks")
+    // console.timeEnd("|--- Remove Chunks")
 
 
-    console.time("|--- Set Chunk Position");
+    // console.time("|--- Set Chunk Position");
     for (let i = 0; i < mapContainer.children.length; i++) {
 
       var chunk = world.chunkMap[newChunks[i]];
       mapContainer.children[i].position.set(chunk.x * S.chunkSize * S.tw, chunk.y * S.chunkSize * S.th);
     }
-    console.timeEnd("|--- Set Chunk Position");
+    // console.timeEnd("|--- Set Chunk Position");
 
 
     this.loadedChunks = newChunks;
     
+    switch (S.debug.displayTiles) {
+      case 0:
+        this.renderUpdateSprites();
+        break;
 
-    if (S.debug.displayTiles == 0) {
-      this.renderUpdateSprites();
+      case 1:
+        this.renderUpdateGraphics();
+        break;
 
-    } else {
-      this.renderUpdateGraphics();
-
+      default:
+        this.renderUpdateOther();
+        break;
     }
 
+
     console.timeEnd("|--- Load Chunks Time");
-    console.log("+");
+    // console.log("+");
 
     }   
   }
 
   this.renderUpdateGraphics = function () {
-    console.time("|--- Update Renderer");
+    // console.time("|--- Update Renderer");
 
     var c = 0;
     for (const chunkName of world.loadedChunks) {
@@ -189,11 +197,11 @@ function GameMap(worldConfigObject) {
       }
       c++;
     }
-    console.timeEnd("|--- Update Renderer");
+    // console.timeEnd("|--- Update Renderer");
   }
 
   this.renderUpdateSprites = function () {
-    console.time("|--- Update Renderer");
+    // console.time("|--- Update Renderer");
 
     var c = 0;
     for (const chunkName of world.loadedChunks) {
@@ -211,7 +219,187 @@ function GameMap(worldConfigObject) {
       }
       c++;
     }
-    console.timeEnd("|--- Update Renderer");
+    // console.timeEnd("|--- Update Renderer");
+  }
+
+  this.renderUpdateOther = function () {
+
+    var c = 0;
+    for (const chunkName of world.loadedChunks) {
+
+      var chunk = world.chunkMap[chunkName];
+      
+      var chunkContainer = mapContainer.children[c];
+      
+      for (var y = 0; y < S.chunkSize; y++) {
+        for (var x = 0; x < S.chunkSize; x++) {
+
+          var tileColor = 0x000000
+          
+          switch (S.debug.displayTiles) {
+          
+            case 11:
+
+              tileColor = this.preset.biomeData[chunk.biome[y * S.chunkSize + x]].altColor;
+
+              // switch (chunk.biome[y * S.chunkSize + x]) {
+                
+              //   case "plains":
+              //     tileColor = 0x99ff00;
+              //   break;
+              //   case "forest":
+              //     tileColor = 0x00ff00;
+              //   break;
+              //   case "rainforest":
+              //     tileColor = 0x006600;
+              //   break;
+              //   case "desert":
+              //     tileColor = 0xffff66;
+              //   break;
+              //   case "savannah":
+              //     tileColor = 0xc0ff62;
+              //   break;
+              //   case "dry_ice_desert":
+              //     tileColor = 0x698083;
+              //   break;
+              //   case "arctic":
+              //     tileColor = 0xbae2e7;
+              //   break;
+              //   case "taiga":
+              //     tileColor = 0x007744;
+              //   break;
+              //   case "tundra":
+              //     tileColor = 0x3ab387;
+              //   break;
+              //   case "swamp":
+              //     tileColor = 0x28b183;
+              //   break;
+  
+              //   default:
+              //   tileColor = 0xFF0000;  
+              // }
+              break;
+
+            case 21:
+              var cval = chunk.c[y * S.chunkSize + x];
+
+              if (cval < -0.8) {
+                tileColor = 0x000000
+              } else if (cval < -0.6) {
+                tileColor = 0x6600ff
+              } else if (cval < -0.4) {
+                tileColor = 0x000086
+              } else if (cval < -0.2) {
+                tileColor = 0x0000ff
+              } else if (cval < 0) {
+                tileColor = 0x00ffff
+              } else if (cval < 0.2) {
+                tileColor = 0x00FF00
+              } else if (cval < 0.4) {
+                tileColor = 0xFFFF00
+              } else if (cval < 0.6) {
+                tileColor = 0xff7707
+              } else if (cval < 0.8) {
+                tileColor = 0xff0000
+              } else {
+                tileColor = 0xffffff
+              }
+              break;
+          
+            case 22:
+              var noiseVal2 = chunk.tem[y * S.chunkSize + x];
+
+              if (noiseVal2 < -0.8) {
+                tileColor = 0x000000
+              } else if (noiseVal2 < -0.6) {
+                tileColor = 0x6600ff
+              } else if (noiseVal2 < -0.4) {
+                tileColor = 0x000086
+              } else if (noiseVal2 < -0.2) {
+                tileColor = 0x0000ff
+              } else if (noiseVal2 < 0) {
+                tileColor = 0x00ffff
+              } else if (noiseVal2 < 0.2) {
+                tileColor = 0x00FF00
+              } else if (noiseVal2 < 0.4) {
+                tileColor = 0xFFFF00
+              } else if (noiseVal2 < 0.6) {
+                tileColor = 0xff7707
+              } else if (noiseVal2 < 0.8) {
+                tileColor = 0xff0000
+              } else {
+                tileColor = 0xffffff
+              }
+              break;
+
+            case 23:
+              var noiseVal3 = chunk.hum[y * S.chunkSize + x];
+
+              if (noiseVal3 < -0.8) {
+                tileColor = 0x000000
+              } else if (noiseVal3 < -0.6) {
+                tileColor = 0x6600ff
+              } else if (noiseVal3 < -0.4) {
+                tileColor = 0x000086
+              } else if (noiseVal3 < -0.2) {
+                tileColor = 0x0000ff
+              } else if (noiseVal3 < 0) {
+                tileColor = 0x00ffff
+              } else if (noiseVal3 < 0.2) {
+                tileColor = 0x00FF00
+              } else if (noiseVal3 < 0.4) {
+                tileColor = 0xFFFF00
+              } else if (noiseVal3 < 0.6) {
+                tileColor = 0xff7707
+              } else if (noiseVal3 < 0.8) {
+                tileColor = 0xff0000
+              } else {
+                tileColor = 0xffffff
+              }
+              break;
+
+
+            case 31:
+              var hashVal1 = chunk.ranNoise[y * S.chunkSize + x];
+
+              if (hashVal1 < -0.8) {
+                tileColor = 0x000000
+              } else if (hashVal1 < -0.6) {
+                tileColor = 0x6600ff
+              } else if (hashVal1 < -0.4) {
+                tileColor = 0x000086
+              } else if (hashVal1 < -0.2) {
+                tileColor = 0x0000ff
+              } else if (hashVal1 < 0) {
+                tileColor = 0x00ffff
+              } else if (hashVal1 < 0.2) {
+                tileColor = 0x00FF00
+              } else if (hashVal1 < 0.4) {
+                tileColor = 0xFFFF00
+              } else if (hashVal1 < 0.6) {
+                tileColor = 0xff7707
+              } else if (hashVal1 < 0.8) {
+                tileColor = 0xff0000
+              } else {
+                tileColor = 0xffffff
+              }
+              break;
+
+            default:
+              alert("Display Tiles mode unvalid")
+              break;
+          }
+
+
+
+
+          chunkContainer.children[y * S.chunkSize + x].tint = tileColor;
+
+  
+        }
+      }
+      c++;
+    }
   }
 
 

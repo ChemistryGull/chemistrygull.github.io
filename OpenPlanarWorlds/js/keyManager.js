@@ -26,12 +26,14 @@ document.addEventListener("keypress", function (e) {
   // console.log(e);
   
   if (e.code == "Space") {
-    if (true) {
-      pause();
+    if (app.ticker.started == true) {
+      app.ticker.stop()
+      console.log("### Main Loop Paused ###");
     }
-    //  else {
-    //   start();
-    // }
+    else {
+      app.ticker.start()
+      console.log("### Main Loop Started ###");
+    }
   }
   // if (e.code == keyCode.openInv) {
   //   console.log("Toggle inv");
@@ -40,6 +42,8 @@ document.addEventListener("keypress", function (e) {
 
 
 });
+
+
 
 window.addEventListener("keydown", function (e) {
   if (e.target != document.body) {

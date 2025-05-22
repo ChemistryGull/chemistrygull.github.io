@@ -7,10 +7,56 @@
 
     <link rel="stylesheet" href="css/main.css">
 
+    <style>
+        #Debug_Container {
+            font-size: 18px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: red;
+            text-shadow: 1px 1px black;
+        }
+    </style>
 
 
 </head>
 <body>
+
+    <div id="Game_Container"></div>
+    
+    
+    <div id="Debug_Container">
+        <!-- <table>
+            <tr>
+                <td>FPS: </td>
+                <td class="dbg-app-ticker" id="dbg_fps"></td>
+            </tr>
+            <tr>
+                <td>App Ticker: </td>
+                <td class="dbg-app-ticker" id="dbg_lastTime"></td>
+            </tr>
+
+
+        </table> -->
+        
+        <div>Mouse:</div>
+        <div>Pos: <span id="mouse_pos_x"></span> | <span id="mouse_pos_y"></span></div>
+        <div>OnChunk: <span id="mouse_onChunk_x"></span> | <span id="mouse_onChunk_y"></span></div>
+        <div>OnTileInChunk: <span id="mouse_onChunkTile_x"></span> | <span id="mouse_onChunkTile_y"></span></div>
+        <div>OnTile: <span id="mouse_onTile_x"></span> | <span id="mouse_onTile_y"></span></div>
+        <div>Temperature: <span id="mouse_temp"></span></div>
+        <div>Humidity: <span id="mouse_hum"></span></div>
+        <div>Vegitation: <span id="mouse_veg"></span></div>
+        <div>Continentalness: <span id="mouse_con"></span></div>
+        <div>Biome: <span id="mouse_biome"></span></div>
+        <div>RanNoise: <span id="mouse_ranNoise"></span></div>
+
+        
+    </div>
+    
+
+
+
     <!-- ### THIRD PARTY SCRIPTS ### -->
 
     <script src="js/openSimplexNoise.js" charset="utf-8"></script>
@@ -25,6 +71,8 @@
     <!-- ### OWN MODULES ### -->
     <script src="js/math.js" charset="utf-8"></script>
     <script src="js/objectPool.js" charset="utf-8"></script>
+    <script src="js/debug.js" charset="utf-8"></script>
+    <script src="js/mouse.js" charset="utf-8"></script>
 
 
     <!-- ### LOGIC SCRIPS ### -->

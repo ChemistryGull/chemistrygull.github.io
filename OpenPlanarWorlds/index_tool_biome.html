@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Document</title>
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <style>
+        #Debug_Container {
+            font-size: 18px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: red;
+            text-shadow: 1px 1px black;
+        }
+
+        .toolContainer {
+            display: grid;
+            grid-template-columns: 150px 650px auto;
+            grid-template-rows: 20px 650px 200px;
+
+        }
+
+        .toolContainer>div {
+            background-color: rgb(181, 204, 203);
+        }
+
+        #Game_Container {
+            /* height: 650px; */
+        }
+
+        #biome_data {
+            width: 100%;
+            box-sizing: border-box;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+
+        .inputAfterRange {
+            width: 2em;
+        }
+
+        #biome_data_full {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        #biome_data_full_container {
+            grid-column: 1 / 4;
+
+        }
+
+
+
+    </style>
+
+
+</head>
+<body>
+    
+
+
+    <div class="toolContainer">
+        <div>
+            heraer aer ae raer as ear 
+        </div>
+        <div></div>
+        <div></div>
+        <div>
+
+            <p>Y:</p>
+
+            <input type="radio" name="val_y" value="0">Temperature <br>
+            <input type="radio" name="val_y" value="1" checked>Humidity <br>
+            <input type="radio" name="val_y" value="2">Vegitation <br>
+            <input type="radio" name="val_y" value="3">Continentalness <br>
+
+            <p>X:</p>
+
+            <input type="radio" name="val_x" value="0" checked>Temperature <br>
+            <input type="radio" name="val_x" value="1">Humidity <br>
+            <input type="radio" name="val_x" value="2">Vegitation <br>
+            <input type="radio" name="val_x" value="3">Continentalness <br>
+
+            <br>
+            <button id="update_Button" onclick="toolBiomeUpdate()">Update</button>
+
+        </div>
+        <div id="Game_Container"></div>
+        <div id="biome_data">
+            <input type="range" class="biome_data_range" min="-10" max="100" id="ee">
+            <input type="text" id="ee" class="inputAfterRange biome_data_num" value="10">
+            <!-- <textarea name="" id="biome_data"></textarea>
+            <button onclick="toolBiomeUpdate()">Update</button> -->
+        </div>
+        <div id="biome_data_full_container">
+            <textarea name="" id="biome_data_full"></textarea>
+
+        </div>
+
+    </div>
+
+
+
+    
+    
+    <div id="Debug_Container">
+        <!-- <table>
+            <tr>
+                <td>FPS: </td>
+                <td class="dbg-app-ticker" id="dbg_fps"></td>
+            </tr>
+            <tr>
+                <td>App Ticker: </td>
+                <td class="dbg-app-ticker" id="dbg_lastTime"></td>
+            </tr>
+
+
+        </table> -->
+        
+        <!-- <div>Mouse:</div>
+        <div>Pos: <span id="mouse_pos_x"></span> | <span id="mouse_pos_y"></span></div>
+        <div>OnChunk: <span id="mouse_onChunk_x"></span> | <span id="mouse_onChunk_y"></span></div>
+        <div>OnTileInChunk: <span id="mouse_onChunkTile_x"></span> | <span id="mouse_onChunkTile_y"></span></div>
+        <div>OnTile: <span id="mouse_onTile_x"></span> | <span id="mouse_onTile_y"></span></div>
+        <div>Temperature: <span id="mouse_temp"></span></div>
+        <div>Humidity: <span id="mouse_hum"></span></div>
+        <div>Biome: <span id="mouse_biome"></span></div>
+        <div>RanNoise: <span id="mouse_ranNoise"></span></div> -->
+
+        
+    </div>
+
+
+
+    
+
+
+
+    <!-- ### THIRD PARTY SCRIPTS ### -->
+
+    <script src="js/openSimplexNoise.js" charset="utf-8"></script>
+    <script src="js/prng.js" charset="utf-8"></script>
+    <script src="lib/jquery-3.7.1.min.js" charset="utf-8"></script>
+
+
+    <!-- ### SETTINGS ### -->
+    <script src="worldTypes/earth.js"></script>
+    <script src="js/settings.js" charset="utf-8"></script>
+    
+
+    <!-- ### OWN MODULES ### -->
+    <script src="js/math.js" charset="utf-8"></script>
+    <script src="js/objectPool.js" charset="utf-8"></script>
+    <script src="js/debug.js" charset="utf-8"></script>
+    <!-- <script src="js/mouse.js" charset="utf-8"></script> -->
+
+
+    <!-- ### LOGIC SCRIPS ### -->
+    <script src="js/keyManager.js" charset="utf-8"></script>
+
+    <script src="js/viewport.js" charset="utf-8"></script>
+    <script src="js/chunkManager.js" charset="utf-8"></script>
+    <script src="js/entity.js" charset="utf-8"></script>
+    <script src="js/vector.js" charset="utf-8"></script>
+
+
+    <script type="module" src="opwTools/tool_biome.js" charset="utf-8"></script>
+
+</body>
+</html>
