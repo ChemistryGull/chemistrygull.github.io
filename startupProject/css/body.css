@@ -113,6 +113,12 @@ p {
     font-size: 1.3em;
     text-align: center !important;
 }
+.text-list p {
+    text-align: center !important;
+}
+.p-list-head {
+    font-size: 1.3em;
+}
 .p-big-num {
     font-size: 4em !important;
     margin: 0;
